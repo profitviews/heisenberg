@@ -1,31 +1,30 @@
 // main.cpp : Defines the entry point for the console application.
 #ifdef _WIN64
-   //define something for Windows (64-bit)
-	#include "Poco/WindowsConsoleChannel.h"
+//define something for Windows (64-bit)
+#include "Poco/WindowsConsoleChannel.h"
 #elif _WIN32
-   //define something for Windows (32-bit)
-	#include "Poco/WindowsConsoleChannel.h"
+//define something for Windows (32-bit)
+#include "Poco/WindowsConsoleChannel.h"
 #elif __APPLE__
-    #if TARGET_IPHONE_SIMULATOR
-         // iOS Simulator
-    #elif TARGET_OS_IPHONE
-        // iOS device
-    #elif TARGET_OS_MAC
-        // Other kinds of Mac OS
-    #else
-        // Unsupported platform
-    #endif
-#elif __linux
-    // linux
-	#include "Poco/ConsoleChannel.h"
-#elif __unix // all unices not caught above
-    // Unix
-	#include "Poco/ConsoleChannel.h"
-#elif __posix
-    // POSIX
-	#include "Poco/ConsoleChannel.h"
+#if TARGET_IPHONE_SIMULATOR
+// iOS Simulator
+#elif TARGET_OS_IPHONE
+// iOS device
+#elif TARGET_OS_MAC
+// Other kinds of Mac OS
+#else
+// Unsupported platform
 #endif
-
+#elif __linux
+// linux
+#include "Poco/ConsoleChannel.h"
+#elif __unix // all unices not caught above
+// Unix
+#include "Poco/ConsoleChannel.h"
+#elif __posix
+// POSIX
+#include "Poco/ConsoleChannel.h"
+#endif
 
 #include "Poco/Thread.h"
 
@@ -36,48 +35,48 @@
 
 using Poco::Thread;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	//create a c++ Poco logger to use and set its channel to the windows console
 	//this is the same logger instance that the library will hook into
 	Logger *logger = &(Logger::get("example"));
 
 #ifdef _WIN64
-   //define something for Windows (64-bit)
+	//define something for Windows (64-bit)
 	logger->setChannel(new Poco::WindowsConsoleChannel());
 #elif _WIN32
-   //define something for Windows (32-bit)
+	//define something for Windows (32-bit)
 	logger->setChannel(new Poco::WindowsConsoleChannel());
 #elif __APPLE__
-    #if TARGET_IPHONE_SIMULATOR
-         // iOS Simulator
-    #elif TARGET_OS_IPHONE
-        // iOS device
-    #elif TARGET_OS_MAC
-        // Other kinds of Mac OS
-    #else
-        // Unsupported platform
-    #endif
+#if TARGET_IPHONE_SIMULATOR
+	// iOS Simulator
+#elif TARGET_OS_IPHONE
+	// iOS device
+#elif TARGET_OS_MAC
+	// Other kinds of Mac OS
+#else
+	// Unsupported platform
+#endif
 #elif __linux
-    // linux
+	// linux
 	logger->setChannel(new Poco::ConsoleChannel());
 #elif __unix // all unices not caught above
-    // Unix
+	// Unix
 	logger->setChannel(new Poco::ConsoleChannel());
 #elif __posix
-    // POSIX
+	// POSIX
 	logger->setChannel(new Poco::ConsoleChannel());
 #endif
 
 	// Declaring an adapter for the client
-	UserAdapter* userAdapter = new UserAdapter();
+	UserAdapter *userAdapter = new UserAdapter();
 
 	//Establish the socket.io connection
 	//JS: var socket = io.connect("localhost:3000")
 	//SIOClient *sio = SIOClient::connect("http://localhost:3000");
 
 	// Establish the socket.io connection to an endpoint
-	SIOClient* sioUserClient = SIOClient::connect("http://localhost:3000/user");
+	SIOClient *sioUserClient = SIOClient::connect("http://localhost:3000/user");
 
 	//Create a target and register object its method onUpdate for the Update event
 	//JS: socket.on("Update", function(data) {...});
@@ -85,7 +84,7 @@ int main(int argc, char* argv[])
 	sioUserClient->on("message", userAdapter, callback(&UserAdapter::onMessage));
 	sioUserClient->on("notification", userAdapter, callback(&UserAdapter::onNotification));
 	sioUserClient->on("send-user-profile", userAdapter, callback(&UserAdapter::onSendUserProfile));
-	
+
 	// Send data to server
 	sioUserClient->send("Send to server");
 	// Emit data to server
@@ -107,4 +106,3 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
-

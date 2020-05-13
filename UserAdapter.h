@@ -7,7 +7,7 @@ public:
 	UserAdapter();
 	~UserAdapter();
 
-	void onNotification(const void* pSender, Array::Ptr& arg);
-	void onSendUserProfile(const void* pSender, Array::Ptr& arg);
-	void onMessage(const void* pSender, Array::Ptr& arg);
-}; 
+	void onNotification(const void *pSender, Array::Ptr &arg);
+	void onSendUserProfile(const void *pSender, Array::Ptr &arg);
+	void onMessage(const void *pSender, Array::Ptr &arg);
+};

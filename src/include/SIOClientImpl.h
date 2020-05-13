@@ -20,17 +20,16 @@
 #include "SIOEventTarget.h"
 #include "SIOPacket.h"
 
-using Poco::Net::HTTPClientSession;
-using Poco::Net::WebSocket;
 using Poco::Logger;
-using Poco::Timer;
-using Poco::TimerCallback;
 using Poco::NotificationCenter;
 using Poco::Thread;
 using Poco::ThreadTarget;
+using Poco::Timer;
+using Poco::TimerCallback;
+using Poco::Net::HTTPClientSession;
+using Poco::Net::WebSocket;
 
-
-class SIOClientImpl: public Poco::Runnable
+class SIOClientImpl : public Poco::Runnable
 {
 public:
 	bool handshake();
@@ -40,27 +39,25 @@ public:
 	void release();
 	void addref();
 
-	static SIOClientImpl* connect(Poco::URI uri);
+	static SIOClientImpl *connect(Poco::URI uri);
 	void disconnect(std::string endpoint);
 	void connectToEndpoint(std::string endpoint);
 	void monitor();
 	virtual void run();
-	void heartbeat(Poco::Timer& timer);
+	void heartbeat(Poco::Timer &timer);
 	bool receive();
 	void send(std::string endpoint, std::string s);
 	void send(SocketIOPacket *packet);
 	void emit(std::string endpoint, std::string eventname, std::string args);
-  void emit(std::string endpoint, std::string eventname, Poco::JSON::Object::Ptr args);
+	void emit(std::string endpoint, std::string eventname, Poco::JSON::Object::Ptr args);
 
 	std::string getUri();
 
 private:
-
-
 	SIOClientImpl();
 	SIOClientImpl(Poco::URI uri);
 	~SIOClientImpl(void);
-	
+
 	std::string _sid;
 	int _heartbeat_timeout;
 	int _timeout;

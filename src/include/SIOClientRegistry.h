@@ -10,8 +10,8 @@ class SIOClientImpl;
 class SIOClientRegistry
 {
 private:
-	SIOClientRegistry() {};
-	~SIOClientRegistry() {delete _inst;};
+	SIOClientRegistry(){};
+	~SIOClientRegistry() { delete _inst; };
 
 	static SIOClientRegistry *_inst;
 
@@ -28,6 +28,4 @@ public:
 	SIOClientImpl *getSocket(std::string uri);
 	void addSocket(SIOClientImpl *socket, std::string uri);
 	void removeSocket(std::string uri);
-	
 };
-

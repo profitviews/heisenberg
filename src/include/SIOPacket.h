@@ -16,7 +16,7 @@ public:
 	typedef enum
 	{
 		V2x
-	}SocketIOVersion;
+	} SocketIOVersion;
 
 	SocketIOPacket();
 	virtual ~SocketIOPacket();
@@ -27,28 +27,29 @@ public:
 	virtual int typeAsNumber();
 	std::string typeForIndex(int index);
 
-	void setEndpoint(std::string endpoint){_endpoint = endpoint;};
-	std::string getEndpoint(){return _endpoint;};
-	void setEvent(std::string event){_name = event;};
-	std::string getEvent(){return _name;};
+	void setEndpoint(std::string endpoint) { _endpoint = endpoint; };
+	std::string getEndpoint() { return _endpoint; };
+	void setEvent(std::string event) { _name = event; };
+	std::string getEvent() { return _name; };
 
 	void addData(std::string data);
 	void addData(Poco::JSON::Array::Ptr data);
-  void addData(Poco::JSON::Object::Ptr data);
-  Poco::JSON::Array getDatas(){return _args;};
+	void addData(Poco::JSON::Object::Ptr data);
+	Poco::JSON::Array getDatas() { return _args; };
 	virtual std::string stringify();
 
-	static SocketIOPacket * createPacketWithType(std::string type, SocketIOPacket::SocketIOVersion version);
-	static SocketIOPacket * createPacketWithTypeIndex(int type, SocketIOPacket::SocketIOVersion version);
+	static SocketIOPacket *createPacketWithType(std::string type, SocketIOPacket::SocketIOVersion version);
+	static SocketIOPacket *createPacketWithTypeIndex(int type, SocketIOPacket::SocketIOVersion version);
+
 protected:
-	std::string _pId;//id message
-	std::string _ack;//
-	std::string _name;//event name
-	Poco::JSON::Array _args;//array of objects
-	std::string _endpoint;//
-	std::string _type;//message type
-	std::string _separator;//for stringify the object
-	std::vector<std::string> _types;//types of messages
+	std::string _pId;				 //id message
+	std::string _ack;				 //
+	std::string _name;				 //event name
+	Poco::JSON::Array _args;		 //array of objects
+	std::string _endpoint;			 //
+	std::string _type;				 //message type
+	std::string _separator;			 //for stringify the object
+	std::vector<std::string> _types; //types of messages
 };
 
 class SocketIOPacketV2x : public SocketIOPacket
@@ -58,10 +59,9 @@ public:
 	virtual ~SocketIOPacketV2x();
 	int typeAsNumber();
 	std::string stringify();
+
 private:
-    std::vector<std::string> _typesMessage;
+	std::vector<std::string> _typesMessage;
 };
-
-
 
 #endif
