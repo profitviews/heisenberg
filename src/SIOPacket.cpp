@@ -203,7 +203,7 @@ SocketIOPacketV10x::~SocketIOPacketV10x()
 
 SocketIOPacket * SocketIOPacket::createPacketWithType(std::string type, SocketIOPacket::SocketIOVersion version)
 {
-	SocketIOPacket *ret;
+	SocketIOPacket *ret = NULL;  //nullptr
 	switch (version)
 	{
 		case SocketIOPacket::V09x:
@@ -220,7 +220,7 @@ SocketIOPacket * SocketIOPacket::createPacketWithType(std::string type, SocketIO
 
 SocketIOPacket * SocketIOPacket::createPacketWithTypeIndex(int type, SocketIOPacket::SocketIOVersion version)
 {
-	SocketIOPacket *ret;
+	SocketIOPacket *ret = NULL;  //nullptr
 	switch (version)
 	{
 		case SocketIOPacket::V09x:
