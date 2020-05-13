@@ -111,7 +111,7 @@ bool SIOClientImpl::handshake()
 		_session = new HTTPClientSession(_host, aport);
 	}
 	_session->setKeepAlive(false);
-	HTTPRequest req(HTTPRequest::HTTP_GET,"/socket.io/1/?EIO=2&transport=polling",HTTPMessage::HTTP_1_1);
+	HTTPRequest req(HTTPRequest::HTTP_GET,"/socket.io/1/?EIO=3&transport=polling",HTTPMessage::HTTP_1_1);
 	req.set("Accept","*/*");
 	req.setContentType("text/plain");
 	req.setHost(_host);
@@ -192,7 +192,7 @@ bool SIOClientImpl::openSocket()
 		}	break;
 	case SocketIOPacket::V10x:
 		{
-			req.setURI("/socket.io/1/websocket/?EIO=2&transport=websocket&sid="+_sid);
+			req.setURI("/socket.io/?EIO=3&transport=websocket&sid="+_sid);
 		}	break;
 	}
 
@@ -530,7 +530,7 @@ bool SIOClientImpl::receive()
 					{
 						endpoint += data.substr(0,nendpoint);
 						data = data.substr(nendpoint);
-						uri+=endpoint;
+						//uri+=endpoint;
 					}
 					packetOut->setEndpoint(endpoint);
 					c = SIOClientRegistry::instance()->getClient(uri);

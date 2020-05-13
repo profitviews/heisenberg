@@ -64,8 +64,10 @@ std::string SocketIOPacket::toString()
 
 	// Add the end point for the namespace to be used, as long as it is not
 	// an ACK, heartbeat, or disconnect packet
-	if (_type != "ack" && _type != "heartbeat" && _type != "disconnect")
-		encoded << _endpoint;
+	if (_type != "ack" && _type != "heartbeat" && _type != "disconnect") 
+		if(_endpoint != "")
+			encoded << _endpoint << ",";
+			
 	encoded << this->_separator;
 
 	if (_args.size() != 0)
