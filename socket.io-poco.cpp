@@ -81,13 +81,15 @@ int main(int argc, char* argv[])
 
 	//Create a target and register object its method onUpdate for the Update event
 	//JS: socket.on("Update", function(data) {...});
-	sioUserClient->on("notification", userAdapter, callback(&UserAdapter::onNotification));
-	
-	// Emit information to server
-	sioUserClient->emit("user-profile-info", "[{\"firstName\":\"myname\",\"lastName\":\"mylastname\"}]");
 
-	// Send simple data to server
-	sioUserClient->send("simple data to server");
+	sioUserClient->on("message", userAdapter, callback(&UserAdapter::onMessage));
+	sioUserClient->on("notification", userAdapter, callback(&UserAdapter::onNotification));
+	sioUserClient->on("send-user-profile", userAdapter, callback(&UserAdapter::onSendUserProfile));
+	
+	// Send data to server
+	sioUserClient->send("Send to server");
+	// Emit data to server
+	sioUserClient->emit("Emit to server", "data");
 
 	//setup is now complete, messages and events can be send and received
 	logger->information("Socket.io client setup complete\n");
