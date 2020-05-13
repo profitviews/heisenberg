@@ -136,43 +136,44 @@ bool SIOClientImpl::handshake()
 		return false;
 	}
 
-	_logger->information("%s %s",res.getStatus(),res.getReason());
-	_logger->information("response: %s\n",temp);
+	_logger->information("%s %s", res.getStatus(), res.getReason());
+	_logger->information("response: %s\n", temp);
 
-	if(temp.at(temp.size()-1) == '}')
-	{
+	//if (temp.at(temp.size() - 1) == '}')
+	//{
 		_version = SocketIOPacket::V10x;
 		//�0{"sid":"HBlgZ7rOi8Y3QrUaAAAB","upgrades":["websocket"],"pingInterval":25000,"pingTimeout":60000}
 		int a = temp.find('{');
-		temp = temp.substr(a,temp.size()-a);
-		temp = temp.substr(0,temp.find('}',temp.size()-5)+1);
+		temp = temp.substr(a, temp.size() - a);
+		temp = temp.substr(0, temp.find('}', temp.size() - 5) + 1);
 		ParseHandler::Ptr pHandler = new ParseHandler(false);
 		Parser parser(pHandler);
 		Var result = parser.parse(temp);
 		Object::Ptr msg = result.extract<Object::Ptr>();
 
-		_logger->information("session: %s",msg->get("sid").toString());
-		_logger->information("heartbeat: %s",msg->get("pingInterval").toString());
-		_logger->information("timeout: %s",msg->get("pingTimeout").toString());
+		_logger->information("session: %s", msg->get("sid").toString());
+		_logger->information("heartbeat: %s", msg->get("pingInterval").toString());
+		_logger->information("timeout: %s", msg->get("pingTimeout").toString());
 
 		_sid = msg->get("sid").toString();
-		_heartbeat_timeout = atoi(msg->get("pingInterval").toString().c_str())/1000;
-		_timeout = atoi(msg->get("pingTimeout").toString().c_str())/1000;
-	}
-	else
-	{
-		_version = SocketIOPacket::V09x;
-		StringTokenizer msg(temp, ":");
-		//3GYzE9md2Ig-lm3cf8Rv:60:60:websocket,htmlfile,xhr-polling,jsonp-polling
-		_logger->information("session: %s",msg[0]);
-		_logger->information("heartbeat: %s",msg[1]);
-		_logger->information("timeout: %s",msg[2]);
-		_logger->information("transports: %s",msg[3]);
-		_sid = msg[0];
-		_heartbeat_timeout = atoi(msg[1].c_str());
-		_timeout = atoi(msg[2].c_str());
-	}
+		_heartbeat_timeout = atoi(msg->get("pingInterval").toString().c_str()) / 1000;
+		_timeout = atoi(msg->get("pingTimeout").toString().c_str()) / 1000;
 
+
+	//}
+	//else
+	//{
+	//	_version = SocketIOPacket::V09x;
+	//	StringTokenizer msg(temp, ":");
+	//	//3GYzE9md2Ig-lm3cf8Rv:60:60:websocket,htmlfile,xhr-polling,jsonp-polling
+	//	_logger->information("session: %s", msg[0]);
+	//	_logger->information("heartbeat: %s", msg[1]);
+	//	_logger->information("timeout: %s", msg[2]);
+	//	_logger->information("transports: %s", msg[3]);
+	//	_sid = msg[0];
+	//	_heartbeat_timeout = atoi(msg[1].c_str());
+	//	_timeout = atoi(msg[2].c_str());
+	//}
 
 	return true;
 }
