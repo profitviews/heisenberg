@@ -1,5 +1,5 @@
-#include "SIOClientRegistry.h"
-#include "SIOClient.h"
+#include "include/SIOClientRegistry.h"
+#include "include/SIOClient.h"
 
 SIOClientRegistry *SIOClientRegistry::_inst = NULL;
 

@@ -1,12 +1,12 @@
-#include "SIONotificationHandler.h"
+#include "include/SIONotificationHandler.h"
 #include "Poco/Observer.h"
-#include "SIONotifications.h"
+#include "include/SIONotifications.h"
 #include "Poco/NotificationCenter.h"
 #include "Poco/JSON/Parser.h"
 #include "Poco/JSON/ParseHandler.h"
 
-#include "SIOEventRegistry.h"
-#include "SIOClient.h"
+#include "include/SIOEventRegistry.h"
+#include "include/SIOClient.h"
 
 using Poco::Observer;
 using Poco::JSON::Parser;

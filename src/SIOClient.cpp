@@ -1,5 +1,5 @@
-#include "SIOClient.h"
-#include "SIOClientRegistry.h"
+#include "include/SIOClient.h"
+#include "include/SIOClientRegistry.h"
 
 #include "Poco/URI.h"
 

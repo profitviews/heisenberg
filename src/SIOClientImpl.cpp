@@ -1,4 +1,4 @@
-#include "SIOClientImpl.h"
+#include "include/SIOClientImpl.h"
 
 #include "Poco/Net/HTTPRequest.h"
 #include "Poco/Net/HTTPSClientSession.h"
@@ -19,9 +19,9 @@
 #include "Poco/RunnableAdapter.h"
 #include "Poco/URI.h"
 
-#include "SIONotifications.h"
-#include "SIOClientRegistry.h"
-#include "SIOClient.h"
+#include "include/SIONotifications.h"
+#include "include/SIOClientRegistry.h"
+#include "include/SIOClient.h"
 
 using Poco::JSON::Parser;
 using Poco::JSON::ParseHandler;
