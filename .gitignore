@@ -5,6 +5,7 @@
 
 # dependencies
 /node_modules
+/example/node_modules
 
 # IDEs and editors
 /.idea
@@ -16,7 +17,7 @@
 *.vcxproj
 *.vcxproj.*
 Debug/*
-
+/enc_temp_folder
 
 # IDE - VSCode
 .vscode/*
