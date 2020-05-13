@@ -8,5 +8,6 @@ public:
 	~UserAdapter();
 
 	void onNotification(const void* pSender, Array::Ptr& arg);
+	void onEvent(const void* pSender, Array::Ptr& arg);
 };
 

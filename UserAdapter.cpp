@@ -16,18 +16,10 @@ UserAdapter::~UserAdapter()
 {
 }
 
-void UserAdapter::onMessage(const void* pSender, Array::Ptr& arg)
+void UserAdapter::onNotification(const void* pSender, Array::Ptr& arg)
 {
 	std::string msg = "";
 	for (int i = 0; i < arg->size(); ++i)
 		msg += arg->get(i).toString() + "";
-	Logger::get("example").information("onMessage: %s", msg);
-}
-
-void UserAdapter::onEvent(const void* pSender, Array::Ptr & arg)
-{
-	std::string msg = "";
-	for (int i = 0; i < arg->size(); ++i)
-		msg += arg->get(i).toString() + " ";
-	Logger::get("example").information("onEvent!");
+	Logger::get("example").information("Notification Event: %s", msg);
 }

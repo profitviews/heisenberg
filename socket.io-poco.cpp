@@ -74,16 +74,21 @@ int main(int argc, char* argv[])
 
 	//Establish the socket.io connection
 	//JS: var socket = io.connect("localhost:3000")
-	SIOClient *sio = SIOClient::connect("http://localhost:3000");
+	//SIOClient *sio = SIOClient::connect("http://localhost:3000");
 
 	// Establish the socket.io connection to an endpoint
-	//SIOClient* sio = SIOClient::connect("http://localhost:3000/user");
+	SIOClient* sioUserClient = SIOClient::connect("http://localhost:3000/user");
 
 	//Create a target and register object its method onUpdate for the Update event
 	//JS: socket.on("Update", function(data) {...});
+	sioUserClient->on("notification", userAdapter, callback(&UserAdapter::onNotification));
 	
-	sio->on("message", userAdapter, callback(&UserAdapter::onMessage));
-	
+	// Emit information to server
+	sioUserClient->emit("user-profile-info", "[{\"firstName\":\"myname\",\"lastName\":\"mylastname\"}]");
+
+	// Send simple data to server
+	sioUserClient->send("simple data to server");
+
 	//setup is now complete, messages and events can be send and received
 	logger->information("Socket.io client setup complete\n");
 
@@ -93,7 +98,7 @@ int main(int argc, char* argv[])
 	std::cin.get();
 
 	//disconnecting the default socket with no endpoint will also disconnect all endpoints
-	sio->disconnect();
+	sioUserClient->disconnect();
 
 	logger->information("Press ENTER to quit...");
 	std::cin.get();
