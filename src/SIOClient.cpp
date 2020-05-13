@@ -101,7 +101,7 @@ void SIOClient::emit(std::string eventname, Poco::JSON::Object::Ptr args)
 {
   _socket->emit(_endpoint, eventname, args);
 
-} //void SIOClient::emit(std::string eventname, Poco::JSON::Object::Ptr args)
+}
 
 void SIOClient::emit(std::string eventname, std::string args)
 {

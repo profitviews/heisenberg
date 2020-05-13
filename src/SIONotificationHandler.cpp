@@ -29,33 +29,10 @@ SIONotificationHandler::SIONotificationHandler(NotificationCenter* nc)
 
 SIONotificationHandler::~SIONotificationHandler(void)
 {
-//	_nCenter->removeObserver(
-//		Observer<SIONotificationHandler, SIOMessage>(*this, &SIONotificationHandler::handleMessage)
-//		);
-//	_nCenter->removeObserver(
-//		Observer<SIONotificationHandler, SIOJSONMessage>(*this, &SIONotificationHandler::handleJSONMessage)
-//		);
 	_nCenter->removeObserver(
 		Observer<SIONotificationHandler, SIOEvent>(*this, &SIONotificationHandler::handleEvent)
 		);
 }
-
-//void SIONotificationHandler::handleMessage(SIOMessage* pNf)
-//{
-//	_logger->information("handling message, message received: %s",pNf->getMsg());
-//	ParseHandler::Ptr pHandler = new ParseHandler(false);
-//	Parser parser(pHandler);
-//	Var result = parser.parse(pNf->getMsg());
-//	Object::Ptr object = result.extract<Object::Ptr>();
-//	pNf->_client->fireEvent("message", object);
-//	pNf->release();
-//}
-//
-//void SIONotificationHandler::handleJSONMessage(SIOJSONMessage* pNf)
-//{
-//	_logger->information("handling JSON message");
-//	pNf->release();
-//}
 
 void SIONotificationHandler::handleEvent(SIOEvent* pNf)
 {
@@ -71,13 +48,6 @@ void SIONotificationHandler::handleEvent(SIOEvent* pNf)
 void SIONotificationHandler::registerCallbacks(NotificationCenter* nc)
 {
 	_nCenter = nc;
-
-//	_nCenter->addObserver(
-//		Observer<SIONotificationHandler, SIOMessage>(*this, &SIONotificationHandler::handleMessage)
-//		);
-//	_nCenter->addObserver(
-//		Observer<SIONotificationHandler, SIOJSONMessage>(*this, &SIONotificationHandler::handleJSONMessage)
-//		);
 	_nCenter->addObserver(
 		Observer<SIONotificationHandler, SIOEvent>(*this, &SIONotificationHandler::handleEvent)
 		);

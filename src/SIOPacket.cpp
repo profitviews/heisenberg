@@ -137,7 +137,7 @@ std::string SocketIOPacket::stringify()
 	return outS;
 }
 
-SocketIOPacketV10x::SocketIOPacketV10x()
+SocketIOPacketV2x::SocketIOPacketV2x()
 {
 	_separator = ":";
 	_type = "";//message type
@@ -163,7 +163,7 @@ SocketIOPacketV10x::SocketIOPacketV10x()
 	_typesMessage.push_back("connect");
 }
 
-int SocketIOPacketV10x::typeAsNumber()
+int SocketIOPacketV2x::typeAsNumber()
 {
 	int num = 0;
 	std::vector<std::string>::iterator item = std::find(_typesMessage.begin(), _typesMessage.end(), _type);
@@ -180,7 +180,7 @@ int SocketIOPacketV10x::typeAsNumber()
     return num;
 }
 
-std::string SocketIOPacketV10x::stringify()
+std::string SocketIOPacketV2x::stringify()
 {
 	std::stringstream ss;
 	Poco::JSON::Array data;
@@ -191,7 +191,7 @@ std::string SocketIOPacketV10x::stringify()
 	return ss.str();
 }
 
-SocketIOPacketV10x::~SocketIOPacketV10x()
+SocketIOPacketV2x::~SocketIOPacketV2x()
 {
 	_types.clear();
 	_typesMessage.clear();
@@ -208,11 +208,8 @@ SocketIOPacket * SocketIOPacket::createPacketWithType(std::string type, SocketIO
 	SocketIOPacket *ret = NULL;  //nullptr
 	switch (version)
 	{
-		case SocketIOPacket::V09x:
-			ret = new SocketIOPacket;
-			break;
-		case SocketIOPacket::V10x:
-			ret = new SocketIOPacketV10x;
+		case SocketIOPacket::V2x:
+			ret = new SocketIOPacketV2x;
 			break;
 	}
 	ret->initWithType(type);
@@ -225,11 +222,8 @@ SocketIOPacket * SocketIOPacket::createPacketWithTypeIndex(int type, SocketIOPac
 	SocketIOPacket *ret = NULL;  //nullptr
 	switch (version)
 	{
-		case SocketIOPacket::V09x:
-			ret = new SocketIOPacket;
-			break;
-		case SocketIOPacket::V10x:
-			return new SocketIOPacketV10x;
+		case SocketIOPacket::V2x:
+			return new SocketIOPacketV2x;
 			break;
 	}
 	ret->initWithTypeIndex(type);

@@ -8,15 +8,14 @@
 
 using Poco::JSON::Array;
 
-class SocketIOPacketV10x;
+class SocketIOPacketV2x;
 
 class SocketIOPacket
 {
 public:
 	typedef enum
 	{
-		V09x,
-		V10x
+		V2x
 	}SocketIOVersion;
 
 	SocketIOPacket();
@@ -52,11 +51,11 @@ protected:
 	std::vector<std::string> _types;//types of messages
 };
 
-class SocketIOPacketV10x : public SocketIOPacket
+class SocketIOPacketV2x : public SocketIOPacket
 {
 public:
-	SocketIOPacketV10x();
-	virtual ~SocketIOPacketV10x();
+	SocketIOPacketV2x();
+	virtual ~SocketIOPacketV2x();
 	int typeAsNumber();
 	std::string stringify();
 private:
