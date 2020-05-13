@@ -1,20 +1,103 @@
-// socket.io-poco.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// main.cpp : Defines the entry point for the console application.
+#ifdef _WIN64
+   //define something for Windows (64-bit)
+	#include "Poco/WindowsConsoleChannel.h"
+#elif _WIN32
+   //define something for Windows (32-bit)
+	#include "Poco/WindowsConsoleChannel.h"
+#elif __APPLE__
+    #if TARGET_IPHONE_SIMULATOR
+         // iOS Simulator
+    #elif TARGET_OS_IPHONE
+        // iOS device
+    #elif TARGET_OS_MAC
+        // Other kinds of Mac OS
+    #else
+        // Unsupported platform
+    #endif
+#elif __linux
+    // linux
+	#include "Poco/ConsoleChannel.h"
+#elif __unix // all unices not caught above
+    // Unix
+	#include "Poco/ConsoleChannel.h"
+#elif __posix
+    // POSIX
+	#include "Poco/ConsoleChannel.h"
+#endif
+
+
+#include "Poco/Thread.h"
+
+#include "src/include/SIOClient.h"
+#include "UserAdapter.h"
 
 #include <iostream>
 
-int main()
+using Poco::Thread;
+
+int main(int argc, char* argv[])
 {
-    std::cout << "Hello World!\n"; 
+	//create a c++ Poco logger to use and set its channel to the windows console
+	//this is the same logger instance that the library will hook into
+	Logger *logger = &(Logger::get("example"));
+
+#ifdef _WIN64
+   //define something for Windows (64-bit)
+	logger->setChannel(new Poco::WindowsConsoleChannel());
+#elif _WIN32
+   //define something for Windows (32-bit)
+	logger->setChannel(new Poco::WindowsConsoleChannel());
+#elif __APPLE__
+    #if TARGET_IPHONE_SIMULATOR
+         // iOS Simulator
+    #elif TARGET_OS_IPHONE
+        // iOS device
+    #elif TARGET_OS_MAC
+        // Other kinds of Mac OS
+    #else
+        // Unsupported platform
+    #endif
+#elif __linux
+    // linux
+	logger->setChannel(new Poco::ConsoleChannel());
+#elif __unix // all unices not caught above
+    // Unix
+	logger->setChannel(new Poco::ConsoleChannel());
+#elif __posix
+    // POSIX
+	logger->setChannel(new Poco::ConsoleChannel());
+#endif
+
+	// Declaring an adapter for the client
+	UserAdapter* userAdapter = new UserAdapter();
+
+	//Establish the socket.io connection
+	//JS: var socket = io.connect("localhost:3000")
+	SIOClient *sio = SIOClient::connect("http://localhost:3000");
+
+	// Establish the socket.io connection to an endpoint
+	//SIOClient* sio = SIOClient::connect("http://localhost:3000/user");
+
+	//Create a target and register object its method onUpdate for the Update event
+	//JS: socket.on("Update", function(data) {...});
+	
+	sio->on("message", userAdapter, callback(&UserAdapter::onMessage));
+	
+	//setup is now complete, messages and events can be send and received
+	logger->information("Socket.io client setup complete\n");
+
+	//wait for user input to move to next section of code
+	//socket receiving occurs in another thread and will not be halted
+	logger->information("Press ENTER to continue...");
+	std::cin.get();
+
+	//disconnecting the default socket with no endpoint will also disconnect all endpoints
+	sio->disconnect();
+
+	logger->information("Press ENTER to quit...");
+	std::cin.get();
+
+	return 0;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
