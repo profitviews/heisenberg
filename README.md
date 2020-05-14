@@ -18,11 +18,13 @@ This project has been taken from: https://github.com/himynameschris/socket.io-po
 
 - Fix emit to endpoint 
 - Fix send to endpoint
-- Fix receive from end point
+- Fix receive from endpoint
 - Null ptr init
 
 #### todos:
 
+- Add socket io client init settings
+- Add reconnection attempts setting 
 - Provide instructions to build on linux & mac with g++
 
 # **#include** #
