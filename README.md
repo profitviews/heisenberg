@@ -5,6 +5,8 @@
 
 This project has been taken from: https://github.com/himynameschris/socket.io-poco
 
+![header_pres](https://github.com/isaelblais/socket.io-cpp/tree/master/md/header.png)
+
 #### changes:
 
 - Removed cmake files
