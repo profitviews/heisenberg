@@ -1,0 +1,126 @@
+﻿# **Socket.IO - Poco** #
+*A C++ Socket.IO Client using the libraries at [pocoproject.org](http://pocoproject.org/)*
+
+# **#info** #
+
+####Currently Supports:
+
+- the Websocket transport
+- asynchronous messaging and mvents
+- event callbacks
+- JS Socket.IO style methods
+- cross platform build tools (cmake)
+- endpoints
+
+####Contributors:
+
+Thanks to all who have spent time fixing issues or implementing features:
+
+bug fixes:
+
+- https://github.com/pilwon
+- https://github.com/geniuslinchao
+
+feature implementation:
+
+- https://github.com/cpowell
+- https://github.com/francoisTemasys or https://github.com/IVBakker
+
+
+# **#include** #
+
+## Dependencies: ##
+
+- POCO C++ Foundation, Net, NetSSL and JSON libraries
+	- see install script in third_party folder
+- OpenSSL
+	- this is required by the Poco NetSSL library and HTTPS support 
+
+# **#building** #
+
+## CMake: ##
+
+####Building Poco
+```
+cd third_party
+./installDependencies.sh
+```
+
+Under Windows, you will need to open the main Poco solution, build the ALL project, and then build the INSTALL project.
+
+Once ran or if using Linux, your poco libraries and headers will be in the third_party/local/bin, include and lib folders. 
+
+####Building socket.io-poco
+```
+cd build
+cmake ..
+make
+```
+
+To build with examples, use ```cmake -DCOMPILE_EXAMPLES=ON ..``` above instead of ```cmake ...```
+
+Under Windows, again you will need to open the Project solution and build the ALL project and the INSTALL project. You may also need to manually copy the poco shared libraries from third_party/local into the same folder as the executable to make it run until the INSTALL path is updated
+
+## Android: ##
+
+(cmake support for Android needs to be updated)
+
+In your NDK makefile, add the path to the Android.mk file in the repo's source folder and add the following lib your app's static library includes
+
+`LOCAL_WHOLE_STATIC_LIBRARIES += socketiopoco_static`
+
+You will also need to include the paths and modules for the Poco libraries, the android makefiles can be found in the android folder of the socket.io repo (add them to the Foundation, JSON and Net include folders)
+
+`LOCAL_WHOLE_STATIC_LIBRARIES += pocofoundation_static poconet_static pocojson_static socketiopoco_static`
+
+# **#using** #
+
+**To create a client object and connect:**
+
+`SIOClient *sio = SIOClient::connect("http://localhost:3000");`
+
+**To use messaging:**
+
+Simply use the send method and pass the message string
+
+`sio->send("Hello Socket.IO");`
+
+**To use events:**
+
+1) Create your own subclass of SIOEventTarget 
+
+2) Create methods to handle the callbacks, an event callback function signature must match this pattern:
+
+`void MyClass::onUpdate(const void* pSender, Object::Ptr& arg)`
+
+3) Event callbacks can then be registered through the "on" method, similar to the javascript API, providing a reference to the target object and the function address of the callback method wrapped in the "callback()" typedef like this:
+
+`sio->on("Update", *pMyClass, callback(&MyClass::onUpdate));`
+
+Note: callback() is a custom typedef used by the socket.io-poco library, defined as:
+
+`typedef void (SIOEventTarget::*callback)(const void*, Object::Ptr&);`
+
+4) Lastly, to fire an event use the emit method, passing the event name and data both as strings:
+
+`testpoint->emit("testevent", "[{\"name\":\"myname\",\"type\":\"mytype\"}]");`
+
+**To use endpoints, AKA namespaces:**
+
+To connect to the endpoint 'testpoint':
+
+`SIOClient *testpoint = SIOClient::connect("http://localhost:3000/testpoint");`
+
+This will first check for a socket already connected to the base URI localhost:3000. If it exists, it will be used and the namespace will be connected. If it does not exist, the connection to the base URI will first be established and then the connection to the endpoint will be established.
+
+# **#license** #
+
+MIT License
+
+Copyright (c) 2013 Chris Hannon / channon.us
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
