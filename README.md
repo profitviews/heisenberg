@@ -21,8 +21,8 @@ This project has been taken from: https://github.com/himynameschris/socket.io-po
 
 #### todos:
 
-- Add scoket io client init settings
-- Add reconnection attempts settings 
+- Add socket io client init settings
+- Add reconnection attempts setting 
 - Provide instructions to build on linux & mac with g++
 
 # **#include** #
