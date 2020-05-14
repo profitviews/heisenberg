@@ -1,77 +1,77 @@
-﻿# **Socket.IO - Poco** #
+﻿# **Socket.IO CPP with Poco libraries** #
 *A C++ Socket.IO Client using the libraries at [pocoproject.org](http://pocoproject.org/)*
 
 # **#info** #
 
-####Currently Supports:
+This project has been taken from: https://github.com/himynameschris/socket.io-poco
 
-- the Websocket transport
-- asynchronous messaging and mvents
-- event callbacks
-- JS Socket.IO style methods
-- cross platform build tools (cmake)
-- endpoints
+#### changes:
 
-####Contributors:
+- Removed cmake files
+- Removed everything related to v09x (old version)
+- Replaced version of v10x for v2x which represent actual version of socket.io
+- Add better demo with endpoint
 
-Thanks to all who have spent time fixing issues or implementing features:
+#### fixes:
 
-bug fixes:
+- Fix emit to endpoint 
+- Fix send to endpoint
+- Fix receive from end point
+- Null ptr init
 
-- https://github.com/pilwon
-- https://github.com/geniuslinchao
+#### todos:
 
-feature implementation:
-
-- https://github.com/cpowell
-- https://github.com/francoisTemasys or https://github.com/IVBakker
-
+- Provide instructions to build on linux & mac with g++
 
 # **#include** #
 
 ## Dependencies: ##
 
 - POCO C++ Foundation, Net, NetSSL and JSON libraries
-	- see install script in third_party folder
+	- Download at: https://pocoproject.org/download.html
 - OpenSSL
 	- this is required by the Poco NetSSL library and HTTPS support 
 
 # **#building** #
 
-## CMake: ##
+## Windows: ##
 
-####Building Poco
+#### Building Poco with vcpkg
 ```
-cd third_party
-./installDependencies.sh
+vcpkg install POCO
+```
+ref: https://pocoproject.org/docs/00200-GettingStarted.html
+
+#### Building socket.io-cpp with visual studio
+
+Add ref. of Poco include files in "Include Directories" of the project
+
+```
+<path_to_vcpkg_folder>\vcpkg\packages\poco_x86-windows\include
+<path_to_vcpkg_folder>\vcpkg\packages\openssl-windows_x86-windows\include
 ```
 
-Under Windows, you will need to open the main Poco solution, build the ALL project, and then build the INSTALL project.
+Add ref. of Poco libraries files in "Library Directories" of the project
 
-Once ran or if using Linux, your poco libraries and headers will be in the third_party/local/bin, include and lib folders. 
-
-####Building socket.io-poco
 ```
-cd build
-cmake ..
+<path_to_vcpkg_folder>\vcpkg\packages\poco_x86-windows\lib
+<path_to_vcpkg_folder>\vcpkg\packages\openssl-windows_x86-windows\lib
+```
+
+## Linux & Mac: ##
+
+#### Building Poco
+```
+./configure
 make
 ```
+ref: https://pocoproject.org/docs/00200-GettingStarted.html
 
-To build with examples, use ```cmake -DCOMPILE_EXAMPLES=ON ..``` above instead of ```cmake ...```
 
-Under Windows, again you will need to open the Project solution and build the ALL project and the INSTALL project. You may also need to manually copy the poco shared libraries from third_party/local into the same folder as the executable to make it run until the INSTALL path is updated
-
-## Android: ##
-
-(cmake support for Android needs to be updated)
-
-In your NDK makefile, add the path to the Android.mk file in the repo's source folder and add the following lib your app's static library includes
-
-`LOCAL_WHOLE_STATIC_LIBRARIES += socketiopoco_static`
-
-You will also need to include the paths and modules for the Poco libraries, the android makefiles can be found in the android folder of the socket.io repo (add them to the Foundation, JSON and Net include folders)
-
-`LOCAL_WHOLE_STATIC_LIBRARIES += pocofoundation_static poconet_static pocojson_static socketiopoco_static`
+#### Building socket.io-cpp
+```
+Comming soon...
+```
 
 # **#using** #
 
