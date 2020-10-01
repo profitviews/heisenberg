@@ -65,7 +65,7 @@ std::string SocketIOPacket::toString()
 	// Add the end point for the namespace to be used, as long as it is not
 	// an ACK, heartbeat, or disconnect packet
 	if (_type != "ack" && _type != "heartbeat" && _type != "disconnect")
-		if (_endpoint != "")
+		if (_endpoint != "" && _endpoint != "/")  // RH: added removing "/"
 			encoded << _endpoint << ",";
 
 	encoded << this->_separator;
@@ -106,12 +106,18 @@ void SocketIOPacket::addData(Poco::JSON::Object::Ptr data)
 {
 	this->_args.add(data);
 
-} //void SocketIOPacket::addData(Poco::JSON::Object::Ptr data)
+}
+
+// void SocketIOPacket::addData(Poco::JSON::Array::Ptr data)
+// {
+// 	// for (int i = 0; i < data->size(); ++i) // RH: commented these out
+// 	// 	this->_args.add(data->get(i));        // RH: trying to add just he array
+// 	this->_args.add(data);
+// }
 
 void SocketIOPacket::addData(Poco::JSON::Array::Ptr data)
 {
-	for (int i = 0; i < data->size(); ++i)
-		this->_args.add(data->get(i));
+	this->_args.add(data);
 }
 
 std::string SocketIOPacket::stringify()
@@ -146,21 +152,23 @@ SocketIOPacketV2x::SocketIOPacketV2x()
 	_ack = "";		 //
 	_name = "";		 //event name
 	_endpoint = "";	 //
-	_types.push_back("disconnected");
-	_types.push_back("connected");
-	_types.push_back("heartbeat");
-	_types.push_back("pong");
-	_types.push_back("message");
-	_types.push_back("upgrade");
-	_types.push_back("noop");
-	_typesMessage.push_back("connect");
-	_typesMessage.push_back("disconnect");
-	_typesMessage.push_back("event");
-	_typesMessage.push_back("ack");
-	_typesMessage.push_back("error");
-	_typesMessage.push_back("binarevent");
-	_typesMessage.push_back("binaryack");
-	_typesMessage.push_back("connect");
+	_types.push_back("disconnected");        // 0
+	_types.push_back("connected");           // 1
+	_types.push_back("heartbeat");           // 2 == PING
+	_types.push_back("pong");                // 3
+	_types.push_back("message");             // 4
+	_types.push_back("upgrade");             // 5
+	_types.push_back("noop");                // 6
+
+                                             // message types	
+	_typesMessage.push_back("connect");      // 0
+	_typesMessage.push_back("disconnect");   // 1
+	_typesMessage.push_back("event");        // 2
+	_typesMessage.push_back("ack");          // 3
+	_typesMessage.push_back("error");        // 4
+	_typesMessage.push_back("binarevent");   // 5
+	_typesMessage.push_back("binaryack");    // 6
+	_typesMessage.push_back("connect");      // 7  <-- WHY IDENTICAL TO THE 0 (ZERO) INDEX???
 }
 
 int SocketIOPacketV2x::typeAsNumber()
@@ -169,8 +177,9 @@ int SocketIOPacketV2x::typeAsNumber()
 	std::vector<std::string>::iterator item = std::find(_typesMessage.begin(), _typesMessage.end(), _type);
 	if (item != _typesMessage.end())
 	{ //it's a message
-		num = item - _typesMessage.begin();
-		num += 40;
+		num = item - _typesMessage.begin(); // so num is the index into vector _typesMessage
+		num += 40; // 4 is message type "message" - see above in constructor
+		// Therefore num is now 4x, where x is the message type: connect, disconnect, event, ack, error... etc
 	}
 	else
 	{

@@ -28,6 +28,7 @@ using Poco::Timer;
 using Poco::TimerCallback;
 using Poco::Net::HTTPClientSession;
 using Poco::Net::WebSocket;
+using Poco::URI;
 
 class SIOClientImpl : public Poco::Runnable
 {
@@ -39,7 +40,11 @@ public:
 	void release();
 	void addref();
 
-	static SIOClientImpl *connect(Poco::URI uri);
+	static SIOClientImpl *connect(
+		Poco::URI uri, 
+		const URI::QueryParameters& = {}, 
+		bool = true,
+		int = -1);
 	void disconnect(std::string endpoint);
 	void connectToEndpoint(std::string endpoint);
 	void monitor();
@@ -50,12 +55,23 @@ public:
 	void send(SocketIOPacket *packet);
 	void emit(std::string endpoint, std::string eventname, std::string args);
 	void emit(std::string endpoint, std::string eventname, Poco::JSON::Object::Ptr args);
+	void emit(std::string endpoint, std::string eventname, Poco::JSON::Array::Ptr args);
+
+	void setHandshakeParameters(const URI::QueryParameters& handshakeParameters) {
+		_handshake_parameters = handshakeParameters;
+	}
 
 	std::string getUri();
 
+	std::string getSid() { return _sid; }
+
 private:
 	SIOClientImpl();
-	SIOClientImpl(Poco::URI uri);
+	SIOClientImpl(
+		const Poco::URI& uri, 
+		const URI::QueryParameters& = {}, 
+		bool = true,
+		int = -1);
 	~SIOClientImpl(void);
 
 	std::string _sid;
@@ -70,12 +86,19 @@ private:
 	HTTPClientSession *_session;
 	WebSocket *_ws;
 	Timer *_heartbeatTimer;
+	int _heartbeat_start_interval;
 	Logger *_logger;
 	Thread _thread;
 
 	int _refCount;
 	char *_buffer;
 	std::size_t _buffer_size;
+
+	// For authentication data or similar - such as an API key
+	URI::QueryParameters _handshake_parameters;
+
+	// Some implementations don't assume a masked payload - such as socket.io
+	bool _mask_payload;
 };
 
 #endif

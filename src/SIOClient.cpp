@@ -26,7 +26,11 @@ SIOClient::~SIOClient()
 	SIOClientRegistry::instance()->removeClient(_uri);
 }
 
-SIOClient *SIOClient::connect(std::string uri)
+SIOClient *SIOClient::connect(
+	std::string uri, 
+	const URI::QueryParameters& hanshakeParameters, 
+	bool mask_payload, 
+	int heartbeat_start_interval)
 {
 
 	//check if connection to endpoint exists
@@ -47,9 +51,10 @@ SIOClient *SIOClient::connect(std::string uri)
 
 		if (!impl)
 		{
-			impl = SIOClientImpl::connect(tmp_uri);
+			impl = SIOClientImpl::connect(tmp_uri, hanshakeParameters, mask_payload, heartbeat_start_interval);
 
 			if (!impl)
+			
 				return NULL; //connect failed
 
 			SIOClientRegistry::instance()->addSocket(impl, spath);
@@ -71,7 +76,7 @@ SIOClient *SIOClient::connect(std::string uri)
 void SIOClient::disconnect()
 {
 	_socket->disconnect(_endpoint);
-	delete this;
+	delete this; 
 }
 
 std::string SIOClient::getUri()
@@ -100,6 +105,11 @@ void SIOClient::send(std::string s)
 }
 
 void SIOClient::emit(std::string eventname, Poco::JSON::Object::Ptr args)
+{
+	_socket->emit(_endpoint, eventname, args);
+}
+
+void SIOClient::emit(std::string eventname, Poco::JSON::Array::Ptr args)
 {
 	_socket->emit(_endpoint, eventname, args);
 }
