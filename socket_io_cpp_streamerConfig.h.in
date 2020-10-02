@@ -1,0 +1,3 @@
+// the configured options and settings for Tutorial
+#define socket_io_cpp_streamer_VERSION_MAJOR @socket_io_cpp_streamer_VERSION_MAJOR@
+#define socket_io_cpp_streamer_VERSION_MINOR @socket_io_cpp_streamer_VERSION_MINOR@

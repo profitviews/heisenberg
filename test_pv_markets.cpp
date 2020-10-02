@@ -1,4 +1,4 @@
-// main.cpp : Defines the entry point for the console application.
+#include "socket_io_cpp_streamerConfig.h"
 #include "Poco/ConsoleChannel.h"
 #include "Poco/Thread.h"
 #include "src/include/SIOClient.h"
@@ -18,6 +18,18 @@ using Poco::JSON::Parser;
 
 int main(int argc, char *argv[])
 {
+	if (argc < 3) {
+		// report version
+		std::cout 
+			<< argv[0] 
+			<< " Version " 
+			<< socket_io_cpp_streamer_VERSION_MAJOR << "."
+			<< socket_io_cpp_streamer_VERSION_MINOR << std::endl;
+		std::cout 
+			<< "Usage: " << argv[0] << " api_key data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
+		return 1;
+	}
+
 	Logger *logger = &(Logger::get("example"));
 
 	logger->setChannel(new Poco::ConsoleChannel());
@@ -30,7 +42,7 @@ int main(int argc, char *argv[])
 	//Establish the socket.io connection
 	URI connect_uri{"https://markets.profitview.net"};
 
-	URI::QueryParameters qp {{"api_key", "223834ffcc42d292c3a5fdc156c244ad2b020465"}};
+	URI::QueryParameters qp {{"api_key", argv[1]}};
 
 	connect_uri.setQueryParameters(qp);
 
@@ -47,9 +59,6 @@ int main(int argc, char *argv[])
 		logger->information("Connected to " + connect_uri.toString() + "\n");
 		logger->information("SID: " + sioUserClient->getSid() + "\n");
 
-		// No "connected" callback necessary
-		// sioUserClient->on("connected", marketDataAdapter, callback(&MarketDataAdapter::onConnected));
-
 		logger->information("Adding callback for 'trade'\n");
 		sioUserClient->on("trade", marketDataAdapter, callback(&MarketDataAdapter::onTrade));
 
@@ -60,8 +69,17 @@ int main(int argc, char *argv[])
 		logger->information("Press ENTER to continue...");
 		std::cin.get();
 
+		std::string names{"[\""};
+		names += argv[2] + std::string{"\""};
+		for (int n = 3; n < argc; ++n)
+			names += ",\"" + std::string{argv[n]} + "\"";
+		names += "]";
+
+		logger->information("Names to subscribe to: " + names);
+
 		Parser parser;
-		Var xbt {parser.parse("[\"trade:bitmex:XBTUSD\"]")};
+		Var xbt {parser.parse(names)};
+
 		using Poco::JSON::Array;
 		auto xbtArray{xbt.extract<Array::Ptr>()};
 

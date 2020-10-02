@@ -5,14 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "g++ - Build and debug active file",
+            "name": "cmake c++",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/test_pv_markets",
-            "args": [],
+            "program": "${workspaceFolder}/build/socket_io_cpp_streamer",
+            "args": [
+                "223834ffcc42d292c3a5fdc156c244ad2b020465",
+                "trade:bitmex:XBTUSD", 
+                "trade:bitmex:ETHUSD"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [{ "name": "LD_LIBRARY_PATH", "value": "/usr/local/debug/lib" }],
+            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
@@ -22,7 +26,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "C/C++: g++ build active file",
+            "preLaunchTask": "CMake build project",
             "miDebuggerPath": "/usr/bin/gdb",
         }
     ]

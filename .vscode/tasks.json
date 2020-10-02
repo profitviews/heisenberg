@@ -3,42 +3,15 @@
     "tasks": [
 		{
 			"type": "shell",
-			"label": "C/C++: g++ build active file",
-			"command": "/usr/bin/g++",
-			"args": [
-				"-g",
-				"-std=c++17",
-				"${workspaceFolder}/*.cpp",
-				"-I.",
-				"-I/usr/local/debug/include",
-				"-L",
-				"./lib",
-				"-lSIOClient",
-				"-L/usr/local/debug/lib",
-				"-lPocoJSONd",
-				"-lPocoNetd",
-				"-lPocoUtild",
-				"-lPocoEncodingsd",
-				"-lPocoNetSSLd",
-				"-lPocoFoundationd",
-				"-lPocoDatad",
-				"-lPocoCryptod",
-				"-lPocoXMLd",
-				"-lssl",
-				"-lcrypto",
-				"-o",
-				"${workspaceFolder}/test_pv_markets"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}"
-			},
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
+			"label": "CMake build project",
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "command": "cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build .",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
 		}
 	]
 }
