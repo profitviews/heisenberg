@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_subdirectory(src)
 
 # add the executable
-add_executable(socket_io_cpp_streamer test_pv_markets.cpp MarketDataAdapter.cpp)
+add_executable(socket_io_cpp_streamer test_pv_markets.cpp DataStreamer.cpp MarketDataAdapter.cpp)
 
 configure_file(socket_io_cpp_streamerConfig.h.in socket_io_cpp_streamerConfig.h)
 

@@ -2,7 +2,7 @@
 #include "Poco/ConsoleChannel.h"
 #include "Poco/Thread.h"
 #include "src/include/SIOClient.h"
-#include "MarketDataAdapter.h"
+#include "DataStreamer.h"
 #include "Poco/URI.h"
 #include "Poco/JSON/Array.h"
 #include "Poco/JSON/Object.h"
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	logger->setChannel(new Poco::ConsoleChannel());
 
 	// Declaring an adapter for the client
-	MarketDataAdapter *marketDataAdapter = new MarketDataAdapter();
+	DataStreamer *dataStreamer = new DataStreamer();
 
 	logger->information("Creating URI\n");
 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 		logger->information("SID: " + sioUserClient->getSid() + "\n");
 
 		logger->information("Adding callback for 'trade'\n");
-		sioUserClient->on("trade", marketDataAdapter, callback(&MarketDataAdapter::onTrade));
+		sioUserClient->on("trade", dataStreamer, callback(&MarketDataAdapter::onTrade));
 
 		logger->information("Socket.io client setup complete\n");
 
