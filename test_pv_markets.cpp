@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
 		std::cin.get();
 
 		std::string symbols_json_string{"[\""};
-		symbols_json_string += argv[2] + std::string{"\""};
-		for (int n = 3; n < argc; ++n)
+		symbols_json_string += argv[4] + std::string{"\""};
+		for (int n = 5; n < argc; ++n)
 			symbols_json_string += ",\"" + std::string{argv[n]} + "\"";
 		symbols_json_string += "]";
 
