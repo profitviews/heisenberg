@@ -3,6 +3,7 @@
 #include "Poco/Thread.h"
 #include "src/include/SIOClient.h"
 #include "DataStreamer.h"
+#include "SimpleMeanReversionAlgo.h"
 #include "Poco/URI.h"
 #include "Poco/JSON/Array.h"
 #include "Poco/JSON/Object.h"
@@ -35,7 +36,8 @@ int main(int argc, char *argv[])
 	logger->setChannel(new Poco::ConsoleChannel());
 
 	// Declaring an adapter for the client
-	DataStreamer *dataStreamer = new DataStreamer();
+	// DataStreamer *dataStreamer = new DataStreamer();
+	SimpleMeanReversionAlgo *algo = new SimpleMeanReversionAlgo("bak", "bs");
 
 	logger->information("Creating URI\n");
 
@@ -49,18 +51,14 @@ int main(int argc, char *argv[])
 	logger->information("Connecting to URI and authenticating with API key\n");
 
 	// Establish the socket.io connection to an endpoint
-	if(SIOClient *sioUserClient = SIOClient::connect(
-		connect_uri.toString(), 
-		qp, 
-		true,
-		-1);
+	if(SIOClient *sioUserClient = SIOClient::connect(connect_uri.toString(), qp);
 		sioUserClient != nullptr) 
 	{
 		logger->information("Connected to " + connect_uri.toString() + "\n");
 		logger->information("SID: " + sioUserClient->getSid() + "\n");
 
 		logger->information("Adding callback for 'trade'\n");
-		sioUserClient->on("trade", dataStreamer, callback(&MarketDataAdapter::onTrade));
+		sioUserClient->on("trade", algo, callback(&MarketDataAdapter::onTrade));
 
 		logger->information("Socket.io client setup complete\n");
 

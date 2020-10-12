@@ -5,11 +5,19 @@ project(socket_io_cpp_streamer VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(PROJECTS_DIR "$ENV{HOME}/projects")
 
 add_subdirectory(src)
 
 # add the executable
-add_executable(socket_io_cpp_streamer test_pv_markets.cpp DataStreamer.cpp MarketDataAdapter.cpp)
+add_executable(socket_io_cpp_streamer 
+    test_pv_markets.cpp 
+    DataStreamer.cpp 
+    MarketDataAdapter.cpp
+    SimpleMeanReversionAlgo.cpp)
+
+include_directories(
+    "${PROJECTS_DIR}/bitmex_trade_example")
 
 configure_file(socket_io_cpp_streamerConfig.h.in socket_io_cpp_streamerConfig.h)
 
@@ -29,11 +37,17 @@ find_package(Poco REQUIRED
     Crypto 
     XML)
 
-# find_package(Boost REQUIRED ProgramOptions)
+find_package(Boost REQUIRED log)
+find_package(Threads REQUIRED)
+
+target_link_directories(socket_io_cpp_streamer PUBLIC
+    "${PROJECTS_DIR}/bitmex_trade_example/build")
 
 target_link_libraries(socket_io_cpp_streamer PUBLIC 
     SIOClient
-    # Boost::ProgramOptions
+    bitmex_trade
+    Boost::log
+    Threads::Threads
     Poco::Net 
     Poco::JSON 
     Poco::Net 
@@ -49,4 +63,5 @@ target_link_libraries(socket_io_cpp_streamer PUBLIC
 
 target_include_directories(socket_io_cpp_streamer PUBLIC 
     "${PROJECT_BINARY_DIR}"
-    "${PROJECT_SOURCE_DIR}/src/include")
+    "${PROJECT_SOURCE_DIR}/src/include"
+    ${PROJECTS_DIR}/bitmex_trade_example)
