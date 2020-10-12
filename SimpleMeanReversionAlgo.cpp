@@ -14,10 +14,15 @@ using Poco::JSON::Parser;
 using Poco::Dynamic::Var;
 
 SimpleMeanReversionAlgo::SimpleMeanReversionAlgo(
-	const std::string& bitmex_api_key, const std::string& bitmex_secret, int lookback)
-: lookback_      {lookback      }
-, symbol_stats_  {              }
-, exchange_      {bitmex_api_key, bitmex_secret}
+	const std::string& bitmex_api_key, const std::string& bitmex_secret, 
+	int lookback,
+	double reversion_level,
+	int base_quantity)
+: lookback_        {lookback      }
+, symbol_stats_    {              }
+, exchange_        {bitmex_api_key, bitmex_secret}
+, reversion_level_ {reversion_level}
+, base_quantity_   {base_quantity}
 {
 }
 
@@ -25,21 +30,39 @@ SimpleMeanReversionAlgo::~SimpleMeanReversionAlgo()
 {
 }
 
-void SimpleMeanReversionAlgo::RunningStats::update_state(double price)
+void SimpleMeanReversionAlgo::RunningStats::prepare_state(double price)
 {
 	count_++;
-	const double mean_differential = (price - mean_) / count_;
-	const double new_mean = mean_ + mean_differential;
-	const double d_squared_increment = 
-			(price - new_mean) * (price - mean_);
-	const double new_d_squared = d_squared_ + d_squared_increment;
-	mean_ = new_mean;
-	d_squared_ = new_d_squared;
+
+	mean_ = mean_ + (price - mean_)/count_;
+	d_squared_ = d_squared_ + (price - mean_)*(price - mean_);
+}
+
+void SimpleMeanReversionAlgo::RunningStats::update_state(double price)
+{
+	if(!prepared_) {
+		lookback_ = count_;
+		prepared_ = true;
+	}
+
+	++count_;
+
+	mean_ = (lookback_*mean_ + price - mean_)/lookback_;
+	d_squared_ = d_squared_ + (price - mean_)*(price - mean_);
+}
+
+double SimpleMeanReversionAlgo::RunningStats::variance() const {
+	if(!prepared_) throw NotPrepared();
+	if (count_ <= 1) return 0.0f;
+	return d_squared_/lookback_;
 }
 
 void SimpleMeanReversionAlgo::update_state(double price, const std::string& symbol)
 {
-    symbol_stats_[symbol].update_state(price);
+	if(symbol_stats_[symbol].count() > lookback_)
+	    symbol_stats_[symbol].update_state(price);
+	else
+	    symbol_stats_[symbol].prepare_state(price);
 }
 
 void SimpleMeanReversionAlgo::onTrade(const void *pSender, Array::Ptr &arg)
@@ -68,4 +91,14 @@ void SimpleMeanReversionAlgo::onTrade(const void *pSender, Array::Ptr &arg)
 	l.information("Symbol: " + resultObj->get("sym").toString());
 	time_t date_time{resultObj->get("time").convert<time_t>()};
 	l.information("Time: " + std::string{std::asctime(std::localtime(&date_time))});
+	RunningStats& stats {symbol_stats_.at(symbol)};
+	if(stats.prepared()) {
+		if(price > stats.mean() + stats.stdev()*reversion_level_) {
+			exchange_.new_order(symbol, Side::sell, base_quantity_, OrderType::market);
+		}
+		if(price < stats.mean() - stats.stdev()*reversion_level_) {
+			exchange_.new_order(symbol, Side::buy, base_quantity_, OrderType::market);
+		}
+	}
+
 }

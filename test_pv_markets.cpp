@@ -19,7 +19,7 @@ using Poco::JSON::Parser;
 
 int main(int argc, char *argv[])
 {
-	if (argc < 3) {
+	if (argc < 5) {
 		// report version
 		std::cout 
 			<< argv[0] 
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 			<< socket_io_cpp_streamer_VERSION_MAJOR << "."
 			<< socket_io_cpp_streamer_VERSION_MINOR << std::endl;
 		std::cout 
-			<< "Usage: " << argv[0] << " api_key data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
+			<< "Usage: " << argv[0] << "exchange_key exchange_secret api_key data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
 		return 1;
 	}
 
@@ -37,14 +37,15 @@ int main(int argc, char *argv[])
 
 	// Declaring an adapter for the client
 	// DataStreamer *dataStreamer = new DataStreamer();
-	SimpleMeanReversionAlgo *algo = new SimpleMeanReversionAlgo("bak", "bs");
+	SimpleMeanReversionAlgo *algo = new SimpleMeanReversionAlgo(
+		argv[1], argv[2]);
 
 	logger->information("Creating URI\n");
 
 	//Establish the socket.io connection
 	URI connect_uri{"https://markets.profitview.net"};
 
-	URI::QueryParameters qp {{"api_key", argv[1]}};
+	URI::QueryParameters qp {{"api_key", argv[3]}};
 
 	connect_uri.setQueryParameters(qp);
 
@@ -67,21 +68,21 @@ int main(int argc, char *argv[])
 		logger->information("Press ENTER to continue...");
 		std::cin.get();
 
-		std::string names{"[\""};
-		names += argv[2] + std::string{"\""};
+		std::string symbols_json_string{"[\""};
+		symbols_json_string += argv[2] + std::string{"\""};
 		for (int n = 3; n < argc; ++n)
-			names += ",\"" + std::string{argv[n]} + "\"";
-		names += "]";
+			symbols_json_string += ",\"" + std::string{argv[n]} + "\"";
+		symbols_json_string += "]";
 
-		logger->information("Names to subscribe to: " + names);
+		logger->information("Names to subscribe to: " + symbols_json_string);
 
 		Parser parser;
-		Var xbt {parser.parse(names)};
+		Var symbols_json {parser.parse(symbols_json_string)};
 
 		using Poco::JSON::Array;
-		auto xbtArray{xbt.extract<Array::Ptr>()};
+		auto symbols{symbols_json.extract<Array::Ptr>()};
 
-		sioUserClient->emit("subscribe", xbtArray);
+		sioUserClient->emit("subscribe", symbols);
 
 		logger->information("Press ENTER to quit...");
 		std::cin.get();
