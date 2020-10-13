@@ -19,7 +19,7 @@ using Poco::JSON::Parser;
 
 int main(int argc, char *argv[])
 {
-	if (argc < 5) {
+	if (argc < 8) {
 		// report version
 		std::cout 
 			<< argv[0] 
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 	// Declaring an adapter for the client
 	// DataStreamer *dataStreamer = new DataStreamer();
 	SimpleMeanReversionAlgo *algo = new SimpleMeanReversionAlgo(
-		argv[1], argv[2]);
+		argv[1], argv[2], std::stoi(argv[4]), std::stod(argv[5]), std::stoi(argv[6]));
 
 	logger->information("Creating URI\n");
 
@@ -65,12 +65,12 @@ int main(int argc, char *argv[])
 
 		// wait for user input to move to next section of code
 		// socket receiving occurs in another thread and will not be halted
-		logger->information("Press ENTER to continue...");
-		std::cin.get();
+		// logger->information("Press ENTER to continue...");
+		// std::cin.get();
 
 		std::string symbols_json_string{"[\""};
-		symbols_json_string += argv[4] + std::string{"\""};
-		for (int n = 5; n < argc; ++n)
+		symbols_json_string += argv[7] + std::string{"\""};
+		for (int n = 8; n < argc; ++n)
 			symbols_json_string += ",\"" + std::string{argv[n]} + "\"";
 		symbols_json_string += "]";
 

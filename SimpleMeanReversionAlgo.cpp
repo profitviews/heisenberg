@@ -48,7 +48,7 @@ void SimpleMeanReversionAlgo::RunningStats::update_state(double price)
 	++count_;
 
 	mean_ = (lookback_*mean_ + price - mean_)/lookback_;
-	d_squared_ = d_squared_ + (price - mean_)*(price - mean_);
+	d_squared_ = d_squared_ + (price - mean_)*(price - mean_) - d_squared_/lookback_;
 }
 
 double SimpleMeanReversionAlgo::RunningStats::variance() const {
@@ -82,8 +82,6 @@ void SimpleMeanReversionAlgo::onTrade(const void *pSender, Array::Ptr &arg)
     update_state(price, symbol);
 
 	l.information("Price: " + std::to_string(price));
-    l.information("Mean: " + std::to_string(symbol_stats_[symbol].mean()));
-    l.information("Standard deviation: " + std::to_string(symbol_stats_[symbol].stdev()));
 
 	l.information("Side: " + resultObj->get("side").toString());
 	l.information("Size: " + resultObj->get("size").toString());
@@ -93,6 +91,8 @@ void SimpleMeanReversionAlgo::onTrade(const void *pSender, Array::Ptr &arg)
 	l.information("Time: " + std::string{std::asctime(std::localtime(&date_time))});
 	RunningStats& stats {symbol_stats_.at(symbol)};
 	if(stats.prepared()) {
+		l.information("Mean: " + std::to_string(symbol_stats_[symbol].mean()));
+		l.information("Standard deviation: " + std::to_string(symbol_stats_[symbol].stdev()));
 		if(price > stats.mean() + stats.stdev()*reversion_level_) {
 			exchange_.new_order(symbol, Side::sell, base_quantity_, OrderType::market);
 		}
