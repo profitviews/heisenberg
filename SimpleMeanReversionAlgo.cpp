@@ -6,6 +6,7 @@
 #include "src/include/SIOClient.h"
 #include "Poco/Any.h"
 #include <string>
+#include <memory>
 
 using Poco::ErrorHandler;
 using Poco::Logger;
@@ -14,15 +15,15 @@ using Poco::JSON::Parser;
 using Poco::Dynamic::Var;
 
 SimpleMeanReversionAlgo::SimpleMeanReversionAlgo(
-	const std::string& bitmex_api_key, const std::string& bitmex_secret, 
+	Exchange& exchange, 
 	int lookback,
 	double reversion_level,
 	int base_quantity)
-: lookback_        {lookback      }
-, symbol_stats_    {              }
-, exchange_        {bitmex_api_key, bitmex_secret}
+: lookback_        {lookback       }
 , reversion_level_ {reversion_level}
-, base_quantity_   {base_quantity}
+, base_quantity_   {base_quantity  }
+, symbol_stats_    {               }
+, exchange_        {exchange       }
 {
 }
 

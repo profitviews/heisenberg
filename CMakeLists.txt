@@ -3,7 +3,9 @@ cmake_minimum_required(VERSION 3.10)
 # set the project name
 project(socket_io_cpp_streamer VERSION 1.0)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_COMPILER "/usr/bin/gcc-10")
+set(CMAKE_CXX_COMPILER "/bin/g++-10")
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(PROJECTS_DIR "$ENV{HOME}/projects")
 

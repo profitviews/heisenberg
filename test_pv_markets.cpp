@@ -1,4 +1,5 @@
 #include "socket_io_cpp_streamerConfig.h"
+#include <Bitmex.h>
 #include "Poco/ConsoleChannel.h"
 #include "Poco/Thread.h"
 #include "src/include/SIOClient.h"
@@ -17,9 +18,30 @@ using Poco::URI;
 using Poco::Dynamic::Var;
 using Poco::JSON::Parser;
 
+auto constructSymbolArray(int number_of_symbols, char** symbols)
+{
+	std::string symbols_json_string{"[\""};
+	symbols_json_string += symbols[0] + std::string{"\""};
+	for (int n = 0; n < number_of_symbols; ++n)
+		symbols_json_string += ",\"" + std::string{symbols[n]} + "\"";
+	symbols_json_string += "]";
+
+	Parser parser;
+	auto symbols_json {parser.parse(symbols_json_string)};
+
+	return symbols_json.extract<Poco::JSON::Array::Ptr>();
+}
+
 int main(int argc, char *argv[])
 {
-	if (argc < 8) {
+	const auto 
+		name_arg{0}, 
+		api_key_arg{1}, api_secret_arg{2}, 
+		profitview_api_arg{3}, 
+		lookback_arg{4}, reversion_level_arg{5}, base_quantity_arg{6}, 
+		base_args{8};
+
+	if (argc < base_args) {
 		// report version
 		std::cout 
 			<< argv[0] 
@@ -27,7 +49,7 @@ int main(int argc, char *argv[])
 			<< socket_io_cpp_streamer_VERSION_MAJOR << "."
 			<< socket_io_cpp_streamer_VERSION_MINOR << std::endl;
 		std::cout 
-			<< "Usage: " << argv[0] << "exchange_key exchange_secret api_key data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
+			<< "Usage: " << argv[name_arg] << "exchange_key exchange_secret api_key data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
 		return 1;
 	}
 
@@ -35,17 +57,16 @@ int main(int argc, char *argv[])
 
 	logger->setChannel(new Poco::ConsoleChannel());
 
-	// Declaring an adapter for the client
-	// DataStreamer *dataStreamer = new DataStreamer();
+	Bitmex bitmex{argv[api_key_arg], argv[api_secret_arg]};
 	SimpleMeanReversionAlgo *algo = new SimpleMeanReversionAlgo(
-		argv[1], argv[2], std::stoi(argv[4]), std::stod(argv[5]), std::stoi(argv[6]));
+		bitmex, std::stoi(argv[lookback_arg]), std::stod(argv[reversion_level_arg]), std::stoi(argv[base_quantity_arg]));
 
 	logger->information("Creating URI\n");
 
 	//Establish the socket.io connection
 	URI connect_uri{"https://markets.profitview.net"};
 
-	URI::QueryParameters qp {{"api_key", argv[3]}};
+	URI::QueryParameters qp {{"api_key", argv[profitview_api_arg]}};
 
 	connect_uri.setQueryParameters(qp);
 
@@ -63,26 +84,7 @@ int main(int argc, char *argv[])
 
 		logger->information("Socket.io client setup complete\n");
 
-		// wait for user input to move to next section of code
-		// socket receiving occurs in another thread and will not be halted
-		// logger->information("Press ENTER to continue...");
-		// std::cin.get();
-
-		std::string symbols_json_string{"[\""};
-		symbols_json_string += argv[7] + std::string{"\""};
-		for (int n = 8; n < argc; ++n)
-			symbols_json_string += ",\"" + std::string{argv[n]} + "\"";
-		symbols_json_string += "]";
-
-		logger->information("Names to subscribe to: " + symbols_json_string);
-
-		Parser parser;
-		Var symbols_json {parser.parse(symbols_json_string)};
-
-		using Poco::JSON::Array;
-		auto symbols{symbols_json.extract<Array::Ptr>()};
-
-		sioUserClient->emit("subscribe", symbols);
+		sioUserClient->emit("subscribe", constructSymbolArray(argc - base_args, argv + base_args));
 
 		logger->information("Press ENTER to quit...");
 		std::cin.get();

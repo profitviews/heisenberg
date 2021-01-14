@@ -1,8 +1,6 @@
 #pragma once
 #include "MarketDataAdapter.h"
-
-#include <Bitmex.h>
-
+#include <Exchange.h>
 #include <vector>
 #include <map>
 
@@ -45,9 +43,7 @@ public:
     };
 public:
 	SimpleMeanReversionAlgo() = delete;
-	SimpleMeanReversionAlgo(
-        const std::string&, const std::string&, 
-        int = 50, double = 3.0f, int = 20);
+	SimpleMeanReversionAlgo(Exchange&, int = 50, double = 3.0f, int = 20);
 	~SimpleMeanReversionAlgo();
 
 	void onTrade(const void *pSender, Array::Ptr &arg);
@@ -64,6 +60,6 @@ private:
 
     std::map<std::string, RunningStats> symbol_stats_;
 
-    Bitmex exchange_;
+    Exchange& exchange_;
 
 };
