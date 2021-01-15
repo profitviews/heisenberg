@@ -16,10 +16,11 @@ add_executable(socket_io_cpp_streamer
     test_pv_markets.cpp 
     DataStreamer.cpp 
     MarketDataAdapter.cpp
-    SimpleMeanReversionAlgo.cpp)
+    TalibMeanReversion.cpp)
 
 include_directories(
-    "${PROJECTS_DIR}/bitmex_trade_example")
+    "${PROJECTS_DIR}/bitmex_trade_example"
+    "/usr/local/include/ta-lib")
 
 configure_file(socket_io_cpp_streamerConfig.h.in socket_io_cpp_streamerConfig.h)
 
@@ -61,7 +62,8 @@ target_link_libraries(socket_io_cpp_streamer PUBLIC
     Poco::Crypto 
     Poco::XML
     OpenSSL::SSL
-    OpenSSL::Crypto)
+    OpenSSL::Crypto
+    ta_lib)
 
 target_include_directories(socket_io_cpp_streamer PUBLIC 
     "${PROJECT_BINARY_DIR}"

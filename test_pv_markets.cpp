@@ -4,7 +4,8 @@
 #include "Poco/Thread.h"
 #include "src/include/SIOClient.h"
 #include "DataStreamer.h"
-#include "SimpleMeanReversionAlgo.h"
+//#include "SimpleMeanReversionAlgo.h"
+#include "TalibMeanReversion.h"
 #include "Poco/URI.h"
 #include "Poco/JSON/Array.h"
 #include "Poco/JSON/Object.h"
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
 	logger->setChannel(new Poco::ConsoleChannel());
 
 	Bitmex bitmex{argv[api_key_arg], argv[api_secret_arg]};
-	SimpleMeanReversionAlgo *algo = new SimpleMeanReversionAlgo(
+	TalibMeanReversion *algo = new TalibMeanReversion(
 		bitmex, std::stoi(argv[lookback_arg]), std::stod(argv[reversion_level_arg]), std::stoi(argv[base_quantity_arg]));
 
 	logger->information("Creating URI\n");
