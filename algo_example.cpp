@@ -19,7 +19,7 @@ using Poco::URI;
 using Poco::Dynamic::Var;
 using Poco::JSON::Parser;
 
-auto constructSymbolArray(int number_of_symbols, char** symbols)
+auto constructSymbolJSON(int number_of_symbols, char** symbols)
 {
 	std::string symbols_json_string{"[\""};
 	symbols_json_string += symbols[0] + std::string{"\""};
@@ -27,10 +27,7 @@ auto constructSymbolArray(int number_of_symbols, char** symbols)
 		symbols_json_string += ",\"" + std::string{symbols[n]} + "\"";
 	symbols_json_string += "]";
 
-	Parser parser;
-	auto symbols_json {parser.parse(symbols_json_string)};
-
-	return symbols_json.extract<Poco::JSON::Array::Ptr>();
+	return Parser().parse(symbols_json_string).extract<Poco::JSON::Array::Ptr>();
 }
 
 int main(int argc, char *argv[])
@@ -40,9 +37,9 @@ int main(int argc, char *argv[])
 		api_key_arg{1}, api_secret_arg{2}, 
 		profitview_api_arg{3}, 
 		lookback_arg{4}, reversion_level_arg{5}, base_quantity_arg{6}, 
-		base_args{8};
+		symbol_args{8};
 
-	if (argc < base_args) {
+	if (argc < symbol_args) {
 		// report version
 		std::cout 
 			<< argv[0] 
@@ -85,7 +82,7 @@ int main(int argc, char *argv[])
 
 		logger->information("Socket.io client setup complete\n");
 
-		sioUserClient->emit("subscribe", constructSymbolArray(argc - base_args, argv + base_args));
+		sioUserClient->emit("subscribe", constructSymbolJSON(argc - symbol_args, argv + symbol_args));
 
 		logger->information("Press ENTER to quit...");
 		std::cin.get();

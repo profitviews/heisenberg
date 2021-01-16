@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name
-project(socket_io_cpp_streamer VERSION 1.0)
+project(profitview_socketio_cpp VERSION 1.0)
 
 set(CMAKE_C_COMPILER "/usr/bin/gcc-10")
 set(CMAKE_CXX_COMPILER "/bin/g++-10")
@@ -12,8 +12,8 @@ set(PROJECTS_DIR "$ENV{HOME}/projects")
 add_subdirectory(src)
 
 # add the executable
-add_executable(socket_io_cpp_streamer 
-    test_pv_markets.cpp 
+add_executable(profitview_socketio_cpp 
+    algo_example.cpp 
     DataStreamer.cpp 
     MarketDataAdapter.cpp
     TalibMeanReversion.cpp)
@@ -22,7 +22,7 @@ include_directories(
     "${PROJECTS_DIR}/bitmex_trade_example"
     "/usr/local/include/ta-lib")
 
-configure_file(socket_io_cpp_streamerConfig.h.in socket_io_cpp_streamerConfig.h)
+configure_file(profitview_socketio_cppConfig.h.in profitview_socketio_cppConfig.h)
 
 find_package(OpenSSL REQUIRED
     SSL
@@ -43,10 +43,10 @@ find_package(Poco REQUIRED
 find_package(Boost REQUIRED log)
 find_package(Threads REQUIRED)
 
-target_link_directories(socket_io_cpp_streamer PUBLIC
+target_link_directories(profitview_socketio_cpp PUBLIC
     "${PROJECTS_DIR}/bitmex_trade_example/build")
 
-target_link_libraries(socket_io_cpp_streamer PUBLIC 
+target_link_libraries(profitview_socketio_cpp PUBLIC 
     SIOClient
     bitmex_trade
     Boost::log
@@ -65,7 +65,7 @@ target_link_libraries(socket_io_cpp_streamer PUBLIC
     OpenSSL::Crypto
     ta_lib)
 
-target_include_directories(socket_io_cpp_streamer PUBLIC 
+target_include_directories(profitview_socketio_cpp PUBLIC 
     "${PROJECT_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/src/include"
     ${PROJECTS_DIR}/bitmex_trade_example)
