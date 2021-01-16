@@ -8,7 +8,7 @@
             "name": "cmake c++",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/socket_io_cpp_streamer",
+            "program": "${workspaceFolder}/build/profitview_socketio_cpp",
             "args": [
                 "P0Og16NeYiyN5zjrbe8C7yik",
                 "GrFJ9ZAJDVLa7dH41M0_S1c-UE4OSzMaI1H7qqdhOQP3WDUj",
