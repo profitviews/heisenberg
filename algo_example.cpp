@@ -1,10 +1,9 @@
-#include "socket_io_cpp_streamerConfig.h"
+#include "profitview_socketio_cppConfig.h"
 #include <Bitmex.h>
 #include "Poco/ConsoleChannel.h"
 #include "Poco/Thread.h"
 #include "src/include/SIOClient.h"
 #include "DataStreamer.h"
-//#include "SimpleMeanReversionAlgo.h"
 #include "TalibMeanReversion.h"
 #include "Poco/URI.h"
 #include "Poco/JSON/Array.h"
@@ -44,8 +43,8 @@ int main(int argc, char *argv[])
 		std::cout 
 			<< argv[0] 
 			<< " Version " 
-			<< socket_io_cpp_streamer_VERSION_MAJOR << "."
-			<< socket_io_cpp_streamer_VERSION_MINOR << std::endl;
+			<< profitview_socketio_cpp_VERSION_MAJOR << "."
+			<< profitview_socketio_cpp_VERSION_MINOR << std::endl;
 		std::cout 
 			<< "Usage: " << argv[name_arg] << "exchange_key exchange_secret api_key data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
 		return 1;
