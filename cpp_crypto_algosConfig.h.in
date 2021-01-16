@@ -1,0 +1,3 @@
+// the configured options and settings for Tutorial
+#define cpp_crypto_algos_VERSION_MAJOR @cpp_crypto_algos_VERSION_MAJOR@
+#define cpp_crypto_algos_VERSION_MINOR @cpp_crypto_algos_VERSION_MINOR@

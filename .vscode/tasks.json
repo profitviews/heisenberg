@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+		{
+			"type": "shell",
+			"label": "CMake build project",
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "command": "cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build .",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+		}
+	]
+}
