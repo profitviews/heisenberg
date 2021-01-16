@@ -11,11 +11,13 @@ set(PROJECTS_DIR "$ENV{HOME}/projects")
 
 add_subdirectory(src)
 
+add_library(profitview_socketio STATIC
+    DataStreamer.cpp
+    MarketDataAdapter.cpp)
+
 # add the executable
 add_executable(profitview_socketio_cpp 
-    algo_example.cpp 
-    DataStreamer.cpp 
-    MarketDataAdapter.cpp
+    algo_example.cpp
     TalibMeanReversion.cpp)
 
 include_directories(
@@ -47,6 +49,7 @@ target_link_directories(profitview_socketio_cpp PUBLIC
     "${PROJECTS_DIR}/bitmex_trade_example/build")
 
 target_link_libraries(profitview_socketio_cpp PUBLIC 
+    profitview_socketio
     SIOClient
     bitmex_trade
     Boost::log
