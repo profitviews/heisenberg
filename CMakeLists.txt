@@ -21,7 +21,7 @@ add_executable(profitview_socketio_cpp
     TalibMeanReversion.cpp)
 
 include_directories(
-    "${PROJECTS_DIR}/bitmex_trade_example"
+    "${PROJECTS_DIR}/bitmex_executor"
     "/usr/local/include/ta-lib")
 
 configure_file(profitview_socketio_cppConfig.h.in profitview_socketio_cppConfig.h)
@@ -46,7 +46,7 @@ find_package(Boost REQUIRED log)
 find_package(Threads REQUIRED)
 
 target_link_directories(profitview_socketio_cpp PUBLIC
-    "${PROJECTS_DIR}/bitmex_trade_example/build")
+    "${PROJECTS_DIR}/bitmex_executor/build")
 
 target_link_libraries(profitview_socketio_cpp PUBLIC 
     profitview_socketio
@@ -71,4 +71,4 @@ target_link_libraries(profitview_socketio_cpp PUBLIC
 target_include_directories(profitview_socketio_cpp PUBLIC 
     "${PROJECT_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/src/include"
-    ${PROJECTS_DIR}/bitmex_trade_example)
+    ${PROJECTS_DIR}/bitmex_executor)
