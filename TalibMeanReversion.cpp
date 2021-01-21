@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <ctime>
 
 using Poco::ErrorHandler;
 using Poco::Logger;
@@ -46,6 +47,16 @@ double TalibMeanReversion::stdev(const Sequence& sequence) const {
     return out[0];
 }
 
+namespace{
+void logTradeData(auto& l, auto& r) {
+   	l.information("Price: " + r->get("price").toString());
+	l.information("Side: " + r->get("side").toString());
+	l.information("Size: " + r->get("size").toString());
+	l.information("Source: " + r->get("src").toString());
+	l.information("Symbol: " + r->get("sym").toString());
+}    
+}
+
 void TalibMeanReversion::onTrade(const void *pSender, Array::Ptr &arg)
 {
 	auto& l{ Logger::get("example")};
@@ -61,11 +72,8 @@ void TalibMeanReversion::onTrade(const void *pSender, Array::Ptr &arg)
 
     auto symbol{ resultObj->get("sym").toString()};
 
-	l.information("Price: " + std::to_string(price));
-	l.information("Side: " + resultObj->get("side").toString());
-	l.information("Size: " + resultObj->get("size").toString());
-	l.information("Source: " + resultObj->get("src").toString());
-	l.information("Symbol: " + resultObj->get("sym").toString());
+    logTradeData(l, resultObj);
+
 	time_t date_time{ resultObj->get("time").convert<time_t>()};
 	l.information("Time: " + std::string{std::asctime(std::localtime(&date_time))});
 

@@ -36,7 +36,7 @@ find_package(Boost REQUIRED log)
 find_package(Threads REQUIRED)
 
 target_link_directories(cpp_crypto_algos PUBLIC
-    "${PROJECTS_DIR}/bitmex_trade_example/build"
+    "${PROJECTS_DIR}/bitmex_executor/build"
     "${PROJECTS_DIR}/profitview_socketio_cpp/build"
     "${PROJECTS_DIR}/profitview_socketio_cpp/build/src")
 
@@ -65,4 +65,4 @@ target_include_directories(cpp_crypto_algos PUBLIC
     "/usr/local/include/ta-lib"
     "${PROJECTS_DIR}/profitview_socketio_cpp"
     "${PROJECTS_DIR}/profitview_socketio_cpp/src/include"
-    ${PROJECTS_DIR}/bitmex_trade_example)
+    ${PROJECTS_DIR}/bitmex_executor)

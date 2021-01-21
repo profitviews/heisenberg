@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "*.in": "cpp"
+        "*.in": "cpp",
+        "array": "cpp"
     }
 }
