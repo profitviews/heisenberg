@@ -13,10 +13,6 @@ using Poco::Net::NetException;
 using Poco::JSON::Parser;
 using Poco::Dynamic::Var;
 
-MarketDataAdapter::MarketDataAdapter()
-{
-}
+MarketDataAdapter::MarketDataAdapter() {}
 
-MarketDataAdapter::~MarketDataAdapter()
-{
-}
+MarketDataAdapter::~MarketDataAdapter() {}

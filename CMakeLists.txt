@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 # set the project name
 project(profitview_socketio_cpp VERSION 1.0)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 set(CMAKE_C_COMPILER "/usr/bin/gcc-10")
 set(CMAKE_CXX_COMPILER "/bin/g++-10")
 set(CMAKE_CXX_STANDARD 20)
@@ -12,11 +14,12 @@ set(PROJECTS_DIR "$ENV{HOME}/projects")
 add_subdirectory(src)
 
 add_library(profitview_socketio STATIC
+    util.cpp
     DataStreamer.cpp
     MarketDataAdapter.cpp)
 
 # add the executable
-add_executable(profitview_socketio_cpp 
+add_executable(profitview_socketio_cpp
     algo_example.cpp
     TalibMeanReversion.cpp)
 

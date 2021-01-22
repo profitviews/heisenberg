@@ -32,7 +32,7 @@ auto constructSymbolJSON(int number_of_symbols, char** symbols)
 int main(int argc, char *argv[])
 {
 	const auto 
-		name_arg{0}, 
+		name_arg{0},
 		api_key_arg{1}, api_secret_arg{2}, 
 		profitview_api_arg{3}, 
 		lookback_arg{4}, reversion_level_arg{5}, base_quantity_arg{6}, 
@@ -46,11 +46,11 @@ int main(int argc, char *argv[])
 			<< profitview_socketio_cpp_VERSION_MAJOR << "."
 			<< profitview_socketio_cpp_VERSION_MINOR << std::endl;
 		std::cout 
-			<< "Usage: " << argv[name_arg] << "exchange_key exchange_secret api_key data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
+			<< "Usage: " << argv[name_arg] << " exchange_key exchange_secret api_key data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
 		return 1;
 	}
 
-	Logger *logger = &(Logger::get("example"));
+	Logger *logger{&(Logger::get("example"))};
 
 	logger->setChannel(new Poco::ConsoleChannel());
 
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
 	logger->information("Connecting to URI and authenticating with API key\n");
 
-	// Establish the socket.io connection to an endpoint
+	// Connect the socket.io to an endpoint
 	if(SIOClient *sioUserClient = SIOClient::connect(connect_uri.toString(), qp);
 		sioUserClient != nullptr) 
 	{

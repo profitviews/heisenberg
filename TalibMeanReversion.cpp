@@ -1,4 +1,5 @@
 #include "TalibMeanReversion.h"
+#include "util.h"
 #include "Poco/ErrorHandler.h"
 #include "Poco/Logger.h"
 #include "Poco/JSON/Parser.h"
@@ -29,12 +30,11 @@ TalibMeanReversion::TalibMeanReversion(
 {
 }
 
-TalibMeanReversion::~TalibMeanReversion()
-{
-}
+TalibMeanReversion::~TalibMeanReversion() {}
 
 template<typename Sequence>
-double TalibMeanReversion::stdev(const Sequence& sequence) const {
+double TalibMeanReversion::stdev(const Sequence& sequence) const 
+{
     std::vector<double> prices{ sequence.begin(), sequence.end()};
 
     // See: https://www.ta-lib.org/d_api/d_api.html#Output%20Size
@@ -46,43 +46,48 @@ double TalibMeanReversion::stdev(const Sequence& sequence) const {
     return out[0];
 }
 
-void TalibMeanReversion::onTrade(const void *pSender, Array::Ptr &arg)
+void TalibMeanReversion::onTrade(const void *p, Array::Ptr &market_data)
 {
-	auto& l{ Logger::get("example")};
-	auto result{ arg->getElement<std::string>(0)};
+	auto& logger{ Logger::get("example")};
+	auto result{ market_data->getElement<std::string>(0)};
 
 	Parser parser;
 	Var result_json{ parser.parse(result)};
 
 	using Poco::JSON::Object;
 
-	auto resultObj{ result_json.extract<Object::Ptr>()};
-	auto price{ resultObj->get("price").convert<double>()};
+	auto result_object{ result_json.extract<Object::Ptr>()};
+	auto price{ result_object->get("price").convert<double>()};
 
-    auto symbol{ resultObj->get("sym").toString()};
+    auto symbol{ result_object->get("sym").toString()};
 
-	l.information("Price: " + std::to_string(price));
-	l.information("Side: " + resultObj->get("side").toString());
-	l.information("Size: " + resultObj->get("size").toString());
-	l.information("Source: " + resultObj->get("src").toString());
-	l.information("Symbol: " + resultObj->get("sym").toString());
-	time_t date_time{ resultObj->get("time").convert<time_t>()};
-	l.information("Time: " + std::string{std::asctime(std::localtime(&date_time))});
+    util::log_trade(logger, result_object);
+
+	time_t date_time{ result_object->get("time").convert<time_t>()};
+	logger.information("Time: " + std::string{std::asctime(std::localtime(&date_time))});
 
     auto& [elements, prices] { counted_prices_[symbol]};
+
     prices.emplace_back(price);
+
     if(elements + 1 < lookback_) {
-        ++elements;
+        ++elements; // Accumulate up to lookback_ prices
     } else {
+        // These could be done on the fly but the complexity would distract
         auto mean { std::accumulate(prices.begin(), prices.end(), 0.0)/lookback_};
-        double std_reversion{ reversion_level_*stdev(prices)};
-        prices.pop_front();
-		l.information("Mean: " + std::to_string(mean));
-		l.information("Standard reversion: " + std::to_string(std_reversion));
-        if(price > mean + std_reversion) {
+        double std_reversion { reversion_level_*stdev(prices)};
+
+        prices.pop_front(); // Now we have lookback_ prices already, remove the oldest
+
+		logger.information("Mean: " + std::to_string(mean));
+		logger.information("Standard reversion: " + std::to_string(std_reversion));
+
+        if(price > mean + std_reversion) { // Well greater than the normal volatility
+            // so sell, expecting a reversion to the mean
 			exchange_.new_order(symbol, Side::sell, base_quantity_, OrderType::market);
         }
-        else if(price < mean - std_reversion) {
+        else if(price < mean - std_reversion) { // Well lest than the normal volatility
+            // so buy, expecting a reversion to the mean
             exchange_.new_order(symbol, Side::buy, base_quantity_, OrderType::market);
         }
     }
