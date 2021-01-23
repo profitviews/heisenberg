@@ -1,6 +1,7 @@
 #pragma once
 #include "MarketDataAdapter.h"
 #include <Exchange.h>
+#include <boost/json.hpp>
 #include <deque>
 #include <vector>
 #include <map>
@@ -12,7 +13,7 @@ public:
 	TalibMeanReversion(Exchange&, int = 50, double = 3.0f, int = 20);
 	~TalibMeanReversion();
 
-	void onTrade(const void *pSender, Array::Ptr &arg);
+	void onTrade(const void *, Array::Ptr &arg);
 
 private:
 
@@ -24,6 +25,8 @@ private:
     std::map<std::string, std::pair<int, std::deque<double>>> counted_prices_;
 
     Exchange& exchange_;
+
+    boost::json::object result_;
 
     template<typename Sequence>
     double stdev(const Sequence& sequence) const;

@@ -7,7 +7,7 @@
             "options": {
                 "cwd": "${workspaceFolder}/build"
             },
-            "command": "cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build .",
+            "command": "cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . 2>&1|tee cmake.out",
             "group": {
                 "kind": "build",
                 "isDefault": true

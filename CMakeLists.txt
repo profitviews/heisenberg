@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 # set the project name
 project(cpp_crypto_algos VERSION 1.0)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 set(CMAKE_C_COMPILER "/usr/bin/gcc-10")
 set(CMAKE_CXX_COMPILER "/bin/g++-10")
 set(CMAKE_CXX_STANDARD 20)
@@ -32,7 +34,9 @@ find_package(Poco REQUIRED
     Crypto 
     XML)
 
-find_package(Boost REQUIRED log)
+find_package(Boost REQUIRED 
+    log
+    json)
 find_package(Threads REQUIRED)
 
 target_link_directories(cpp_crypto_algos PUBLIC
@@ -45,6 +49,7 @@ target_link_libraries(cpp_crypto_algos PUBLIC
     SIOClient
     bitmex_trade
     Boost::log
+    Boost::json
     Threads::Threads
     Poco::Net 
     Poco::JSON 
