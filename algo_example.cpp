@@ -22,7 +22,7 @@ auto constructSymbolJSON(int number_of_symbols, char** symbols)
 {
 	std::string symbols_json_string{"[\""};
 	symbols_json_string += symbols[0] + std::string{"\""};
-	for (int n = 0; n < number_of_symbols; ++n)
+	for (int n = 1; n < number_of_symbols; ++n)
 		symbols_json_string += ",\"" + std::string{symbols[n]} + "\"";
 	symbols_json_string += "]";
 
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 		api_key_arg{1}, api_secret_arg{2}, 
 		profitview_api_arg{3}, 
 		lookback_arg{4}, reversion_level_arg{5}, base_quantity_arg{6}, 
-		symbol_args{8};
+		symbol_args{7};
 
 	if (argc < symbol_args) {
 		// report version

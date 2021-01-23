@@ -5,4 +5,4 @@
 
 namespace util {
     void log_trade(Poco::Logger&, Poco::JSON::Object::Ptr&);
-}
+} 

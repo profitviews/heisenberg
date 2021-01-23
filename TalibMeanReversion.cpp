@@ -4,6 +4,7 @@
 #include "Poco/Logger.h"
 #include "Poco/JSON/Parser.h"
 #include "Poco/Net/NetException.h"
+#include <boost/json.hpp>
 #include "src/include/SIOClient.h"
 #include "Poco/Any.h"
 #include <ta_libc.h>
@@ -11,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <ctime>
 
 using Poco::ErrorHandler;
 using Poco::Logger;
@@ -82,13 +84,18 @@ void TalibMeanReversion::onTrade(const void *p, Array::Ptr &market_data)
 		logger.information("Mean: " + std::to_string(mean));
 		logger.information("Standard reversion: " + std::to_string(std_reversion));
 
-        if(price > mean + std_reversion) { // Well greater than the normal volatility
-            // so sell, expecting a reversion to the mean
-			exchange_.new_order(symbol, Side::sell, base_quantity_, OrderType::market);
-        }
-        else if(price < mean - std_reversion) { // Well lest than the normal volatility
-            // so buy, expecting a reversion to the mean
-            exchange_.new_order(symbol, Side::buy, base_quantity_, OrderType::market);
+        if(boost::json::value* headers{ result_.if_contains("headers")}; 
+           result_.empty() || 
+           (headers && 
+            std::stol(headers->as_object()["x-ratelimit-reset"].as_string().c_str()) < std::time(nullptr))) {
+            if(price > mean + std_reversion) { // Well greater than the normal volatility
+                // so sell, expecting a reversion to the mean
+                result_ = exchange_.new_order(symbol, Side::sell, base_quantity_, OrderType::market);
+            }
+            else if(price < mean - std_reversion) { // Well lest than the normal volatility
+                // so buy, expecting a reversion to the mean
+                result_ = exchange_.new_order(symbol, Side::buy, base_quantity_, OrderType::market);
+            }
         }
     }
 }

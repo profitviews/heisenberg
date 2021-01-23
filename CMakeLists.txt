@@ -45,7 +45,9 @@ find_package(Poco REQUIRED
     Crypto 
     XML)
 
-find_package(Boost REQUIRED log)
+find_package(Boost REQUIRED 
+    log
+    json)
 find_package(Threads REQUIRED)
 
 target_link_directories(profitview_socketio_cpp PUBLIC
@@ -56,6 +58,7 @@ target_link_libraries(profitview_socketio_cpp PUBLIC
     SIOClient
     bitmex_trade
     Boost::log
+    Boost::json
     Threads::Threads
     Poco::Net 
     Poco::JSON 
