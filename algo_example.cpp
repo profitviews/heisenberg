@@ -50,8 +50,7 @@ int main(int argc, char *argv[])
 	logger->information("Connecting to URI and authenticating with API key\n");
 
 	// Establish the socket.io connection to an endpoint
-	if(SIOClient *sioUserClient = SIOClient::connect(connect_uri.toString(), qp);
-		sioUserClient != nullptr) 
+	if(SIOClient *sioUserClient { SIOClient::connect(connect_uri.toString(), qp)}; sioUserClient != nullptr) 
 	{
 		logger->information("Connected to " + connect_uri.toString() + "\n");
 		logger->information("SID: " + sioUserClient->getSid() + "\n");
