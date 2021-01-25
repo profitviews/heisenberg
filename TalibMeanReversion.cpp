@@ -1,9 +1,7 @@
 #include "TalibMeanReversion.h"
-#include "util.h"
-#include "Poco/ErrorHandler.h"
+#include "profitview_util.h"
 #include "Poco/Logger.h"
 #include "Poco/JSON/Parser.h"
-#include "Poco/Net/NetException.h"
 #include <boost/json.hpp>
 #include "src/include/SIOClient.h"
 #include "Poco/Any.h"
@@ -13,12 +11,6 @@
 #include <vector>
 #include <memory>
 #include <ctime>
-
-using Poco::ErrorHandler;
-using Poco::Logger;
-using Poco::Net::NetException;
-using Poco::JSON::Parser;
-using Poco::Dynamic::Var;
 
 TalibMeanReversion::TalibMeanReversion(
 	Exchange& exchange, 
@@ -50,20 +42,18 @@ double TalibMeanReversion::stdev(const Sequence& sequence) const
 
 void TalibMeanReversion::onTrade(const void *p, Array::Ptr &market_data)
 {
-	auto& logger{ Logger::get("example")};
+	auto& logger{ Poco::Logger::get("example")};
 	auto result{ market_data->getElement<std::string>(0)};
 
-	Parser parser;
-	Var result_json{ parser.parse(result)};
+	Poco::JSON::Parser parser;
+	Poco::Dynamic::Var result_json{ parser.parse(result)};
 
-	using Poco::JSON::Object;
-
-	auto result_object{ result_json.extract<Object::Ptr>()};
+	auto result_object{ result_json.extract<Poco::JSON::Object::Ptr>()};
 	auto price{ result_object->get("price").convert<double>()};
 
     auto symbol{ result_object->get("sym").toString()};
 
-    util::log_trade(logger, result_object);
+    profitview::util::log_trade(logger, result_object);
 
 	time_t date_time{ result_object->get("time").convert<time_t>()};
 	logger.information("Time: " + std::string{std::asctime(std::localtime(&date_time))});
