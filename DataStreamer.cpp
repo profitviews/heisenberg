@@ -1,5 +1,5 @@
 #include "DataStreamer.h"
-#include "util.h"
+#include "profitview_util.h"
 #include "Poco/ErrorHandler.h"
 #include "Poco/Logger.h"
 #include "Poco/JSON/Parser.h"
@@ -33,7 +33,7 @@ void DataStreamer::onTrade(const void *, Array::Ptr &arg)
     std::string side{result_object->get("side").toString() == "S" ? "Sell" : "Buy"};
     int size{result_object->get("size").convert<int>()};
 
-	util::log_trade(logger, result_object);
+	profitview::util::log_trade(logger, result_object);
 
 	time_t date_time{result_object->get("time").convert<time_t>()};
 	logger.information("Time: " + std::string{std::asctime(std::localtime(&date_time))});

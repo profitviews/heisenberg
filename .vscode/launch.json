@@ -10,12 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/profitview_socketio_cpp",
             "args": [
-                "P0Og16NeYiyN5zjrbe8C7yik",
-                "GrFJ9ZAJDVLa7dH41M0_S1c-UE4OSzMaI1H7qqdhOQP3WDUj",
                 "223834ffcc42d292c3a5fdc156c244ad2b020465",
-                "50",
-                "3",
-                "20",
                 "trade:bitmex:XBTUSD", 
                 "trade:bitmex:ETHUSD",
                 "trade:bitmex:XRPUSD"

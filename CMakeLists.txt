@@ -14,18 +14,16 @@ set(PROJECTS_DIR "$ENV{HOME}/projects")
 add_subdirectory(src)
 
 add_library(profitview_socketio STATIC
-    util.cpp
-    DataStreamer.cpp
-    MarketDataAdapter.cpp)
+    MarketDataAdapter.cpp
+    profitview_util.cpp)
 
 # add the executable
 add_executable(profitview_socketio_cpp
-    algo_example.cpp
-    TalibMeanReversion.cpp)
+    streaming_example.cpp
+    DataStreamer.cpp)
 
 include_directories(
-    "${PROJECTS_DIR}/bitmex_executor"
-    "/usr/local/include/ta-lib")
+    "${PROJECTS_DIR}/bitmex_executor")
 
 configure_file(profitview_socketio_cppConfig.h.in profitview_socketio_cppConfig.h)
 
@@ -45,9 +43,6 @@ find_package(Poco REQUIRED
     Crypto 
     XML)
 
-find_package(Boost REQUIRED 
-    log
-    json)
 find_package(Threads REQUIRED)
 
 target_link_directories(profitview_socketio_cpp PUBLIC
@@ -57,8 +52,6 @@ target_link_libraries(profitview_socketio_cpp PUBLIC
     profitview_socketio
     SIOClient
     bitmex_trade
-    Boost::log
-    Boost::json
     Threads::Threads
     Poco::Net 
     Poco::JSON 
@@ -71,8 +64,7 @@ target_link_libraries(profitview_socketio_cpp PUBLIC
     Poco::Crypto 
     Poco::XML
     OpenSSL::SSL
-    OpenSSL::Crypto
-    ta_lib)
+    OpenSSL::Crypto)
 
 target_include_directories(profitview_socketio_cpp PUBLIC 
     "${PROJECT_BINARY_DIR}"

@@ -8,7 +8,7 @@ class MarketDataAdapter : public SIOEventTarget
 {
 public:
 	MarketDataAdapter();
-	~MarketDataAdapter();
+	virtual ~MarketDataAdapter();
 
 	virtual void onTrade(const void *pSender, Array::Ptr &arg) = 0;
 };
