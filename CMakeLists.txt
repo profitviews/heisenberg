@@ -22,9 +22,6 @@ add_executable(profitview_socketio_cpp
     streaming_example.cpp
     DataStreamer.cpp)
 
-include_directories(
-    "${PROJECTS_DIR}/bitmex_executor")
-
 configure_file(profitview_socketio_cppConfig.h.in profitview_socketio_cppConfig.h)
 
 find_package(OpenSSL REQUIRED
@@ -45,13 +42,9 @@ find_package(Poco REQUIRED
 
 find_package(Threads REQUIRED)
 
-target_link_directories(profitview_socketio_cpp PUBLIC
-    "${PROJECTS_DIR}/bitmex_executor/build")
-
 target_link_libraries(profitview_socketio_cpp PUBLIC 
     profitview_socketio
     SIOClient
-    bitmex_trade
     Threads::Threads
     Poco::Net 
     Poco::JSON 
@@ -68,5 +61,4 @@ target_link_libraries(profitview_socketio_cpp PUBLIC
 
 target_include_directories(profitview_socketio_cpp PUBLIC 
     "${PROJECT_BINARY_DIR}"
-    "${PROJECT_SOURCE_DIR}/src/include"
-    ${PROJECTS_DIR}/bitmex_executor)
+    "${PROJECT_SOURCE_DIR}/src/include")
