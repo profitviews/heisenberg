@@ -6,6 +6,7 @@
 #include <Poco/URI.h>
 
 #include <iostream>
+#include <cstdlib>
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +23,7 @@ int main(int argc, char *argv[])
 			<< profitview_socketio_cpp_VERSION_MAJOR << "."
 			<< profitview_socketio_cpp_VERSION_MINOR << std::endl;
 		std::cout 
-			<< "Usage: " << argv[name_arg] << " exchange_key exchange_secret api_key data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
+			<< "Usage: " << argv[name_arg] << " api_key_name data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
 		return 1;
 	}
 

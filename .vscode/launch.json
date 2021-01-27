@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/profitview_socketio_cpp",
             "args": [
-                "223834ffcc42d292c3a5fdc156c244ad2b020465",
+                "profitview_api_key",
                 "trade:bitmex:XBTUSD", 
                 "trade:bitmex:ETHUSD",
                 "trade:bitmex:XRPUSD"
