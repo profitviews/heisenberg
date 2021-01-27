@@ -74,15 +74,15 @@ void TalibMeanReversion::onTrade(const void *p, Array::Ptr &market_data)
 		logger.information("Mean: " + std::to_string(mean));
 		logger.information("Standard reversion: " + std::to_string(std_reversion));
 
-        if(boost::json::value* headers{ result_.if_contains("headers")}; 
-           result_.empty() || 
+        if(boost::json::value* headers{ result_.if_contains("headers")};
+           result_.empty() ||
            (headers && 
             std::stol(headers->as_object()["x-ratelimit-reset"].as_string().c_str()) < std::time(nullptr))) {
             if(price > mean + std_reversion) { // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
                 result_ = exchange_.new_order(symbol, Side::sell, base_quantity_, OrderType::market);
             }
-            else if(price < mean - std_reversion) { // Well lest than the normal volatility
+            else if(price < mean - std_reversion) { // Well less than the normal volatility
                 // so buy, expecting a reversion to the mean
                 result_ = exchange_.new_order(symbol, Side::buy, base_quantity_, OrderType::market);
             }
