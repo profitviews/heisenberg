@@ -1,19 +1,26 @@
 ﻿# **Socket.IO C++ for ProfitView**
 
-# **#info** #
+This project has been forked from: https://github.com/isaelblais/socket.io-cpp where it was forked from https://github.com/himynameschris/socket.io-poco.
+The originally forked version (of [Isaël Blais](https://github.com/isaelblais)) seemed to function in some contexts, but not with https://markets.profitview.net.
 
-This project has been taken from: https://github.com/himynameschris/socket.io-poco
+Some significant changes were required.
 
-## Dependencies: ##
+## Prerequisits ##
 
-- POCO C++ Foundation, Net, NetSSL and JSON libraries
-	- Download at: https://pocoproject.org/download.html
-- OpenSSL
-	- this is required by the Poco NetSSL library and HTTPS support 
+### Linux
 
-## Windows: ##
+1. Compilers
+   `sudo apt install build-essential`
+   
+1. Other software
+   `sudo apt install libssl-dev`
+   `sudo apt install zlib1g-dev`
+
+### Windows
 
 **Some more work required**
+
+With some work a manual build with Msys2 was possible, however there were runtime problems.  It is probably not difficult to complete this work.
 
 1. Msys
    To build on Windows you need [Msys2](https://www.msys2.org/).  Follow the instructions there.
@@ -24,8 +31,6 @@ This project has been taken from: https://github.com/himynameschris/socket.io-po
    `mingw-w64-x86_64-boost`
    `mingw-w64-x86_64-poco`
 
-## Linux & Mac: ##
-
 ### Building Poco
 
    ```shell
@@ -33,23 +38,17 @@ This project has been taken from: https://github.com/himynameschris/socket.io-po
    cd poco
    make
    sudo make install
-
-## Windows
-
-3. Download the latest TA-Lib **source** tar ball from [ta-lib.org](https://www.ta-lib.org/hdr_dw.html) - currently that is `ta-lib-0.4.0-src.tar.gz`
-   In some appropriate directory do
-   ```bash
-   tar xf ta-lib-0.4.0-src.tar.gz 
-   cd ta-lib/
-   ./configure
-   make
-   make install
+   ```
    
-## Linux
+## Build
 
-1. Compilers
-   `sudo apt install build-essential`
-   
-1. Other software
-   `sudo apt install libssl-dev`
-   `sudo apt install zlib1g-dev`
+```bash
+git clone https://github.com/profitviews/profitview_socketio_cpp.git
+cd profitview_socketio_cpp/build
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+cmake --build .
+```
+
+This will create (with debugging symbols):
+* `build/profitview_socketio_cpp` which will print streamed prices from https://markets.profitview.net
+* `build/libprofitview_socketio.a` a static library containing classes allowing this streaming.
