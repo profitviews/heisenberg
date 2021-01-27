@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
 	logger->setChannel(new Poco::ConsoleChannel());
 
-	DataStreamer *streamer = new DataStreamer();
+	DataStreamer *streamer { new DataStreamer()};
 
 	logger->information("Creating URI\n");
 
@@ -44,13 +44,12 @@ int main(int argc, char *argv[])
 	logger->information("Connecting to URI and authenticating with API key\n");
 
 	// Connect the socket.io to an endpoint
-	if(SIOClient *sioUserClient = SIOClient::connect(connect_uri.toString(), qp);
-		sioUserClient != nullptr) 
+	if(SIOClient *sioUserClient = SIOClient::connect(connect_uri.toString(), qp); sioUserClient != nullptr) 
 	{
 		logger->information("Connected to " + connect_uri.toString() + "\n");
 		logger->information("SID: " + sioUserClient->getSid() + "\n");
-
 		logger->information("Adding callback for 'trade'\n");
+
 		sioUserClient->on("trade", streamer, callback(&DataStreamer::onTrade));
 
 		logger->information("Socket.io client setup complete\n");
