@@ -26,6 +26,7 @@ Some significant changes were required to get it working.  It now appears robust
    make
    sudo make install
    ```
+   **Note: the Poco build may take tens of minutes**
    
 ## Build
 
