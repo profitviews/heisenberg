@@ -7,10 +7,10 @@ This is a set of Cryptocurrency trading algos
    
    In some appropriate directory do
    
-   ```
-   ta-lib-0.4.0-src.tar.gz
-   cd ta-lib/
-   ./configure
-   make
-   sudo make install
+   ```bash
+   tar xf ta-lib-0.4.0-src.tar.gz
+   cd ta-lib
+   ./configure
+   make
+   sudo make install
    ```
