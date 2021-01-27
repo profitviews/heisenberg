@@ -5,7 +5,7 @@ The forked version (of [Isaël Blais](https://github.com/isaelblais)) seemed to 
 
 Some significant changes were required to get it working.  It now appears robust.
 
-## Prerequisits ##
+## Prerequisites
 
 ### Linux
 
