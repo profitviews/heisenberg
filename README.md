@@ -1,4 +1,4 @@
-﻿# **Socket.IO C++ for ProfitView**
+# **Socket.IO C++ for ProfitView**
 
 This project has been forked from: [isaelblais/socket.io-cpp](https://github.com/isaelblais/socket.io-cpp) where it was forked from [himynameschris/socket.io-poco](https://github.com/himynameschris/socket.io-poco).
 The forked version (of [Isaël Blais](https://github.com/isaelblais)) seemed to function in some contexts, but not with https://markets.profitview.net.
