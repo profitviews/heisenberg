@@ -1,10 +1,10 @@
 #include "cpp_crypto_algosConfig.h"
 #include "TalibMeanReversion.h"
-#include "profitview_util.h"
+#include <profitview_util.h>
 #include <Bitmex.h>
-#include "SIOClient.h"
-#include "Poco/URI.h"
-#include "Poco/ConsoleChannel.h"
+#include <SIOClient.h>
+#include <Poco/URI.h>
+#include <Poco/ConsoleChannel.h>
 
 #include <iostream>
 

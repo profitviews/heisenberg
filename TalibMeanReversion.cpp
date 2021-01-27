@@ -1,10 +1,10 @@
 #include "TalibMeanReversion.h"
-#include "profitview_util.h"
-#include "Poco/Logger.h"
-#include "Poco/JSON/Parser.h"
+#include <profitview_util.h>
+#include <SIOClient.h>
+#include <Poco/Logger.h>
+#include <Poco/JSON/Parser.h>
 #include <boost/json.hpp>
-#include "src/include/SIOClient.h"
-#include "Poco/Any.h"
+#include <Poco/Any.h>
 #include <ta_libc.h>
 #include <numeric>
 #include <string>
