@@ -25,7 +25,6 @@ find_package(OpenSSL REQUIRED
 find_package(Poco REQUIRED 
     Net 
     JSON 
-    Net 
     Util
     Encodings 
     NetSSL 
@@ -53,7 +52,6 @@ target_link_libraries(cpp_crypto_algos PUBLIC
     Threads::Threads
     Poco::Net 
     Poco::JSON 
-    Poco::Net 
     Poco::Util
     Poco::Encodings 
     Poco::NetSSL 
@@ -70,4 +68,4 @@ target_include_directories(cpp_crypto_algos PUBLIC
     "/usr/local/include/ta-lib"
     "${PROJECTS_DIR}/profitview_socketio_cpp"
     "${PROJECTS_DIR}/profitview_socketio_cpp/src/include"
-    ${PROJECTS_DIR}/bitmex_executor)
+    "${PROJECTS_DIR}/bitmex_executor")
