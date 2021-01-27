@@ -10,9 +10,9 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/cpp_crypto_algos",
             "args": [
-                "P0Og16NeYiyN5zjrbe8C7yik",
-                "GrFJ9ZAJDVLa7dH41M0_S1c-UE4OSzMaI1H7qqdhOQP3WDUj",
-                "223834ffcc42d292c3a5fdc156c244ad2b020465",
+                "bitmex_api_key",
+                "bitmex_secret",
+                "profitview_api_key",
                 "50",
                 "3",
                 "20",
