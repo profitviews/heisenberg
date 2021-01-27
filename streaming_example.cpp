@@ -1,9 +1,9 @@
 #include "profitview_socketio_cppConfig.h"
 #include "DataStreamer.h"
 #include "profitview_util.h"
-#include "src/include/SIOClient.h"
-#include "Poco/ConsoleChannel.h"
-#include "Poco/URI.h"
+#include <SIOClient.h>
+#include <Poco/ConsoleChannel.h>
+#include <Poco/URI.h>
 
 #include <iostream>
 

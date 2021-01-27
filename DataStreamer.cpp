@@ -1,11 +1,11 @@
 #include "DataStreamer.h"
 #include "profitview_util.h"
-#include "Poco/ErrorHandler.h"
-#include "Poco/Logger.h"
-#include "Poco/JSON/Parser.h"
-#include "Poco/Net/NetException.h"
-#include "src/include/SIOClient.h"
-#include "Poco/Any.h"
+#include <SIOClient.h>
+#include <Poco/ErrorHandler.h>
+#include <Poco/Logger.h>
+#include <Poco/JSON/Parser.h>
+#include <Poco/Net/NetException.h>
+#include <Poco/Any.h>
 #include <string>
 
 using Poco::ErrorHandler;

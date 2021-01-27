@@ -1,8 +1,7 @@
 #pragma once
-#include "src/include/SIOEventTarget.h"
-#include "src/include/SIOClient.h"
 
-#include <vector>
+#include <SIOEventTarget.h>
+#include <SIOClient.h>
 
 class MarketDataAdapter : public SIOEventTarget
 {

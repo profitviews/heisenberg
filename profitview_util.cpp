@@ -1,6 +1,6 @@
 #include "profitview_util.h"
-#include "Poco/JSON/Parser.h"
-#include "Poco/JSON/Array.h"
+#include <Poco/JSON/Parser.h>
+#include <Poco/JSON/Array.h>
 
 void profitview::util::log_trade(Poco::Logger& logger, Poco::JSON::Object::Ptr& result_object)
 {

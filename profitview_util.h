@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Poco/Logger.h"
-#include "Poco/JSON/Parser.h"
-#include "Poco/JSON/Array.h"
+#include <Poco/Logger.h>
+#include <Poco/JSON/Parser.h>
+#include <Poco/JSON/Array.h>
 
 namespace profitview {
 namespace util {

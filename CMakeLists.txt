@@ -17,6 +17,10 @@ add_library(profitview_socketio STATIC
     MarketDataAdapter.cpp
     profitview_util.cpp)
 
+target_include_directories(profitview_socketio PUBLIC 
+    "${PROJECT_BINARY_DIR}"
+    "${PROJECT_SOURCE_DIR}/src/include")
+
 # add the executable
 add_executable(profitview_socketio_cpp
     streaming_example.cpp

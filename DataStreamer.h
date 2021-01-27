@@ -1,3 +1,5 @@
+#pragma once
+
 #include "MarketDataAdapter.h"
 
 class DataStreamer : public MarketDataAdapter
