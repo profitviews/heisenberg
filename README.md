@@ -1,9 +1,9 @@
 ﻿# **Socket.IO C++ for ProfitView**
 
-This project has been forked from: https://github.com/isaelblais/socket.io-cpp where it was forked from https://github.com/himynameschris/socket.io-poco.
-The originally forked version (of [Isaël Blais](https://github.com/isaelblais)) seemed to function in some contexts, but not with https://markets.profitview.net.
+This project has been forked from: [isaelblais/socket.io-cpp](https://github.com/isaelblais/socket.io-cpp) where it was forked from [himynameschris/socket.io-poco](https://github.com/himynameschris/socket.io-poco).
+The forked version (of [Isaël Blais](https://github.com/isaelblais)) seemed to function in some contexts, but not with https://markets.profitview.net.
 
-Some significant changes were required.
+Some significant changes were required to get it working.  It now appears robust.
 
 ## Prerequisits ##
 
@@ -18,7 +18,7 @@ Some significant changes were required.
 
 ### Windows
 
-**Some more work required**
+**Some further work required**
 
 With some work a manual build with Msys2 was possible, however there were runtime problems.  It is probably not difficult to complete this work.
 
