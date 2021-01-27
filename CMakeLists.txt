@@ -9,7 +9,9 @@ set(CMAKE_C_COMPILER "/usr/bin/gcc-10")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-10")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(PROJECTS_DIR "$ENV{HOME}/projects")
+
+# Assumes `bitmex_executor` and `profitview_socketio_cpp` are peers to the `cpp_crypto_algos` directory
+set(PROJECTS_DIR "${PROJECT_BINARY_DIR}/../..") 
 
 # add the executable
 add_executable(cpp_crypto_algos
