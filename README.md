@@ -1,10 +1,18 @@
 # C++ Crypto Algos
 
-This is a set of Cryptocurrency trading algos:
+This is a set (currently of size 1!) of Cryptocurrency trading algos:
 * `TalibMeanReversion`: a minimal Mean Reversion algo using the TA-Lib STDDEV implementation.
 
 ## Prerequisites
 
+1. Compilers
+   `sudo apt install build-essential`
+   
+1. Other software packages
+   ```bash
+   sudo apt install libssl-dev
+   sudo apt install zlib1g-dev
+   ```
 1. TA-Lib
    Download the latest TA-Lib **source** tar ball from [ta-lib.org](https://www.ta-lib.org/hdr_dw.html) - currently that is `ta-lib-0.4.0-src.tar.gz`
    
