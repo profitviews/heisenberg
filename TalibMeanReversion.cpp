@@ -22,9 +22,13 @@ TalibMeanReversion::TalibMeanReversion(
 , base_quantity_   {base_quantity  }
 , exchange_        {exchange       }
 {
+    TA_Initialize();
 }
 
-TalibMeanReversion::~TalibMeanReversion() {}
+TalibMeanReversion::~TalibMeanReversion() 
+{
+    TA_Shutdown();
+}
 
 template<typename Sequence>
 double TalibMeanReversion::stdev(const Sequence& sequence) const 
