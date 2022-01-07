@@ -16,14 +16,16 @@ Some significant changes were required to get it working.  It now appears robust
    ```bash
    sudo apt install libssl-dev
    sudo apt install zlib1g-dev
+   sudo apt-get install libiodbc2 libiodbc2-dev
+   sudo snap install --classic cmake
    ```
 
 ### Building Poco
 
    ```shell
-   git clone -b master https://github.com/pocoproject/poco.git`
+   git clone -b master https://github.com/pocoproject/poco.git
    cd poco
-   make
+   make -k
    sudo make install
    ```
    **Note: the Poco build may take tens of minutes**
