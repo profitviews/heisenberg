@@ -25,6 +25,7 @@ Some significant changes were required to get it working.  It now appears robust
    ```shell
    git clone -b master https://github.com/pocoproject/poco.git
    cd poco
+   ./configure --omit=Data/SQLite,Data/ODBC,Data/MySQL,Data/PostgreSQL
    make -k
    sudo make install
    ```
