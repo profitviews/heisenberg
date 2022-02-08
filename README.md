@@ -42,4 +42,4 @@ cmake --build .
 
 This will create (with debugging symbols):
 
-* `build/profitview_socketio_cpp` which will run a simple Mean Reversion algo around prices streamed from https://markets.profitview.net
+* `build/cpp_crypto_algos` which will run a simple Mean Reversion algo around prices streamed from https://markets.profitview.net
