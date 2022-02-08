@@ -22,12 +22,16 @@ Some significant changes were required to get it working.  It now appears robust
 
 ### Building Poco
 
+This deploys Poco to `/usr/local`
+
    ```shell
    git clone -b master https://github.com/pocoproject/poco.git
    cd poco
-   ./configure --omit=Data/SQLite,Data/ODBC,Data/MySQL,Data/PostgreSQL
-   make -k
-   sudo make install
+   mkdir cmake-build
+   cd cmake-build
+   cmake -H.. -B. -DENABLE_DATA_SQLITE=OFF -DENABLE_DATA_MYSQL=OFF -DENABLE_DATA_POSTGRESQL=OFF -DENABLE_DATA_ODBC=OFF
+   cmake --build .
+   sudo cmake --install .
    ```
    **Note: the Poco build may take tens of minutes**
    
