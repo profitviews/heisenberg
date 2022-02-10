@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 			<< cpp_crypto_algos_VERSION_MAJOR << "."
 			<< cpp_crypto_algos_VERSION_MINOR << std::endl;
 		std::cout 
-			<< "Usage: " << argv[name_arg] << "exchange_key exchange_secret api_key data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
+			<< "Usage: " << argv[name_arg] << " exchange_key exchange_secret api_key lookback reversion_multiple base_quantity data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
 		return 1;
 	}
 
