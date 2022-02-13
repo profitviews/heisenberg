@@ -9,6 +9,10 @@ set(Boost_DEBUG ON)
 message("-------------- Checking names -------------")
 message("CMAKE_SYSTEM_NAME")
 message(${CMAKE_SYSTEM_NAME})
+message("ENV{HOME}/software/ccapi/include")
+message("$ENV{HOME}/software/ccapi/include")
+message("End ENV{HOME}/software/ccapi/include")
+
 message("===========================================")
 
 
@@ -26,9 +30,21 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+add_compile_definitions(CCAPI_ENABLE_SERVICE_EXECUTION_MANAGEMENT)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_BITMEX)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_FTX)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_COINBASE)
+
 add_library(ccex_trade STATIC
     Ccex.cpp
     CcexOrderExecutor.cpp)
+
+set(SOFTWARE "$ENV{HOME}/software")
+
+target_include_directories(ccex_trade PUBLIC
+    "${SOFTWARE}/websocketpp"
+    "${SOFTWARE}/ccapi/include"
+)
 
 if(CMAKE_SYSTEM_NAME MATCHES "^MINGW64")
   target_link_libraries(ccex_trade 
@@ -57,6 +73,10 @@ find_package(Threads REQUIRED)
 add_executable(ccex_executor 
     execute_ccex_order.cpp)
 
+target_include_directories(ccex_executor PUBLIC
+    "${SOFTWARE}/ccapi/include"
+)
+    
 target_link_libraries(ccex_executor PUBLIC
     ccex_trade
 )
