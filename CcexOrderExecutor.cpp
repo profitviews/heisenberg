@@ -88,22 +88,16 @@ void CcexOrderExecutor::new_order(const std::string &symbol, Side side, double o
   request.appendParam({{"type", type == OrderType::market ? "market" : "limit"},
                        {"side", side == Side::buy ? "BUY" : "SELL"},
                        {"size", std::to_string(orderQty)},
-                       {"price", type == OrderType::limit ? std::to_string(price) : ""}});
+                       {"price", type == OrderType::limit ? std::to_string(price) : "0.0001"}});
   session.sendRequest(request);
 
   std::this_thread::sleep_for(std::chrono::seconds(10));
   session.stop();
-  std::cout << "Bye" << std::endl;
 }
 
 boost::json::object CcexOrderExecutor::result() const
 {
-  using namespace boost::json;
-
-  // @todo
-
-
-  return {{"headers", ""}, {"body", ""}};
+  return boost::json::object{};
 }
 
 CcexOrderExecutor::~CcexOrderExecutor()
