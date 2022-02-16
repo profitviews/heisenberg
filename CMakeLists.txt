@@ -10,8 +10,14 @@ set(CMAKE_CXX_COMPILER "/usr/bin/g++-10")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+add_compile_definitions(CCAPI_ENABLE_SERVICE_EXECUTION_MANAGEMENT)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_BITMEX)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_FTX)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_COINBASE)
+
 # Assumes `bitmex_executor` and `profitview_socketio_cpp` are peers to the `cpp_crypto_algos` directory
 set(PROJECTS_DIR "${PROJECT_BINARY_DIR}/../..") 
+set(SOFTWARE "$ENV{HOME}/software")
 
 # add the executable
 add_executable(cpp_crypto_algos
@@ -41,14 +47,14 @@ find_package(Boost REQUIRED
 find_package(Threads REQUIRED)
 
 target_link_directories(cpp_crypto_algos PUBLIC
-    "${PROJECTS_DIR}/bitmex_executor/build"
+    "${PROJECTS_DIR}/ccapi_executor/build"
     "${PROJECTS_DIR}/profitview_socketio_cpp/build"
     "${PROJECTS_DIR}/profitview_socketio_cpp/build/src")
 
 target_link_libraries(cpp_crypto_algos PUBLIC 
     profitview_socketio
     SIOClient
-    bitmex_trade
+    ccex_trade
     Boost::log
     Boost::json
     Threads::Threads
@@ -68,6 +74,7 @@ target_link_libraries(cpp_crypto_algos PUBLIC
 target_include_directories(cpp_crypto_algos PUBLIC 
     "${PROJECT_BINARY_DIR}"
     "/usr/local/include/ta-lib"
+    "${SOFTWARE}/ccapi/include"
     "${PROJECTS_DIR}/profitview_socketio_cpp"
     "${PROJECTS_DIR}/profitview_socketio_cpp/src/include"
-    "${PROJECTS_DIR}/bitmex_executor")
+    "${PROJECTS_DIR}/ccapi_executor")

@@ -1,21 +1,22 @@
 #include "cpp_crypto_algosConfig.h"
 #include "TalibMeanReversion.h"
 #include <profitview_util.h>
-#include <Bitmex.h>
+#include <Ccex.h>
 #include <SIOClient.h>
-#include <Poco/URI.h>
-#include <Poco/ConsoleChannel.h>
 
 #include <iostream>
 
 int main(int argc, char *argv[])
 {
-	const auto 
-		name_arg{0}, 
-		api_key_arg{1}, api_secret_arg{2}, 
-		profitview_api_arg{3}, 
-		lookback_arg{4}, reversion_level_arg{5}, base_quantity_arg{6}, 
-		symbol_args{7};
+	enum{ name_arg
+		, api_key_arg
+		, api_secret_arg
+		, profitview_api_arg
+		, lookback_arg
+		, reversion_level_arg
+		, base_quantity_arg
+		, symbol_args 
+		};
 
 	if (argc < symbol_args) {
 		// report version
@@ -31,11 +32,9 @@ int main(int argc, char *argv[])
 
 	Logger *logger {&(Logger::get("example"))};
 
-	logger->setChannel(new Poco::ConsoleChannel());
-
-	Bitmex bitmex{argv[api_key_arg], argv[api_secret_arg]};
+	Ccex ftx{"ftx", argv[api_key_arg], argv[api_secret_arg]};
 	TalibMeanReversion *algo { new TalibMeanReversion(
-		bitmex, std::stoi(argv[lookback_arg]), std::stod(argv[reversion_level_arg]), std::stoi(argv[base_quantity_arg]))};
+		ftx, std::stoi(argv[lookback_arg]), std::stod(argv[reversion_level_arg]), std::stoi(argv[base_quantity_arg]))};
 
 	logger->information("Creating URI\n");
 
