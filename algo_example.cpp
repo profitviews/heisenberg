@@ -1,7 +1,7 @@
 #include "cpp_crypto_algosConfig.h"
 #include "TalibMeanReversion.h"
 #include <profitview_util.h>
-#include <Ccex.h>
+#include <CcexOrderExecutor.h>
 #include <SIOClient.h>
 
 #include <iostream>
@@ -9,6 +9,7 @@
 int main(int argc, char *argv[])
 {
 	enum{ name_arg
+		, exchange_arg
 		, api_key_arg
 		, api_secret_arg
 		, profitview_api_arg
@@ -21,7 +22,7 @@ int main(int argc, char *argv[])
 	if (argc < symbol_args) {
 		// report version
 		std::cout 
-			<< argv[0] 
+			<< argv[0]  
 			<< " Version " 
 			<< cpp_crypto_algos_VERSION_MAJOR << "."
 			<< cpp_crypto_algos_VERSION_MINOR << std::endl;
@@ -32,9 +33,9 @@ int main(int argc, char *argv[])
 
 	Logger *logger {&(Logger::get("example"))};
 
-	Ccex ftx{"ftx", argv[api_key_arg], argv[api_secret_arg]};
+	CcexOrderExecutor exchange{argv[exchange_arg], 5, argv[api_key_arg], argv[api_secret_arg]};
 	TalibMeanReversion *algo { new TalibMeanReversion(
-		ftx, std::stoi(argv[lookback_arg]), std::stod(argv[reversion_level_arg]), std::stoi(argv[base_quantity_arg]))};
+		exchange, std::stoi(argv[lookback_arg]), std::stod(argv[reversion_level_arg]), std::stod(argv[base_quantity_arg]))};
 
 	logger->information("Creating URI\n");
 

@@ -13,10 +13,10 @@
 #include <ctime>
 
 TalibMeanReversion::TalibMeanReversion(
-	Exchange& exchange, 
+	OrderExecutor& exchange, 
 	int lookback,
 	double reversion_level,
-	int base_quantity)
+	double base_quantity)
 : lookback_        {lookback       }
 , reversion_level_ {reversion_level}
 , base_quantity_   {base_quantity  }
@@ -66,6 +66,9 @@ void TalibMeanReversion::onTrade(const void *p, Array::Ptr &market_data)
 
     prices.emplace_back(price);
 
+    using Side = OrderExecutor::Side;
+    using OrderType = OrderExecutor::OrderType;
+
     if(elements + 1 < lookback_) {
         ++elements; // Accumulate up to lookback_ prices
     } else {
@@ -86,11 +89,15 @@ void TalibMeanReversion::onTrade(const void *p, Array::Ptr &market_data)
         {
             if(price > mean + std_reversion) { // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
-                result_ = exchange_.new_order(symbol, Side::sell, base_quantity_, OrderType::market);
+                std::cout << "Selling " << base_quantity_ << " " << symbol << " at " << price << std::endl;
+                exchange_.new_order(symbol, Side::sell, base_quantity_, OrderType::limit, price);
+                std::cout << "For " << base_quantity_ << " " << symbol << " asked " << price << std::endl;
             }
             else if(price < mean - std_reversion) { // Well less than the normal volatility
                 // so buy, expecting a reversion to the mean
-                result_ = exchange_.new_order(symbol, Side::buy, base_quantity_, OrderType::market);
+                std::cout << "Buying " << base_quantity_ << " " << symbol << " at " << price << std::endl;
+                exchange_.new_order(symbol, Side::buy, base_quantity_, OrderType::limit, price);
+                std::cout << "For " << base_quantity_ << " " << symbol << " offered " << price << std::endl;
             }
         }
     }

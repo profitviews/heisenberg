@@ -1,6 +1,6 @@
 #pragma once
 #include <MarketDataAdapter.h>
-#include <Exchange.h>
+#include <OrderExecutor.h>
 #include <boost/json.hpp>
 #include <deque>
 #include <vector>
@@ -10,7 +10,7 @@ class TalibMeanReversion : public MarketDataAdapter
 {
 public:
 	TalibMeanReversion() = delete;
-	TalibMeanReversion(Exchange&, int = 50, double = 3.0f, int = 20);
+	TalibMeanReversion(OrderExecutor&, int = 50, double = 3.0f, double = 0.0f);
 	~TalibMeanReversion();
 
 	void onTrade(const void *, Array::Ptr &arg);
@@ -20,11 +20,11 @@ private:
 	const int lookback_;
 
     const double reversion_level_; // Multiple of stdev
-    int base_quantity_;
+    double base_quantity_;
 
     std::map<std::string, std::pair<int, std::deque<double>>> counted_prices_;
 
-    Exchange& exchange_;
+    OrderExecutor& exchange_;
 
     boost::json::object result_;
 

@@ -5,8 +5,8 @@ project(cpp_crypto_algos VERSION 1.0)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(CMAKE_C_COMPILER "/usr/bin/gcc-10")
-set(CMAKE_CXX_COMPILER "/usr/bin/g++-10")
+set(CMAKE_C_COMPILER "/usr/bin/gcc-11")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++-11")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -75,6 +75,7 @@ target_include_directories(cpp_crypto_algos PUBLIC
     "${PROJECT_BINARY_DIR}"
     "/usr/local/include/ta-lib"
     "${SOFTWARE}/ccapi/include"
+    "${SOFTWARE}/websocketpp"
     "${PROJECTS_DIR}/profitview_socketio_cpp"
     "${PROJECTS_DIR}/profitview_socketio_cpp/src/include"
     "${PROJECTS_DIR}/ccapi_executor")
