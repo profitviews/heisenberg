@@ -22,23 +22,12 @@
 namespace ccapi
 {
   Logger *Logger::logger = nullptr; // This line is needed.
-  class MyEventHandler : public EventHandler
-  {
-  public:
-    bool processEvent(const Event &event, Session *session) override
-    {
-      std::cout << "Received an event:\n" + event.toStringPretty(2, 2) << std::endl;
-      return true;
-    }
-  };
-} /* namespace ccapi */
+}
 
-using ::ccapi::MyEventHandler;
 using ::ccapi::Request;
 using ::ccapi::Session;
 using ::ccapi::SessionConfigs;
 using ::ccapi::SessionOptions;
-using ::ccapi::toString;
 using ::ccapi::UtilSystem;
 
 const std::map<OrderExecutor::OrderType, std::string> CcexOrderExecutor::order_type_names_{
@@ -47,19 +36,19 @@ const std::map<OrderExecutor::OrderType, std::string> CcexOrderExecutor::order_t
 const std::map<OrderExecutor::Side, std::string> CcexOrderExecutor::side_names_{
     {Side::buy, "Buy"}, {Side::sell, "Sell"}};
 
-const std::map<std::string, std::tuple<std::string, std::string, std::string>> 
-CcexOrderExecutor::exchange_key_names_ =
-{
-  { CCAPI_EXCHANGE_NAME_FTX, { CCAPI_FTX_API_KEY, CCAPI_FTX_API_SECRET, "" } },
-  { CCAPI_EXCHANGE_NAME_BITMEX, { CCAPI_BITMEX_API_KEY, CCAPI_FTX_API_SECRET, "" } },
-  { CCAPI_EXCHANGE_NAME_COINBASE, { CCAPI_COINBASE_API_KEY, CCAPI_COINBASE_API_SECRET, CCAPI_COINBASE_API_PASSPHRASE } },
+const std::map<std::string, std::tuple<std::string, std::string, std::string>>
+    CcexOrderExecutor::exchange_key_names_ =
+        {
+            {CCAPI_EXCHANGE_NAME_FTX, {CCAPI_FTX_API_KEY, CCAPI_FTX_API_SECRET, ""}},
+            {CCAPI_EXCHANGE_NAME_BITMEX, {CCAPI_BITMEX_API_KEY, CCAPI_FTX_API_SECRET, ""}},
+            {CCAPI_EXCHANGE_NAME_COINBASE, {CCAPI_COINBASE_API_KEY, CCAPI_COINBASE_API_SECRET, CCAPI_COINBASE_API_PASSPHRASE}},
 };
 
 CcexOrderExecutor::CcexOrderExecutor(
-  const std::string &exchange, int expiry, 
-  const std::string &api_key, 
-  const std::string &api_secret, 
-  const std::string &pass_phrase)
+    const std::string &exchange, int expiry,
+    const std::string &api_key,
+    const std::string &api_secret,
+    const std::string &pass_phrase)
     : exchange_{exchange}, api_key_{api_key}, api_secret_{api_secret}, expiry_{expiry}, pass_phrase_{pass_phrase}
 {
 }
@@ -71,14 +60,15 @@ void CcexOrderExecutor::new_order(const std::string &symbol, Side side, double o
 {
   SessionOptions sessionOptions;
   SessionConfigs sessionConfigs;
-  MyEventHandler eventHandler;
+  CcexOrderHandler eventHandler;
 
-  using setCredential_p1 = mp_at_c<ct::args_t<decltype(&SessionConfigs::setCredential)>,1>;
+  using setCredential_p1 = mp_at_c<ct::args_t<decltype(&SessionConfigs::setCredential)>, 1>;
 
   setCredential_p1 cred = {
-    { std::get<0>(exchange_key_names_.at(exchange_)), api_key_},
-    { std::get<1>(exchange_key_names_.at(exchange_)), api_secret_},
-    { std::get<2>(exchange_key_names_.at(exchange_)), pass_phrase_},};
+      {std::get<0>(exchange_key_names_.at(exchange_)), api_key_},
+      {std::get<1>(exchange_key_names_.at(exchange_)), api_secret_},
+      {std::get<2>(exchange_key_names_.at(exchange_)), pass_phrase_},
+  };
 
   sessionConfigs.setCredential(cred);
 
@@ -90,8 +80,7 @@ void CcexOrderExecutor::new_order(const std::string &symbol, Side side, double o
                        {"size", std::to_string(orderQty)},
                        {"price", type == OrderType::limit ? std::to_string(price) : "0.0001"}});
   session.sendRequest(request);
-
-  std::this_thread::sleep_for(std::chrono::seconds(10));
+  eventHandler.wait();
   session.stop();
 }
 

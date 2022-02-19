@@ -36,7 +36,6 @@ add_compile_definitions(CCAPI_ENABLE_EXCHANGE_FTX)
 add_compile_definitions(CCAPI_ENABLE_EXCHANGE_COINBASE)
 
 add_library(ccex_trade STATIC
-    Ccex.cpp
     CcexOrderExecutor.cpp)
 
 set(SOFTWARE "$ENV{HOME}/software")
