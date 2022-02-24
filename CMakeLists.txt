@@ -21,8 +21,8 @@ set(SOFTWARE "$ENV{HOME}/software")
 
 # add the executable
 add_executable(cpp_crypto_algos
-    algo_example.cpp
-    TalibMeanReversion.cpp)
+    simple_algo.cpp
+    SimpleMR.cpp)
 
 configure_file(cpp_crypto_algosConfig.h.in cpp_crypto_algosConfig.h)
 
