@@ -28,7 +28,6 @@ public:
 
 	void onTrade(const void *p, Array::Ptr &market_data)
     {
-        auto& logger{ Poco::Logger::get("example")};
         auto result{ market_data->getElement<std::string>(0)};
 
         Poco::JSON::Parser parser;
@@ -39,10 +38,10 @@ public:
 
         auto symbol{ result_object->get("sym").toString()};
 
-        profitview::util::log_trade(logger, result_object);
+        logger_.log_trade(result_object);
 
         time_t date_time{ result_object->get("time").convert<time_t>()};
-        logger.information("Time: " + std::string{std::asctime(std::localtime(&date_time))});
+        logger_.info("Time: " + std::string{std::asctime(std::localtime(&date_time))});
 
         auto& [elements, prices] { counted_prices_[symbol]};
 
@@ -60,8 +59,8 @@ public:
 
             prices.pop_front(); // Now we have lookback_ prices already, remove the oldest
 
-            logger.information("Mean: " + std::to_string(mean_value));
-            logger.information("Standard reversion: " + std::to_string(std_reversion));
+            logger_.info("Mean: " + std::to_string(mean_value));
+            logger_.info("Standard reversion: " + std::to_string(std_reversion));
 
             if(price > mean_value + std_reversion) { // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
@@ -86,6 +85,8 @@ private:
 
     boost::json::object result_;
 
+    profitview::util::Logger logger_;
+
     template<typename Sequence>
     double mean(const Sequence& sequence) const
     {
@@ -95,10 +96,10 @@ private:
     template<typename Sequence>
     double stdev(const Sequence& sequence, double m) const
     {
-        auto variance_func {[&m, this](auto accumulator, const auto& val) {
-            return accumulator + ((val - m)*(val - m) / (lookback_ - 1));
+        auto variance {[&m, this](auto accumulator, const auto& val) {
+            return accumulator + (val - m)*(val - m) / (lookback_ - 1);
         }};
 
-        return std::sqrt(std::accumulate(sequence.begin(), sequence.end(), 0.0, variance_func));
+        return std::sqrt(std::accumulate(sequence.begin(), sequence.end(), 0.0, variance));
     }
 };
