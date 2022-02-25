@@ -19,7 +19,7 @@ DataStreamer::~DataStreamer() {}
 
 void DataStreamer::onTrade(const void *, Array::Ptr &arg)
 {
-	auto& logger{Logger::get("example")};
+    profitview::util::Logger logger;
 	auto result{arg->getElement<std::string>(0)};
 
 	Parser parser;
@@ -33,9 +33,9 @@ void DataStreamer::onTrade(const void *, Array::Ptr &arg)
     std::string side{result_object->get("side").toString() == "S" ? "Sell" : "Buy"};
     int size{result_object->get("size").convert<int>()};
 
-	profitview::util::log_trade(logger, result_object);
+	logger.log_trade(result_object);
 
 	time_t date_time{result_object->get("time").convert<time_t>()};
-	logger.information("Time: " + std::string{std::asctime(std::localtime(&date_time))});
+	logger.info("Time: " + std::string{std::asctime(std::localtime(&date_time))});
 }
 

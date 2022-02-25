@@ -30,3 +30,6 @@ Debug/*
 # System Files
 .DS_Store
 Thumbs.db
+
+# CMake
+/build
