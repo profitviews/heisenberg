@@ -1,5 +1,6 @@
-#include "DataStreamer.h"
+#include "SIOPocoDataStreamer.h"
 #include "profitview_util.h"
+#include "TradeStreamMaker.h"
 #include <SIOClient.h>
 #include <Poco/ErrorHandler.h>
 #include <Poco/Logger.h>
@@ -14,10 +15,10 @@ using Poco::Net::NetException;
 using Poco::JSON::Parser;
 using Poco::Dynamic::Var;
 
-DataStreamer::DataStreamer() {}
-DataStreamer::~DataStreamer() {}
+SIOPocoDataStreamer::SIOPocoDataStreamer() {}
+SIOPocoDataStreamer::~SIOPocoDataStreamer() {}
 
-void DataStreamer::onTrade(const void *, Array::Ptr &arg)
+void SIOPocoDataStreamer::onTrade(const void *p, Array::Ptr &arg)
 {
     profitview::util::Logger logger;
 	auto result{arg->getElement<std::string>(0)};
@@ -30,12 +31,17 @@ void DataStreamer::onTrade(const void *, Array::Ptr &arg)
 	auto result_object{result_json.extract<Object::Ptr>()};
 
     auto price{result_object->get("price").convert<double>()};
-    std::string side{result_object->get("side").toString() == "S" ? "Sell" : "Buy"};
-    int size{result_object->get("size").convert<int>()};
+    auto side{result_object->get("side").toString()};
+    auto size{result_object->get("size").convert<double>()};
+	auto source{result_object->get("src")};
+	auto symbol{result_object->get("sym")};
 
 	logger.log_trade(result_object);
 
 	time_t date_time{result_object->get("time").convert<time_t>()};
 	logger.info("Time: " + std::string{std::asctime(std::localtime(&date_time))});
+
+	TradeStreamMaker::make.at("SIOPocoStream")->onTrade(
+		{price, side == "S" ? TradeData::Side::Sell : TradeData::Side::Buy, size, source, symbol, date_time});
 }
 

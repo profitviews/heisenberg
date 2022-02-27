@@ -1,5 +1,5 @@
 #include "profitview_socketio_cppConfig.h"
-#include "DataStreamer.h"
+#include "SIOPocoDataStreamer.h"
 #include "profitview_util.h"
 #include <SIOClient.h>
 #include <Poco/ConsoleChannel.h>
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
 	logger->setChannel(new Poco::ConsoleChannel());
 
-	DataStreamer *streamer { new DataStreamer()};
+	SIOPocoDataStreamer *streamer { new SIOPocoDataStreamer()};
 
 	logger->information("Creating URI\n");
 
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 		logger->information("SID: " + sioUserClient->getSid() + "\n");
 		logger->information("Adding callback for 'trade'\n");
 
-		sioUserClient->on("trade", streamer, callback(&DataStreamer::onTrade));
+		sioUserClient->on("trade", streamer, callback(&SIOPocoDataStreamer::onTrade));
 
 		logger->information("Socket.io client setup complete\n");
 

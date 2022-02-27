@@ -28,8 +28,8 @@ target_include_directories(profitview_socketio PUBLIC
 
 # add the executable
 add_executable(profitview_socketio_cpp
-    streaming_example.cpp
-    DataStreamer.cpp)
+    abstracted_streamer.cpp
+    SIOPocoDataStreamer.cpp)
 
 configure_file(profitview_socketio_cppConfig.h.in profitview_socketio_cppConfig.h)
 
