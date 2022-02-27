@@ -46,16 +46,18 @@ int main(int argc, char *argv[])
 
 	connect_uri.setQueryParameters(qp);
 
+	const auto& uri{connect_uri.toString()};
+
 	logger.info("Connecting to URI and authenticating with API key\n");
 
 	// Establish the socket.io connection to an endpoint
-	if(SIOClient *sioUserClient { SIOClient::connect(connect_uri.toString(), qp)}; sioUserClient != nullptr) 
+	if(SIOClient *sioUserClient { SIOClient::connect(uri, qp)}; sioUserClient != nullptr) 
 	{
 		logger.info("Connected to " + connect_uri.toString() + "\n");
 		logger.info("SID: " + sioUserClient->getSid() + "\n");
 
 		logger.info("Adding callback for 'trade'\n");
-		sioUserClient->on("trade", algo, callback(&MarketDataAdapter::onTrade));
+		sioUserClient->on("trade", algo, callback(&SimpleMR::onTrade));
 
 		logger.info("Socket.io client setup complete\n");
 

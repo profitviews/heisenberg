@@ -1,13 +1,11 @@
 #pragma once
-#include <MarketDataAdapter.h>
+#include <SIOEventTarget.h>
 #include <OrderExecutor.h>
 #include <profitview_util.h>
 #include <SIOClient.h>
 #include <Poco/Logger.h>
 #include <Poco/JSON/Parser.h>
-#include <boost/json.hpp>
 #include <Poco/Any.h>
-#include <boost/json.hpp>
 #include <functional>
 #include <deque>
 #include <vector>
@@ -18,7 +16,7 @@
 #include <memory>
 #include <ctime>
 
-class SimpleMR : public MarketDataAdapter
+class SimpleMR : public SIOEventTarget
 {
 public:
 	SimpleMR() = delete;
@@ -82,8 +80,6 @@ private:
     std::map<std::string, std::pair<int, std::deque<double>>> counted_prices_;
 
     OrderExecutor& executor_;
-
-    boost::json::object result_;
 
     profitview::util::Logger logger_;
 
