@@ -23,7 +23,7 @@ class TradeStream
 public:
     TradeStream() {}
     virtual ~TradeStream() {}
-	virtual void onTrade(const TradeData& trade_data) = 0;
+	virtual void onStreamedTrade(const TradeData& trade_data) = 0;
     virtual void subscribe(const std::string& market, const std::vector<std::string>& symbol_list) = 0;
 
 };
@@ -37,6 +37,7 @@ struct TradeStreamException : public std::runtime_error
 struct TradeStreamMaker
 {
     inline static std::map<std::string, std::shared_ptr<TradeStream>> make;
+
     template<typename TradeStreamT, typename... Args>
     static void register_stream(const std::string& name, Args... args)
     {

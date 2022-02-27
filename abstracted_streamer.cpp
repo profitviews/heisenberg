@@ -3,9 +3,6 @@
 #include "TradeStreamMaker.h"
 #include "profitview_util.h"
 
-#include <ranges>
-#include <string_view>
-
 #include <iostream>
 #include <cstdlib>
 
@@ -36,14 +33,8 @@ int main(int argc, char *argv[])
 	auto market{symbols.substr(first_colon + 1, second_colon - first_colon - 1)};
 	auto symbol{symbols.substr(second_colon + 1)};
 
-    // const std::string_view subscription{argv[symbol_args]};
-    // constexpr std::string_view separator{":"};
-
-	// std::vector<std::string_view> sub;
-	// for (const auto component : std::views::split(subscription, separator)) sub.emplace_back(component);
-
 	std::vector<std::string> symbol_vector{symbol};
-	TradeStreamMaker::register_stream<SIOPocoTradeStream>("SIOPocoStream", argv[profitview_api_arg]);
+	TradeStreamMaker::register_stream<SIOPocoTradeStream>("SIOPocoStream", argv[profitview_api_arg], "SIOPocoStream");
 
 	TradeStreamMaker::make["SIOPocoStream"]->subscribe(market, symbol_vector);
 

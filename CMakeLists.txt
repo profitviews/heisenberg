@@ -13,7 +13,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_subdirectory(src)
 
 add_library(profitview_socketio STATIC
-    MarketDataAdapter.cpp
     profitview_util.cpp)
 
 # PROJECT_BINARY_DIR is the root of where CMake will write the build output
@@ -28,8 +27,7 @@ target_include_directories(profitview_socketio PUBLIC
 
 # add the executable
 add_executable(profitview_socketio_cpp
-    abstracted_streamer.cpp
-    SIOPocoDataStreamer.cpp)
+    abstracted_streamer.cpp)
 
 configure_file(profitview_socketio_cppConfig.h.in profitview_socketio_cppConfig.h)
 

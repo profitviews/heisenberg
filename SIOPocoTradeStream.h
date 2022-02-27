@@ -1,5 +1,4 @@
 #include "TradeStreamMaker.h"
-#include "SIOPocoDataStreamer.h"
 
 #include "profitview_util.h"
 
@@ -19,8 +18,9 @@ using Poco::Dynamic::Var;
 class SIOPocoStream : public SIOEventTarget
 {
 public:
-    SIOPocoStream(const std::string& profitview_api_key) 
-    : sio_user_client_ {nullptr}, sio_streamer_{ new SIOPocoDataStreamer }
+    SIOPocoStream(const std::string& profitview_api_key, const std::string& trade_stream_name) 
+    : sio_user_client_ {nullptr}
+    , trade_stream_name_ {trade_stream_name}
     {
         // Establish the socket.io connection
         Poco::URI connect_uri{"https://markets.profitview.net"};
@@ -31,7 +31,7 @@ public:
 
         if(sio_user_client_ == nullptr) throw TradeStreamException("Couldn't connect to URI");
 
-        sio_user_client_->on("trade", sio_streamer_, callback(&SIOPocoStream::onTrade));
+        sio_user_client_->on("trade", this, callback(&SIOPocoStream::onTrade));
     }
 
     void subscribe(const std::string& market, const std::vector<std::string>& symbol_list)
@@ -61,8 +61,9 @@ public:
 
         time_t date_time{result_object->get("time").convert<time_t>()};
         logger.info("Time: " + std::string{std::asctime(std::localtime(&date_time))});
+        std::cout << "trade_stream_name_: " << trade_stream_name_ << std::endl;
 
-        TradeStreamMaker::make["SIOPocoStream"]->onTrade(
+        TradeStreamMaker::make.at(trade_stream_name_)->onStreamedTrade(
             {price, side == "S" ? TradeData::Side::Sell : TradeData::Side::Buy, size, source, symbol, date_time});
     }
 
@@ -73,7 +74,7 @@ public:
 
 private:
     SIOClient* sio_user_client_;
-    SIOPocoDataStreamer* sio_streamer_;
+    const std::string trade_stream_name_; // @note Can't be a reference (why? not understood)
     Poco::JSON::Array::Ptr construct_symbol_json_string(const std::string& market, const std::vector<std::string>& symbol_list)
     {
         std::string symbols_json_string{"[\""};
@@ -93,8 +94,8 @@ class SIOPocoTradeStream : public TradeStream, private SIOPocoStream
 {
 public:
     SIOPocoTradeStream(
-        const std::string& profitview_api_key) 
-    : SIOPocoStream(profitview_api_key)
+        const std::string& profitview_api_key, const std::string& trade_stream_name) 
+    : SIOPocoStream(profitview_api_key, trade_stream_name)
     {
     }
 
@@ -102,7 +103,7 @@ public:
     {
     }
 
-    void onTrade(const TradeData& trade_data) override
+    void onStreamedTrade(const TradeData& trade_data) override
     {
         std::cout << "Price: " << trade_data.price << std::endl;
         std::cout << "Side: " << (trade_data.side == TradeData::Side::Buy ? "Buy" : "Sell") << std::endl;
