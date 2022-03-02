@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
 		logger->information("Socket.io client setup complete\n");
 
-		sioUserClient->emit("subscribe", profitview::util::constructSymbolJSON(argc - symbol_args, argv + symbol_args));
+		sioUserClient->emit("subscribe", profitview::util::constructSymbolJSON(argc - symbol_args, argv + symbol_args, lookback_));
 
 		logger->information("Press ENTER to quit...");
 		std::cin.get();

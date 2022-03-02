@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_compile_definitions(CCAPI_ENABLE_SERVICE_EXECUTION_MANAGEMENT)
+add_compile_definitions(CCAPI_ENABLE_SERVICE_MARKET_DATA)
 add_compile_definitions(CCAPI_ENABLE_EXCHANGE_BITMEX)
 add_compile_definitions(CCAPI_ENABLE_EXCHANGE_FTX)
 add_compile_definitions(CCAPI_ENABLE_EXCHANGE_COINBASE)
