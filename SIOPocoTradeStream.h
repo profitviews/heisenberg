@@ -64,7 +64,13 @@ public:
         std::cout << "trade_stream_name_: " << trade_stream_name_ << std::endl;
 
         TradeStreamMaker::make.at(trade_stream_name_)->onStreamedTrade(
-            {price, side == "S" ? TradeData::Side::Sell : TradeData::Side::Buy, size, source, symbol, date_time});
+            { price
+            , side == "S" ? TradeData::Side::Sell : TradeData::Side::Buy
+            , size
+            , source
+            , symbol
+            , date_time
+            });
     }
 
     ~SIOPocoStream()

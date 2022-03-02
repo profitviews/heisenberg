@@ -1,5 +1,6 @@
 #include "profitview_socketio_cppConfig.h"
 #include "SIOPocoTradeStream.h"
+#include "WSCcTradeStream.h"
 #include "TradeStreamMaker.h"
 #include "profitview_util.h"
 
@@ -35,8 +36,10 @@ int main(int argc, char *argv[])
 
 	std::vector<std::string> symbol_vector{symbol};
 	TradeStreamMaker::register_stream<SIOPocoTradeStream>("SIOPocoStream", argv[profitview_api_arg], "SIOPocoStream");
+	TradeStreamMaker::register_stream<WSCcTradeStream>("WSCcStream", "WSCcStream");
 
-	TradeStreamMaker::make["SIOPocoStream"]->subscribe(market, symbol_vector);
+	// TradeStreamMaker::make.at("SIOPocoStream")->subscribe(market, symbol_vector);
+	TradeStreamMaker::make.at("WSCcStream")->subscribe(market, symbol_vector);
 
 	std::cout << "Press enter to quit" << std::endl;
 	std::cin.get();

@@ -10,10 +10,17 @@ set(CMAKE_CXX_COMPILER "/usr/bin/g++-11")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+add_compile_definitions(CCAPI_ENABLE_SERVICE_MARKET_DATA)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_BITMEX)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_FTX)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_COINBASE)
+
 add_subdirectory(src)
 
 add_library(profitview_socketio STATIC
     profitview_util.cpp)
+
+set(SOFTWARE "$ENV{HOME}/software")
 
 # PROJECT_BINARY_DIR is the root of where CMake will write the build output
 # PROJECT_SOURCE_DIR is the root of where CMake will take its input files
@@ -23,7 +30,10 @@ add_library(profitview_socketio STATIC
 # to be the current directory
 target_include_directories(profitview_socketio PUBLIC 
     "${PROJECT_BINARY_DIR}"
-    "${PROJECT_SOURCE_DIR}/src/include")
+    "${PROJECT_SOURCE_DIR}/src/include"
+    "${SOFTWARE}/websocketpp"
+    "${SOFTWARE}/ccapi/include"
+)
 
 # add the executable
 add_executable(profitview_socketio_cpp
