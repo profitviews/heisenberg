@@ -1,0 +1,3 @@
+// the configured options and settings for Tutorial
+#define profitview_socketio_cpp_VERSION_MAJOR @profitview_socketio_cpp_VERSION_MAJOR@
+#define profitview_socketio_cpp_VERSION_MINOR @profitview_socketio_cpp_VERSION_MINOR@
