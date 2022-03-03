@@ -29,11 +29,8 @@ int main(int argc, char *argv[])
 			<< "Usage: " << argv[name_arg] << " exchange_key exchange_secret lookback reversion_multiple base_quantity data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
 		return 1;
 	}
-    profitview::util::Logger logger;
 
 	CcexOrderExecutor executor{argv[exchange_arg], 5, argv[api_key_arg], argv[api_secret_arg]};
-
-	logger.info("Creating URI\n");
 
 	std::string symbols{argv[symbol_args]};
 	auto first_colon = symbols.find(':');
@@ -46,8 +43,7 @@ int main(int argc, char *argv[])
 		&executor, 
 		std::stoi(argv[lookback_arg]),
 		std::stod(argv[reversion_level_arg]), 
-		std::stod(argv[base_quantity_arg]),
-		"CcSimpleMR");
+		std::stod(argv[base_quantity_arg]));
 
 	TradeStreamMaker::make["CcSimpleMR"]->subscribe(market, symbol_vector);
 

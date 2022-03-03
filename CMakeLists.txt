@@ -30,17 +30,6 @@ find_package(OpenSSL REQUIRED
     SSL
     Crypto)
 
-find_package(Poco REQUIRED 
-    Net 
-    JSON 
-    Util
-    Encodings 
-    NetSSL 
-    Foundation 
-    Data 
-    Crypto 
-    XML)
-
 find_package(Boost REQUIRED 
     log
     json)
@@ -58,18 +47,10 @@ target_link_libraries(cpp_crypto_algos PUBLIC
     Boost::log
     Boost::json
     Threads::Threads
-    Poco::Net 
-    Poco::JSON 
-    Poco::Util
-    Poco::Encodings 
-    Poco::NetSSL 
-    Poco::Foundation 
-    Poco::Data 
-    Poco::Crypto 
-    Poco::XML
     OpenSSL::SSL
     OpenSSL::Crypto
-    ta_lib)
+    # ta_lib
+    )
 
 target_include_directories(cpp_crypto_algos PUBLIC 
     "${PROJECT_BINARY_DIR}"

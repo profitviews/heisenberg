@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SimpleMR.h"
+#include <OrderExecutor.h>
 #include <WSCcTradeStream.h>
 
 #include <profitview_util.h>
@@ -13,11 +13,11 @@ class CcSimpleMR : public TradeStream, private CcTradeHandler
 {
 public:
     CcSimpleMR
-		( OrderExecutor* executor
+		( const std::string trade_stream_name 
+        , OrderExecutor* executor
 		, int lookback
 		, double reversion_level
 		, double base_quantity
-		, const std::string trade_stream_name
 	) 
     : CcTradeHandler(trade_stream_name)
 	, lookback_        {lookback       }
@@ -56,9 +56,6 @@ public:
 
             prices.pop_front(); // Now we have lookback_ prices already, remove the oldest
 
-            logger_.info("Mean: " + std::to_string(mean_value));
-            logger_.info("Standard reversion: " + std::to_string(std_reversion));
-
             if(trade_data.price > mean_value + std_reversion) { // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::sell, base_quantity_, OrderType::limit, trade_data.price);
@@ -84,6 +81,4 @@ private:
     std::map<std::string, std::pair<int, std::deque<double>>> counted_prices_;
 
     OrderExecutor* executor_;
-
-    profitview::util::Logger logger_;
 };
