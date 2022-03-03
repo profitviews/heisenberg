@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 	TradeStreamMaker::register_stream<WSCcTradeStream>("WSCcStream");
 
 	// TradeStreamMaker::make.at("SIOPocoStream")->subscribe(market, symbol_vector);
-	TradeStreamMaker::make.at("WSCcStream")->subscribe(market, symbol_vector);
+	TradeStreamMaker::get("WSCcStream").subscribe(market, symbol_vector);
 
 	std::cout << "Press enter to quit" << std::endl;
 	std::cin.get();

@@ -63,7 +63,7 @@ public:
         logger.info("Time: " + std::string{std::asctime(std::localtime(&date_time))});
         std::cout << "trade_stream_name_: " << trade_stream_name_ << std::endl;
 
-        TradeStreamMaker::make.at(trade_stream_name_)->onStreamedTrade(
+        TradeStreamMaker::get(trade_stream_name_).onStreamedTrade(
             { price
             , side == "S" ? TradeData::Side::Sell : TradeData::Side::Buy
             , size

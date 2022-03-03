@@ -36,11 +36,19 @@ struct TradeStreamException : public std::runtime_error
 
 struct TradeStreamMaker
 {
-    inline static std::map<std::string, std::shared_ptr<TradeStream>> make;
-
+public:
     template<typename TradeStreamT, typename... Args>
     static void register_stream(const std::string& name, Args... args)
     {
-        make[name] = std::make_shared<TradeStreamT>(name, args...);
+        made[name] = std::make_shared<TradeStreamT>(name, args...);
     }
+
+    static TradeStream& get(const std::string& name)
+    {
+        return *made.at(name);
+    }
+
+private:
+    inline static std::map<std::string, std::shared_ptr<TradeStream>> made;
+
 };

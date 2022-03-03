@@ -40,7 +40,7 @@ public:
                 auto cid{message.getCorrelationIdList().begin()}; // Assumes correlation list matchs elements - which it should
                 for (const auto& element : message.getElementList()) {
                     const auto& e{element.getNameValueMap()};
-                    TradeStreamMaker::make.at(trade_stream_name_)->onStreamedTrade(
+                    TradeStreamMaker::get(trade_stream_name_).onStreamedTrade(
                         { std::stod(e.at("LAST_PRICE"))
                         , e.at("IS_BUYER_MAKER") == "1" ? TradeData::Side::Buy : TradeData::Side::Sell
                         , std::stod(e.at("LAST_SIZE"))
