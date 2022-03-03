@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 		std::stod(argv[reversion_level_arg]), 
 		std::stod(argv[base_quantity_arg]));
 
-	TradeStreamMaker::make["CcSimpleMR"]->subscribe(market, symbol_vector);
+	TradeStreamMaker::get("CcSimpleMR").subscribe(market, symbol_vector);
 
 	std::cout << "Press enter to quit" << std::endl;
 	std::cin.get();
