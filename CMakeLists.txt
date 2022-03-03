@@ -16,11 +16,8 @@ add_compile_definitions(CCAPI_ENABLE_EXCHANGE_BITMEX)
 add_compile_definitions(CCAPI_ENABLE_EXCHANGE_FTX)
 add_compile_definitions(CCAPI_ENABLE_EXCHANGE_COINBASE)
 
-add_subdirectory(trade_stream)
 add_subdirectory(ccapi_executor)
 
-# Assumes `bitmex_executor` and `profitview_socketio_cpp` are peers to the `cpp_crypto_algos` directory
-# set(PROJECTS_DIR "${PROJECT_BINARY_DIR}/../..") 
 set(SOFTWARE "$ENV{HOME}/software")
 
 configure_file(cpp_crypto_algosConfig.h.in cpp_crypto_algosConfig.h)
@@ -38,27 +35,19 @@ find_package(Boost REQUIRED
     json)
 find_package(Threads REQUIRED)
 
-# target_link_directories(cpp_crypto_algos PUBLIC
-#     "${PROJECT_BINARY_DIR}/build"
-#     "${PROJECTS_DIR}/profitview_socketio_cpp/build"
-#     "${PROJECTS_DIR}/profitview_socketio_cpp/build/src")
-
 target_link_libraries(cpp_crypto_algos PUBLIC 
-    SIOClient
     ccapi_executor
     Boost::log
     Boost::json
     Threads::Threads
     OpenSSL::SSL
     OpenSSL::Crypto
-    # ta_lib
-    )
+)
 
 target_include_directories(cpp_crypto_algos PUBLIC 
     "${PROJECT_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/trade_stream/include"
     "${PROJECT_SOURCE_DIR}/ccapi_executor"
-    # "/usr/local/include/ta-lib"
     "${SOFTWARE}/ccapi/include"
     "${SOFTWARE}/websocketpp"
 )

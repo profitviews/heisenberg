@@ -84,11 +84,6 @@ void CcexOrderExecutor::new_order(const std::string &symbol, Side side, double o
   session.stop();
 }
 
-boost::json::object CcexOrderExecutor::result() const
-{
-  return boost::json::object{};
-}
-
 CcexOrderExecutor::~CcexOrderExecutor()
 {
 }

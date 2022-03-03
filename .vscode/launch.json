@@ -9,16 +9,17 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/cpp_crypto_algos",
-            "args": [
-                "bitmex_api_key",
-                "bitmex_secret",
-                "profitview_api_key",
-                "50",
-                "3",
-                "20",
-                "trade:bitmex:XBTUSD", 
-                "trade:bitmex:ETHUSD",
-                "trade:bitmex:XRPUSD"
+            "args": 
+                [ "ftx"
+                , "tvngG97bMO5HhGgbRVC1IAA4rb9qkd7wFQScPzsS"
+                , "6WS07c66pDvEYXFIpnaXYomuYBhln7oWlHe1FTdw"
+                // , "223834ffcc42d292c3a5fdc156c244ad2b020465"
+                , "50"
+                , "3"
+                , "0.0025"
+                , "trade:ftx:BTC-PERP"
+                // , "trade:ftx:ETHUSD"
+                // , "trade:ftx:XRPUSD"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

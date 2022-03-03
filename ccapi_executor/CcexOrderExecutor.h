@@ -68,5 +68,4 @@ public:
         const std::string &pass_phrase = "");
     ~CcexOrderExecutor();
     void new_order(const std::string &symbol, Side side, double orderQty, OrderType type, double price = -1.0) override;
-    boost::json::object result() const;
 };

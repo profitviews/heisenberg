@@ -8,15 +8,15 @@
 
 int main(int argc, char *argv[])
 {
-	enum{ name_arg
-		, exchange_arg
-		, api_key_arg
-		, api_secret_arg
-		, lookback_arg
-		, reversion_level_arg
-		, base_quantity_arg
-		, symbol_args 
-		};
+	enum { name_arg
+		 , exchange_arg
+		 , api_key_arg
+		 , api_secret_arg
+		 , lookback_arg
+		 , reversion_level_arg
+		 , base_quantity_arg
+		 , symbol_args 
+		 };
 
 	if (argc < symbol_args) {
 		// report version
