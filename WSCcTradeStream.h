@@ -1,7 +1,5 @@
 #include "TradeStreamMaker.h"
 
-#include "profitview_util.h"
-
 #include <ccapi_cpp/ccapi_session.h>
 
 #include <iterator>

@@ -1,6 +1,6 @@
 #include "TradeStreamMaker.h"
 
-#include "profitview_util.h"
+#include "profitview_poco.h"
 
 #include <SIOClient.h>
 #include <Poco/URI.h>
@@ -41,7 +41,7 @@ public:
 
     void onTrade(const void *pSender, Array::Ptr &arg)
     {
-        profitview::util::Logger logger;
+        profitview::poco::Logger logger;
         auto result{arg->getElement<std::string>(0)};
 
         Parser parser;
@@ -100,7 +100,7 @@ class SIOPocoTradeStream : public TradeStream, private SIOPocoStream
 {
 public:
     SIOPocoTradeStream(
-        const std::string& profitview_api_key, const std::string& trade_stream_name) 
+        const std::string& trade_stream_name, const std::string& profitview_api_key) 
     : SIOPocoStream(profitview_api_key, trade_stream_name)
     {
     }

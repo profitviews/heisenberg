@@ -2,7 +2,7 @@
 #include "SIOPocoTradeStream.h"
 #include "WSCcTradeStream.h"
 #include "TradeStreamMaker.h"
-#include "profitview_util.h"
+#include "profitview_poco.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-    profitview::util::Logger logger;
+    profitview::poco::Logger logger;
 
 	std::string symbols{argv[symbol_args]};
 	auto first_colon = symbols.find(':');
@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
 	auto symbol{symbols.substr(second_colon + 1)};
 
 	std::vector<std::string> symbol_vector{symbol};
-	TradeStreamMaker::register_stream<SIOPocoTradeStream>("SIOPocoStream", argv[profitview_api_arg], "SIOPocoStream");
-	TradeStreamMaker::register_stream<WSCcTradeStream>("WSCcStream", "WSCcStream");
+	TradeStreamMaker::register_stream<SIOPocoTradeStream>("SIOPocoStream", argv[profitview_api_arg]);
+	TradeStreamMaker::register_stream<WSCcTradeStream>("WSCcStream");
 
 	// TradeStreamMaker::make.at("SIOPocoStream")->subscribe(market, symbol_vector);
 	TradeStreamMaker::make.at("WSCcStream")->subscribe(market, symbol_vector);

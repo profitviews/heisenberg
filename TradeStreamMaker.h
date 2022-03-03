@@ -41,6 +41,6 @@ struct TradeStreamMaker
     template<typename TradeStreamT, typename... Args>
     static void register_stream(const std::string& name, Args... args)
     {
-        make[name] = std::make_shared<TradeStreamT>(args...);
+        make[name] = std::make_shared<TradeStreamT>(name, args...);
     }
 };

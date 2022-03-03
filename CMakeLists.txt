@@ -18,7 +18,7 @@ add_compile_definitions(CCAPI_ENABLE_EXCHANGE_COINBASE)
 add_subdirectory(src)
 
 add_library(profitview_socketio STATIC
-    profitview_util.cpp)
+    profitview_poco.cpp)
 
 set(SOFTWARE "$ENV{HOME}/software")
 
