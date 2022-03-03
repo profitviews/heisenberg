@@ -10,6 +10,8 @@
    sudo apt install libssl-dev
    sudo apt install zlib1g-dev
    ```
+   *There are a few more now - to be added*
+   
 ## Build
 
 ```bash
