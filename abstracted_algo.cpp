@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
 		 , exchange_arg
 		 , api_key_arg
 		 , api_secret_arg
+		 , api_phrase
 		 , lookback_arg
 		 , reversion_level_arg
 		 , base_quantity_arg
@@ -26,12 +27,14 @@ int main(int argc, char *argv[])
 			<< cpp_crypto_algos_VERSION_MAJOR << "."
 			<< cpp_crypto_algos_VERSION_MINOR << std::endl;
 		std::cout 
-			<< "Usage: " << argv[name_arg] << "market exchange_key exchange_secret lookback reversion_multiple base_quantity symbol [symbol ...]" << std::endl;
+			<< "Usage: " << argv[name_arg] << "market exchange_key exchange_secret phrase lookback reversion_multiple base_quantity symbol [symbol ...]" << std::endl;
 		return 1;
 	}
 
+	std::string phrase{argv[api_phrase]};
+	if(phrase == "-") phrase.clear();
 	const std::string market{argv[exchange_arg]};
-	CcexOrderExecutor executor{market, 5, argv[api_key_arg], argv[api_secret_arg]};
+	CcexOrderExecutor executor{market, 5, argv[api_key_arg], argv[api_secret_arg], phrase};
 
 	std::vector<std::string> symbol_vector;
 	for (int i = symbol_args; i < argc; ++i)
