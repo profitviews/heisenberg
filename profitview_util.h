@@ -14,7 +14,7 @@ double mean(const Sequence& sequence, int lookback)
 
 template<typename Sequence>
 double stdev(const Sequence& sequence, double m, int lookback)
-{
+{   // Calculate standard deviation given mean (m)
     auto variance {[&m, &lookback](auto accumulator, const auto& val) {
         return accumulator + (val - m)*(val - m) / (lookback - 1);
     }};

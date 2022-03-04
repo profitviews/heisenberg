@@ -24,12 +24,9 @@ public:
 	, reversion_level_ {reversion_level}
 	, base_quantity_   {base_quantity  }
 	, executor_        {executor       }
-    {
-    }
+    {}
 
-    ~CcSimpleMR()
-    {
-    }
+    ~CcSimpleMR(){}
 
     void onStreamedTrade(const TradeData& trade_data) override
     {
@@ -39,7 +36,7 @@ public:
         std::cout << "Source: " << trade_data.source << std::endl;
         std::cout << "Symbol: " << trade_data.symbol << std::endl;
         std::cout << "Time: " << std::string{std::asctime(std::localtime(&trade_data.time))} << std::endl;
-        
+
         auto& [elements, prices] { counted_prices_[trade_data.symbol]};
 
         prices.emplace_back(trade_data.price);
