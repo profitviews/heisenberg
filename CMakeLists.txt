@@ -16,8 +16,6 @@ add_compile_definitions(CCAPI_ENABLE_EXCHANGE_BITMEX)
 add_compile_definitions(CCAPI_ENABLE_EXCHANGE_FTX)
 add_compile_definitions(CCAPI_ENABLE_EXCHANGE_COINBASE)
 
-add_subdirectory(ccapi_executor)
-
 set(SOFTWARE "$ENV{HOME}/software")
 
 configure_file(cpp_crypto_algosConfig.h.in cpp_crypto_algosConfig.h)
@@ -36,7 +34,6 @@ find_package(Boost REQUIRED
 find_package(Threads REQUIRED)
 
 target_link_libraries(cpp_crypto_algos PUBLIC 
-    ccapi_executor
     Boost::log
     Boost::json
     Threads::Threads
