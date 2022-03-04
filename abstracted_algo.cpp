@@ -26,19 +26,17 @@ int main(int argc, char *argv[])
 			<< cpp_crypto_algos_VERSION_MAJOR << "."
 			<< cpp_crypto_algos_VERSION_MINOR << std::endl;
 		std::cout 
-			<< "Usage: " << argv[name_arg] << " exchange_key exchange_secret lookback reversion_multiple base_quantity data_type:market:symbol [data_type:market:symbol ...]" << std::endl;
+			<< "Usage: " << argv[name_arg] << "market exchange_key exchange_secret lookback reversion_multiple base_quantity symbol [symbol ...]" << std::endl;
 		return 1;
 	}
 
-	CcexOrderExecutor executor{argv[exchange_arg], 5, argv[api_key_arg], argv[api_secret_arg]};
+	const std::string market{argv[exchange_arg]};
+	CcexOrderExecutor executor{market, 5, argv[api_key_arg], argv[api_secret_arg]};
 
-	std::string symbols{argv[symbol_args]};
-	auto first_colon = symbols.find(':');
-	auto second_colon = symbols.find(':', first_colon + 1);
-	auto market{symbols.substr(first_colon + 1, second_colon - first_colon - 1)};
-	auto symbol{symbols.substr(second_colon + 1)};
+	std::vector<std::string> symbol_vector;
+	for (int i = symbol_args; i < argc; ++i)
+		symbol_vector.emplace_back(argv[i]);
 
-	std::vector<std::string> symbol_vector{symbol};
 	TradeStreamMaker::register_stream<CcSimpleMR>("CcSimpleMR", 
 		&executor, 
 		std::stoi(argv[lookback_arg]),
