@@ -1,25 +1,33 @@
 # C++ Crypto Algos
 
-## Prerequisites
+## Build steps
 
-1. Compilers
-   `sudo apt install build-essential`
-   
-1. Other software packages
-   ```bash
-   sudo apt install libssl-dev
-   sudo apt install zlib1g-dev
+1. Clone project
    ```
-   *There are a few more now - to be added*
-   
-## Build
+   git clone https://github.com/profitviews/cpp_crypto_algos.git cpp_crypto_algos
+   cd cpp_crypto_algos
+   ```
 
-```bash
-git clone https://github.com/profitviews/cpp_crypto_algos.git
-cd cpp_crypto_algos/build
-cmake -DCMAKE_BUILD_TYPE=Debug ..
-cmake --build .
-```
+2. Install Conan
+   ```
+   python3 -m venv .venv         # Create a Python virtual env
+   source ./.venv/bin/activate   # Activate the virtual env
+   pip install conan             # Install conan
+   ```
+
+3. Install Conan Package & Configure CMake 
+   ```
+   mkdir build
+   cd build
+   conan install ../ --build missing
+   source ./activate.sh
+   cmake -DCMAKE_BUILD_TYPE=Debug ..
+   ```
+   
+4. Build
+   ```bash
+   cmake --build .
+   ```
 
 This will create (with debugging symbols):
 
