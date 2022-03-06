@@ -1,13 +1,13 @@
-#include "cpp_crypto_algosConfig.h"
-#include "CcexOrderExecutor.h"
-#include "CcSimpleMR.h"
+#include "cc_simple_mr.hpp"
+#include "ccex_order_executor.hpp"
 #include "program_options.hpp"
 #include "trade_stream_maker.hpp"
 #include "utils.hpp"
 
+#include <boost/program_options.hpp>
 #include <iostream>
 
-namespace profitview::algo
+namespace profitview
 {
 
 struct ProgramArgs
@@ -42,8 +42,8 @@ struct ProgramArgs
 int main(int argc, char *argv[])
 {
 	using namespace profitview;
-	algo::ProgramArgs options;
-	auto const result = profitview::parseProgramOptions(argc, argv, options);
+	ProgramArgs options;
+	auto const result = parseProgramOptions(argc, argv, options);
 	if (result)
 		return result.value();
 

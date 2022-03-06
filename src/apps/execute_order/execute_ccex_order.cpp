@@ -1,53 +1,56 @@
-#include "CcexOrderExecutor.h"
+#include "ccex_order_executor.hpp"
+#include "program_options.hpp"
 
 #include <ccapi_cpp/ccapi_macro.h>
 
 #include <boost/log/trivial.hpp>
 #include <boost/json.hpp>
+#include <boost/program_options.hpp>
 
 #include <iostream>
 #include <string>
 #include <map>
 
-namespace profitview::order
+namespace profitview
 {
 
 struct ProgramArgs
 {
 	std::string exchange;
+    std::string symbol;
 	std::string apiKey;
 	std::string apiSecret;
 	std::string apiPhrase;
-	int lookback = 0;
-	double reversionLevel = 0.0;
-	double baseQuantity = 0.0;
-	std::vector<std::string> symbols;
+    Side side = Side::Buy;
+	double size = 0.0;
+    OrderType type = OrderType::Limit;
+	double price = 0.0;
 
 	void addOptions(boost::program_options::options_description& options)
 	{
+        namespace po = boost::program_options;
 		options.add_options()
 			("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
+			("symbol", po::value(&symbol)->required(), "Symbol for cypto assets to trade.")
 			("api_key", po::value(&apiKey)->required(), "API key for Cypto exchange.")
 			("api_secret", po::value(&apiSecret)->required(), "API secret for Cypto exchange.")
 			("api_phrase", po::value(&apiPhrase), "API phrase for Cypto exchange.")
-			("lookback", po::value(&lookback)->required(), "Time period to look back")
-			("reversion_level", po::value(&reversionLevel)->required(), "Mean reversion level.")
-			("base_quantity", po::value(&baseQuantity)->required(), "Quantity to trade.")
-			("symbol", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.")
+//			("side", po::value(&side)->required(), "The side of the trade <buy|sell>.")
+			("size", po::value(&size)->required(), "Size to trade.")
+//			("type", po::value(&type)->required(), "The type of order <limit|market>.")
+    		("price", po::value(&price)->required(), "Price to trade at.")
 		;		
 	}
 };
 
+}
 auto main(int argc, char* argv[]) -> int
 {
-    if(argc < 3) 
-    {
-        std::cout 
-            << "Usage: " << argv[0] 
-            << " API_key API_secret [Passphrase]"
-            << std::endl;
-        return 1;
-    }
+	using namespace profitview;
+	ProgramArgs options;
+	auto const result = parseProgramOptions(argc, argv, options);
+	if (result)
+		return result.value();
 
     const std::map<std::string, std::string> exchange_names = {
         {"ftx", CCAPI_EXCHANGE_NAME_FTX},
@@ -59,19 +62,21 @@ auto main(int argc, char* argv[]) -> int
 
     enum {name_arg, market_arg, symbol_arg, side_arg, size_arg, type_arg, price_arg, key_arg, secret_arg, phrase_arg};
 
-    CcexOrderExecutor executor{exchange_names.at(argv[market_arg]), 0, argv[key_arg], argv[secret_arg], argc > 9 ? argv[phrase_arg] : ""};
+    CcexOrderExecutor executor{
+        exchange_names.at(options.exchange), 
+        options.apiKey, 
+        options.apiSecret, 
+        options.apiPhrase, 
+        0
+    };
 
-    using Side = OrderExecutor::Side;
-    using OrderType = OrderExecutor::OrderType;
     BOOST_LOG_TRIVIAL(info) << argv[symbol_arg] << "Running: " << std::endl; 
     executor.new_order(
-        argv[symbol_arg], 
-        std::string(argv[side_arg]) == "buy" ? Side::buy : Side::sell, 
-        std::stod(argv[size_arg]), 
-        std::string(argv[type_arg]) == "limit" ? OrderType::limit : OrderType::market, 
-        std::stod(argv[price_arg]));
+        options.symbol, 
+        std::string(argv[side_arg]) == "buy" ? Side::Buy : Side::Sell, 
+        options.size, 
+        std::string(argv[type_arg]) == "limit" ? OrderType::Limit : OrderType::Market, 
+        options.price);
 
     return 0;
-}
-
 }

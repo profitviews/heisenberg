@@ -7,7 +7,6 @@ fmt/8.1.1
 openssl/1.1.1l
 rapidjson/cci.20211112
 
-
 [generators]
 cmake_find_package
 virtualenv

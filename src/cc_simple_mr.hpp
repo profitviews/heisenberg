@@ -1,7 +1,7 @@
 #pragma once
 
 #include "order_executor.hpp"
-#include "WSCcTradeStream.h"
+#include "wscc_trade_stream.hpp"
 #include "utils.hpp"
 
 #include <iostream>

@@ -1,11 +1,13 @@
-#include "WSCcTradeStream.h"
-#include "TradeStreamMaker.h"
+#include "program_options.hpp"
+#include "trade_stream_maker.hpp"
+#include "wscc_trade_stream.hpp"
 
+#include <boost/program_options.hpp>
 #include <cstdlib>
 #include <iostream>
 #include <string>
 
-namespace profitview::streamer
+namespace profitview
 {
 
 struct ProgramArgs
@@ -15,6 +17,7 @@ struct ProgramArgs
 
 	void addOptions(boost::program_options::options_description& options)
 	{
+        namespace po = boost::program_options;
 		options.add_options()
 			("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
 			("symbol", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.")
@@ -26,7 +29,7 @@ struct ProgramArgs
 
 int main(int argc, char *argv[])
 {
-	using namespace profitview::streamer;
+	using namespace profitview;
 	ProgramArgs options;
 	auto const result = profitview::parseProgramOptions(argc, argv, options);
 	if (result)

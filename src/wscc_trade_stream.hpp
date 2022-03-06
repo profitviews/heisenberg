@@ -1,8 +1,7 @@
 #pragma once
 
+#include "cc_trade_handler.hpp"
 #include "trade_stream_maker.hpp"
-
-#include "CcTradeHandler.h"
 
 #include <iostream>
 #include <string>

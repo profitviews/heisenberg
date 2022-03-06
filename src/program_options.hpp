@@ -1,5 +1,7 @@
 #pragma once
 
+#include "cpp_crypto_algos_config.hpp"
+
 #include <boost/program_options.hpp>
 #include <fmt/core.h>
 #include <concepts>
