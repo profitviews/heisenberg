@@ -19,6 +19,7 @@ FetchContent_MakeAvailable(ccapi websocketpp)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 find_package(Boost REQUIRED log json)
+find_package(fmt REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(RapidJSON REQUIRED)
 find_package(Threads REQUIRED)
@@ -40,10 +41,12 @@ target_link_libraries(cpp_crypto_algos
     PRIVATE 
         Boost::log
         Boost::json
-        Threads::Threads
+        Boost::program_options
+        fmt::fmt
         OpenSSL::SSL
         OpenSSL::Crypto
         RapidJSON::RapidJSON
+        Threads::Threads
 )
 
 target_include_directories(cpp_crypto_algos
@@ -66,5 +69,5 @@ target_compile_definitions(cpp_crypto_algos
 
 target_compile_options(cpp_crypto_algos
     PRIVATE
-        $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-terminate>
+        $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-terminate -fvisibility=hidden -fvisibility-inlines-hidden>
 )

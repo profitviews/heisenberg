@@ -2,53 +2,55 @@
 #include "CcSimpleMR.h"
 #include "TradeStreamMaker.h"
 #include "profitview_util.h"
-#include <CcexOrderExecutor.h>
+#include "CcexOrderExecutor.h"
+#include "program_options.hpp"
 
 #include <iostream>
 
 using namespace profitview;
+namespace po = boost::program_options;
+
+struct ProgramArgs
+{
+	std::string exchange;
+	std::string apiKey;
+	std::string apiSecret;
+	std::string apiPhrase;
+	int lookback = 0;
+	double reversionLevel = 0.0;
+	double baseQuantity = 0.0;
+	std::vector<std::string> symbols;
+
+	void addOptions(po::options_description& options)
+	{
+		options.add_options()
+			("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
+			("api_key", po::value(&apiKey)->required(), "API key for Cypto exchange.")
+			("api_secret", po::value(&apiSecret)->required(), "API secret for Cypto exchange.")
+			("api_phrase", po::value(&apiPhrase), "API phrase for Cypto exchange.")
+			("lookback", po::value(&lookback)->required(), "Time period to look back")
+			("reversion_level", po::value(&reversionLevel)->required(), "Mean reversion level.")
+			("base_quantity", po::value(&baseQuantity)->required(), "Quantity to trade.")
+			("symbol", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.")
+		;		
+	}
+};
 
 int main(int argc, char *argv[])
 {
-	enum { name_arg
-		 , exchange_arg
-		 , api_key_arg
-		 , api_secret_arg
-		 , api_phrase
-		 , lookback_arg
-		 , reversion_level_arg
-		 , base_quantity_arg
-		 , symbol_args 
-		 };
+	ProgramArgs options;
+	auto result = profitview::parseProgramOptions(argc, argv, options);
+	if (result)
+		return result.value();
 
-	if (argc < symbol_args) {
-		// report version
-		std::cout 
-			<< argv[0]  
-			<< " Version " 
-			<< cpp_crypto_algos_VERSION_MAJOR << "."
-			<< cpp_crypto_algos_VERSION_MINOR << std::endl;
-		std::cout 
-			<< "Usage: " << argv[name_arg] << "market exchange_key exchange_secret phrase lookback reversion_multiple base_quantity symbol [symbol ...]" << std::endl;
-		return 1;
-	}
-
-	std::string phrase{argv[api_phrase]};
-	if(phrase == "-") phrase.clear();
-	const std::string market{argv[exchange_arg]};
-	CcexOrderExecutor executor{market, 5, argv[api_key_arg], argv[api_secret_arg], phrase};
-
-	std::vector<std::string> symbol_vector;
-	for (int i = symbol_args; i < argc; ++i)
-		symbol_vector.emplace_back(argv[i]);
-
+	CcexOrderExecutor executor{options.exchange, options.apiKey, options.apiSecret, options.apiPhrase, 5};
 	TradeStreamMaker::register_stream<CcSimpleMR>("CcSimpleMR", 
 		&executor, 
-		std::stoi(argv[lookback_arg]),
-		std::stod(argv[reversion_level_arg]), 
-		std::stod(argv[base_quantity_arg]));
+		options.lookback,
+		options.reversionLevel,
+		options.baseQuantity);
 
-	TradeStreamMaker::get("CcSimpleMR").subscribe(market, symbol_vector);
+	TradeStreamMaker::get("CcSimpleMR").subscribe(options.exchange, options.symbols);
 
 	std::cout << "Press enter to quit" << std::endl;
 	std::cin.get();
