@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+using namespace profitview;
+
 int main(int argc, char *argv[])
 {
 	enum { name_arg

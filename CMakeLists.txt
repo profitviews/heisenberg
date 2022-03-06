@@ -49,6 +49,7 @@ target_link_libraries(cpp_crypto_algos
 target_include_directories(cpp_crypto_algos
     PRIVATE 
         ${PROJECT_BINARY_DIR}
+        ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/ccapi_executor
         ${ccapi_SOURCE_DIR}/include
         ${websocketpp_SOURCE_DIR}

@@ -7,9 +7,7 @@
 
 #include <iostream>
 
-using namespace ccapi;
-
-class CcSimpleMR : public TradeStream, private CcTradeHandler
+class CcSimpleMR : public profitview::TradeStream, private ccapi::CcTradeHandler
 {
 public:
     CcSimpleMR
@@ -19,19 +17,17 @@ public:
 		, double reversion_level
 		, double base_quantity
 	) 
-    : CcTradeHandler(trade_stream_name)
+    : ccapi::CcTradeHandler(trade_stream_name)
 	, lookback_        {lookback       }
 	, reversion_level_ {reversion_level}
 	, base_quantity_   {base_quantity  }
 	, executor_        {executor       }
     {}
 
-    ~CcSimpleMR(){}
-
-    void onStreamedTrade(const TradeData& trade_data) override
+    void onStreamedTrade(profitview::TradeData const& trade_data) override
     {
         std::cout << "Price: " << trade_data.price << std::endl;
-        std::cout << "Side: " << (trade_data.side == TradeData::Side::Buy ? "Buy" : "Sell") << std::endl;
+        std::cout << "Side: " << (trade_data.side == profitview::Side::Buy ? "Buy" : "Sell") << std::endl;
         std::cout << "Size: " << trade_data.size << std::endl;
         std::cout << "Source: " << trade_data.source << std::endl;
         std::cout << "Symbol: " << trade_data.symbol << std::endl;

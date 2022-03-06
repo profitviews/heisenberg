@@ -1,15 +1,18 @@
 #pragma once
 
-#include <string>
-#include <vector>
+#include "side.hpp"
+
 #include <map>
 #include <memory>
+#include <string>
 #include <stdexcept>
+#include <vector>
+
+namespace profitview 
+{
 
 struct TradeData
 {
-    enum class Side { Buy, Sell };
-
     double price;
     Side side;
     double size;
@@ -30,25 +33,27 @@ public:
 
 struct TradeStreamException : public std::runtime_error 
 {
-    TradeStreamException(const std::string message) : std::runtime_error(message){}
-    ~TradeStreamException() {}
+    TradeStreamException(std::string const& message)
+    :   std::runtime_error(message) 
+    {}
 };
 
 struct TradeStreamMaker
 {
 public:
     template<typename TradeStreamT, typename... Args>
-    static void register_stream(const std::string& name, Args... args)
+    static void register_stream(std::string const& name, Args&&... args)
     {
-        made[name] = std::make_shared<TradeStreamT>(name, args...);
+        made[name] = std::make_shared<TradeStreamT>(name, std::forward<Args>(args)...);
     }
 
-    static TradeStream& get(const std::string& name)
+    static TradeStream& get(std::string const& name)
     {
         return *made.at(name);
     }
 
 private:
     inline static std::map<std::string, std::shared_ptr<TradeStream>> made;
-
 };
+
+}
