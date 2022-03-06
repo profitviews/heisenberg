@@ -1,7 +1,7 @@
 #pragma once
 
-#include <numeric>
 #include <cmath>
+#include <numeric>
 
 namespace profitview::util
 {

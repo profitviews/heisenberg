@@ -24,7 +24,7 @@ struct ProgramArgs
 	void addOptions(boost::program_options::options_description& options)
 	{
         namespace po = boost::program_options;
-		options.add_options()
+        options.add_options()
 			("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
 			("api_key", po::value(&apiKey)->required(), "API key for Cypto exchange.")
 			("api_secret", po::value(&apiSecret)->required(), "API secret for Cypto exchange.")
@@ -58,6 +58,5 @@ int main(int argc, char *argv[])
 
 	std::cout << "Press enter to quit" << std::endl;
 	std::cin.get();
-
 	return 0;
 }

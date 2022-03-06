@@ -24,11 +24,10 @@ struct TradeData
 class TradeStream 
 {
 public:
-    TradeStream() {}
-    virtual ~TradeStream() {}
-	virtual void onStreamedTrade(const TradeData& trade_data) = 0;
-    virtual void subscribe(const std::string& market, const std::vector<std::string>& symbol_list) = 0;
-
+    TradeStream() = default;
+    virtual ~TradeStream() = default;
+	virtual void onStreamedTrade(TradeData const& trade_data) = 0;
+    virtual void subscribe(std::string const& market, std::vector<std::string> const& symbol_list) = 0;
 };
 
 struct TradeStreamException : public std::runtime_error 

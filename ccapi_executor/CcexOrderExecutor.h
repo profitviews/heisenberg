@@ -9,12 +9,8 @@
 #include <atomic>
 #include <map>
 #include <tuple>
+#include <unordered_map>
 #include <vector>
-
-using ::ccapi::Request;
-using ::ccapi::Session;
-using ::ccapi::SessionConfigs;
-using ::ccapi::SessionOptions;
 
 namespace ccapi
 {
@@ -24,12 +20,17 @@ namespace ccapi
 namespace profitview
 {
 
+using ::ccapi::Request;
+using ::ccapi::Session;
+using ::ccapi::SessionConfigs;
+using ::ccapi::SessionOptions;
+
 class CcexOrderExecutor : public OrderExecutor
 {
 private:
-    inline static const std::map<OrderType, std::string> order_type_names_{
+    inline static const std::unordered_map<OrderType, std::string> order_type_names_{
         {OrderType::Limit, "Limit"}, {OrderType::Market, "Market"}};
-    inline static const std::map<Side, std::string> side_names_{
+    inline static const std::unordered_map<Side, std::string> side_names_{
         {Side::Buy, "Buy"}, {Side::Sell, "Sell"}};
 
     std::string order_message_;
@@ -73,15 +74,13 @@ public:
         const std::string &api_secret,
         const std::string &pass_phrase,
         int expiry)
-    : exchange_{exchange}
-    , api_key_{api_key}
-    , api_secret_{api_secret}
-    , pass_phrase_{pass_phrase}
-    , expiry_{expiry}
+    :   exchange_{exchange}
+    ,   api_key_{api_key}
+    ,   api_secret_{api_secret}
+    ,   pass_phrase_{pass_phrase}
+    ,   expiry_{expiry}
     {
     }
-
-    ~CcexOrderExecutor(){};
 
     void new_order(std::string const& symbol, Side side, double orderQty, OrderType type, double price = -1.0) override
     {
