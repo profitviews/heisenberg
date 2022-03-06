@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OrderExecutor.h"
+#include "order_executor.h"
 
 #include <ccapi_cpp/ccapi_logger.h>
 #include <ccapi_cpp/ccapi_macro.h>
@@ -83,7 +83,7 @@ public:
 
     ~CcexOrderExecutor(){};
 
-    void new_order(const std::string &symbol, Side side, double orderQty, OrderType type, double price = -1.0) override
+    void new_order(std::string const& symbol, Side side, double orderQty, OrderType type, double price = -1.0) override
     {
         SessionOptions session_options;
         SessionConfigs session_configs;

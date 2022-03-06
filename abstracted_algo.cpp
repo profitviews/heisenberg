@@ -23,7 +23,7 @@ struct ProgramArgs
 
 	void addOptions(boost::program_options::options_description& options)
 	{
-    	namespace po = boost::program_options;
+        namespace po = boost::program_options;
 		options.add_options()
 			("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
 			("api_key", po::value(&apiKey)->required(), "API key for Cypto exchange.")

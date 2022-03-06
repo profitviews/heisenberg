@@ -9,6 +9,35 @@
 #include <string>
 #include <map>
 
+namespace profitview::order
+{
+
+struct ProgramArgs
+{
+	std::string exchange;
+	std::string apiKey;
+	std::string apiSecret;
+	std::string apiPhrase;
+	int lookback = 0;
+	double reversionLevel = 0.0;
+	double baseQuantity = 0.0;
+	std::vector<std::string> symbols;
+
+	void addOptions(boost::program_options::options_description& options)
+	{
+		options.add_options()
+			("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
+			("api_key", po::value(&apiKey)->required(), "API key for Cypto exchange.")
+			("api_secret", po::value(&apiSecret)->required(), "API secret for Cypto exchange.")
+			("api_phrase", po::value(&apiPhrase), "API phrase for Cypto exchange.")
+			("lookback", po::value(&lookback)->required(), "Time period to look back")
+			("reversion_level", po::value(&reversionLevel)->required(), "Mean reversion level.")
+			("base_quantity", po::value(&baseQuantity)->required(), "Quantity to trade.")
+			("symbol", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.")
+		;		
+	}
+};
+
 auto main(int argc, char* argv[]) -> int
 {
     if(argc < 3) 
@@ -43,4 +72,6 @@ auto main(int argc, char* argv[]) -> int
         std::stod(argv[price_arg]));
 
     return 0;
+}
+
 }
