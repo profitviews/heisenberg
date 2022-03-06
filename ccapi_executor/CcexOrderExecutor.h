@@ -21,13 +21,16 @@ namespace ccapi
   Logger *Logger::logger = nullptr; // This line is needed.
 }
 
+namespace profitview
+{
+
 class CcexOrderExecutor : public OrderExecutor
 {
 private:
     inline static const std::map<OrderType, std::string> order_type_names_{
-        {OrderType::limit, "Limit"}, {OrderType::market, "Market"}};
+        {OrderType::Limit, "Limit"}, {OrderType::Market, "Market"}};
     inline static const std::map<Side, std::string> side_names_{
-        {Side::buy, "Buy"}, {Side::sell, "Sell"}};
+        {Side::Buy, "Buy"}, {Side::Sell, "Sell"}};
 
     std::string order_message_;
     std::string api_key_;
@@ -96,12 +99,14 @@ public:
         Session session(session_options, session_configs, &event_handler);
 
         Request request(Request::Operation::CREATE_ORDER, exchange_, symbol);
-        request.appendParam({{"type", type == OrderType::market ? "market" : "limit"},
-                            {"side", side == Side::buy ? "BUY" : "SELL"},
+        request.appendParam({{"type", type == OrderType::Market ? "market" : "limit"},
+                            {"side", side == Side::Buy ? "BUY" : "SELL"},
                             {"size", std::to_string(orderQty)},
-                            {"price", type == OrderType::limit ? std::to_string(price) : "0.0001"}});
+                            {"price", type == OrderType::Limit ? std::to_string(price) : "0.0001"}});
         session.sendRequest(request);
         event_handler.wait();
         session.stop();
     }
 };
+
+}

@@ -7,8 +7,8 @@
 
 #include <iostream>
 
-using namespace profitview;
-namespace po = boost::program_options;
+namespace profitview::algo
+{
 
 struct ProgramArgs
 {
@@ -21,8 +21,9 @@ struct ProgramArgs
 	double baseQuantity = 0.0;
 	std::vector<std::string> symbols;
 
-	void addOptions(po::options_description& options)
+	void addOptions(boost::program_options::options_description& options)
 	{
+    	namespace po = boost::program_options;
 		options.add_options()
 			("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
 			("api_key", po::value(&apiKey)->required(), "API key for Cypto exchange.")
@@ -36,10 +37,13 @@ struct ProgramArgs
 	}
 };
 
+}
+
 int main(int argc, char *argv[])
 {
-	ProgramArgs options;
-	auto result = profitview::parseProgramOptions(argc, argv, options);
+	using namespace profitview;
+	algo::ProgramArgs options;
+	auto const result = profitview::parseProgramOptions(argc, argv, options);
 	if (result)
 		return result.value();
 

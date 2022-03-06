@@ -1,30 +1,39 @@
 #include "WSCcTradeStream.h"
 #include "TradeStreamMaker.h"
 
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
+#include <string>
+
+namespace profitview::streamer
+{
+
+struct ProgramArgs
+{
+	std::string exchange;
+	std::vector<std::string> symbols;
+
+	void addOptions(boost::program_options::options_description& options)
+	{
+		options.add_options()
+			("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
+			("symbol", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.")
+		;		
+	}
+};
+
+}
 
 int main(int argc, char *argv[])
 {
-	enum { name_arg
-		 , market_arg
-		 , symbol_args
-	};
-
-	if (argc < symbol_args) {
-		std::cout 
-			<< "Usage: " << argv[name_arg] << " market symbol [symbol...]" << std::endl;
-		return 1;
-	}
-
-	const std::string market{argv[market_arg]};
-
-	std::vector<std::string> symbol_vector;
-	for (int i = symbol_args; i < argc; ++i)
-		symbol_vector.emplace_back(argv[i]);	
+	using namespace profitview::streamer;
+	ProgramArgs options;
+	auto const result = profitview::parseProgramOptions(argc, argv, options);
+	if (result)
+		return result.value();
 	
 	TradeStreamMaker::register_stream<WSCcTradeStream>("WSCcStream");
-	TradeStreamMaker::get("WSCcStream").subscribe(market, symbol_vector);
+	TradeStreamMaker::get("WSCcStream").subscribe(options.exchange, options.symbols);
 
 	std::cout << "Press enter to quit" << std::endl;
 	std::cin.get();

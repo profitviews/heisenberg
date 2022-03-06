@@ -1,14 +1,20 @@
 #pragma once
 
+#include "order_type.hpp"
+#include "side.hpp"
+
 #include <string>
+
+namespace profitview 
+{
 
 class OrderExecutor
 {
 public:
-    enum class Side { buy, sell };
-    enum class OrderType { limit, market };
-
     OrderExecutor() = default;
     virtual ~OrderExecutor() = default;
-    virtual void new_order(const std::string& symbol, Side side, double orderQty, OrderType type, double) = 0;
+    virtual void new_order(std::string const& symbol, Side side, double orderQty, OrderType type, double) = 0;
 };
+
+}
+
