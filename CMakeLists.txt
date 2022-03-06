@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 # set the project name
-project(cpp_crypto_algos VERSION 2.0)
+project(cpp_crypto_algos LANGUAGES CXX VERSION 2.0)
 
 include(FetchContent)
 
@@ -16,15 +16,12 @@ FetchContent_Declare(
     GIT_TAG        develop
 )
 FetchContent_MakeAvailable(ccapi websocketpp)
-add_subdirectory(${websocketpp_SOURCE_DIR})
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 find_package(Boost REQUIRED log json)
 find_package(OpenSSL REQUIRED)
 find_package(RapidJSON REQUIRED)
 find_package(Threads REQUIRED)
-
-set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
