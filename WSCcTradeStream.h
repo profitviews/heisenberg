@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TradeStreamMaker.h"
+#include "trade_stream_maker.hpp"
 
 #include "CcTradeHandler.h"
 
@@ -15,7 +15,7 @@ class WSCcTradeStream : public TradeStream, private ccapi::CcTradeHandler
 {
 public:
     WSCcTradeStream(std::string const& trade_stream_name) 
-    : CcTradeHandler(trade_stream_name)
+    :   CcTradeHandler(trade_stream_name)
     {
     }
 

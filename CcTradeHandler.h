@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TradeStreamMaker.h"
+#include "trade_stream_maker.hpp"
 
 #include <ccapi_cpp/ccapi_session.h>
 
