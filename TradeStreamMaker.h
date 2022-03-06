@@ -1,41 +1,16 @@
 #pragma once
 
 #include "side.hpp"
+#include "trade_data.hpp"
+#include "trade_stream_exception.hpp"
+#include "trade_stream.hpp"
 
-#include <map>
 #include <memory>
 #include <string>
-#include <stdexcept>
-#include <vector>
+#include <unordered_map>
 
 namespace profitview 
 {
-
-struct TradeData
-{
-    double price;
-    Side side;
-    double size;
-    std::string source;
-    std::string symbol;
-    time_t time;
-};
-
-class TradeStream 
-{
-public:
-    TradeStream() = default;
-    virtual ~TradeStream() = default;
-	virtual void onStreamedTrade(TradeData const& trade_data) = 0;
-    virtual void subscribe(std::string const& market, std::vector<std::string> const& symbol_list) = 0;
-};
-
-struct TradeStreamException : public std::runtime_error 
-{
-    TradeStreamException(std::string const& message)
-    :   std::runtime_error(message) 
-    {}
-};
 
 struct TradeStreamMaker
 {
@@ -52,7 +27,7 @@ public:
     }
 
 private:
-    inline static std::map<std::string, std::shared_ptr<TradeStream>> made;
+    inline static std::unordered_map<std::string, std::shared_ptr<TradeStream>> made;
 };
 
 }
