@@ -51,6 +51,7 @@ target_compile_definitions(cpp_crypto_algos_lib
 target_compile_options(cpp_crypto_algos_lib
     INTERFACE
         $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-terminate -fvisibility=hidden -fvisibility-inlines-hidden>
+        $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 )
 
 add_subdirectory(apps)
