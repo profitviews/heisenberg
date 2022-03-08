@@ -4,7 +4,9 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/../../software/**"
+                "${workspaceFolder}/build/_deps/ccapi-src/include/**",
+                "${workspaceFolder}/build/_deps/websocketpp-src/websocketpp/**",
+                "~/.conan/data/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++-11",
