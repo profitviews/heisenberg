@@ -7,8 +7,8 @@ include(FetchContent)
 
 FetchContent_Declare(
     ccapi
-    GIT_REPOSITORY https://github.com/crypto-chassis/ccapi.git
-    GIT_TAG        v5.28.3
+    GIT_REPOSITORY https://github.com/profitviews/ccapi.git
+    GIT_TAG        windows-msvc
 )
 FetchContent_Declare(
     websocketpp
