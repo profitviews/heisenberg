@@ -35,9 +35,9 @@ struct ProgramArgs
 			("api_key", po::value(&apiKey)->required(), "API key for Cypto exchange.")
 			("api_secret", po::value(&apiSecret)->required(), "API secret for Cypto exchange.")
 			("api_phrase", po::value(&apiPhrase), "API phrase for Cypto exchange.")
-//			("side", po::value(&side)->required(), "The side of the trade <buy|sell>.")
+			("side", po::value(&side)->required(), "The side of the trade <buy|sell>.")
 			("size", po::value(&size)->required(), "Size to trade.")
-//			("type", po::value(&type)->required(), "The type of order <limit|market>.")
+			("type", po::value(&type)->required(), "The type of order <limit|market>.")
     		("price", po::value(&price)->required(), "Price to trade at.")
 		;		
 	}
@@ -60,8 +60,6 @@ auto main(int argc, char* argv[]) -> int
 
     BOOST_LOG_TRIVIAL(info) << "Running Ccex test.";
 
-    enum {name_arg, market_arg, symbol_arg, side_arg, size_arg, type_arg, price_arg, key_arg, secret_arg, phrase_arg};
-
     CcexOrderExecutor executor{
         exchange_names.at(options.exchange), 
         options.apiKey, 
@@ -70,13 +68,8 @@ auto main(int argc, char* argv[]) -> int
         0
     };
 
-    BOOST_LOG_TRIVIAL(info) << argv[symbol_arg] << "Running: " << std::endl; 
-    executor.new_order(
-        options.symbol, 
-        std::string(argv[side_arg]) == "buy" ? Side::Buy : Side::Sell, 
-        options.size, 
-        std::string(argv[type_arg]) == "limit" ? OrderType::Limit : OrderType::Market, 
-        options.price);
+    BOOST_LOG_TRIVIAL(info) << options.symbol << "Running: " << std::endl; 
+    executor.new_order(options.symbol, options.side, options.size, options.type, options.price);
 
     return 0;
 }

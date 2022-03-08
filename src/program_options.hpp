@@ -1,8 +1,10 @@
 #pragma once
 
+#include "enum.hpp"
 #include "cpp_crypto_algos_config.hpp"
 
 #include <boost/program_options.hpp>
+#include <boost/throw_exception.hpp>
 #include <fmt/core.h>
 #include <concepts>
 #include <iostream>
@@ -10,6 +12,24 @@
 
 namespace profitview 
 {
+
+template<BoostDescribeEnum Enum>
+void validate(boost::any& v, const std::vector<std::string>& values, Enum*, int)
+{
+    namespace po = boost::program_options;
+    po::validators::check_first_occurrence(v);
+    std::string const& s = po::validators::get_single_string(values);
+
+    if (auto const value = fromString<Enum>(s); value.has_value())
+    {
+        v = boost::any(value.value());
+        return;
+    }
+    else
+    {
+        boost::throw_exception(po::invalid_option_value(s));
+    }
+}
 
 template <typename T>
 concept CustomProgramOptions = requires(T& t, boost::program_options::options_description& options)
@@ -36,7 +56,8 @@ std::optional<int> parseProgramOptions(int argc, char *argv[], CustomProgramOpti
         po::store(po::parse_command_line(argc, argv, desc), vm);
         po::notify(vm);    
 
-        if (vm.count("help")) {
+        if (vm.count("help"))
+        {
             std::cout << desc << "\n";
             return 1;
         }
