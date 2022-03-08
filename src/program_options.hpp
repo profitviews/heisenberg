@@ -22,8 +22,7 @@ void validate(boost::any& v, const std::vector<std::string>& values, Enum*, int)
 
     if (auto const value = fromString<Enum>(s); value.has_value())
     {
-        v = boost::any(value.value());
-        return;
+        v = value.value();
     }
     else
     {
