@@ -7,6 +7,7 @@
 #include <boost/throw_exception.hpp>
 #include <fmt/core.h>
 #include <concepts>
+#include <filesystem>
 #include <iostream>
 #include <optional>
 
@@ -42,8 +43,10 @@ std::optional<int> parseProgramOptions(int argc, char *argv[], CustomProgramOpti
     try {
         po::options_description desc(
             fmt::format("{} Version {}.{}\n\nUsage: ", 
-            argv[0], cpp_crypto_algos_VERSION_MAJOR, cpp_crypto_algos_VERSION_MINOR
-        ));
+                std::filesystem::path( argv[0] ).filename().string(),
+                cpp_crypto_algos_VERSION_MAJOR, cpp_crypto_algos_VERSION_MINOR
+            )
+        );
 
         desc.add_options()
             ("help", "produce help message")
@@ -52,14 +55,15 @@ std::optional<int> parseProgramOptions(int argc, char *argv[], CustomProgramOpti
         (options.addOptions(desc), ...);
 
         po::variables_map vm;
-        po::store(po::parse_command_line(argc, argv, desc), vm);
-        po::notify(vm);    
+        po::store(po::parse_command_line(argc, argv, desc), vm);   
 
         if (vm.count("help"))
         {
             std::cout << desc << "\n";
             return 1;
         }
+
+        po::notify(vm); 
     }
     catch(po::required_option& e)
     {
