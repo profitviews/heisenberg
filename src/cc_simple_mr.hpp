@@ -1,5 +1,6 @@
 #pragma once
 
+#include "enum.hpp"
 #include "order_executor.hpp"
 #include "wscc_trade_stream.hpp"
 #include "utils.hpp"
@@ -29,7 +30,7 @@ public:
     void onStreamedTrade(profitview::TradeData const& trade_data) override
     {
         std::cout << "Price: " << trade_data.price << std::endl;
-        std::cout << "Side: " << (trade_data.side == profitview::Side::Buy ? "Buy" : "Sell") << std::endl;
+        std::cout << "Side: " << toString(Side::Buy) << std::endl;
         std::cout << "Size: " << trade_data.size << std::endl;
         std::cout << "Source: " << trade_data.source << std::endl;
         std::cout << "Symbol: " << trade_data.symbol << std::endl;
