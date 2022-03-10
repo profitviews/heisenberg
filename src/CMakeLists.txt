@@ -4,6 +4,7 @@ target_sources(cpp_crypto_algos_lib
         cc_simple_mr.hpp
         cc_trade_handler.hpp
         ccex_order_executor.hpp
+        enum.hpp
         exchange.hpp
         order_executor.hpp
         order_type.hpp
@@ -18,7 +19,8 @@ target_sources(cpp_crypto_algos_lib
 )
 
 target_link_libraries(cpp_crypto_algos_lib
-    INTERFACE 
+    INTERFACE
+        Boost::headers
         Boost::log
         Boost::program_options
         fmt::fmt
