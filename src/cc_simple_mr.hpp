@@ -5,7 +5,7 @@
 #include "wscc_trade_stream.hpp"
 #include "utils.hpp"
 
-#include <iostream>
+#include <fmt/core.h>
 
 namespace profitview 
 {
@@ -29,12 +29,12 @@ public:
 
     void onStreamedTrade(profitview::TradeData const& trade_data) override
     {
-        std::cout << "Price: " << trade_data.price << std::endl;
-        std::cout << "Side: " << toString(Side::Buy) << std::endl;
-        std::cout << "Size: " << trade_data.size << std::endl;
-        std::cout << "Source: " << trade_data.source << std::endl;
-        std::cout << "Symbol: " << trade_data.symbol << std::endl;
-        std::cout << "Time: " << std::string{std::asctime(std::localtime(&trade_data.time))} << std::endl;
+        fmt::print("Price: {}", trade_data.price);
+        fmt::print("Side: {}", toString(Side::Buy));
+        fmt::print("Size: {}", trade_data.size);
+        fmt::print("Source: {}", trade_data.source);
+        fmt::print("Symbol: {}", trade_data.symbol);
+        fmt::print("Time: {}", td::string{std::asctime(std::localtime(&trade_data.time))});
 
         auto& [elements, prices] { counted_prices_[trade_data.symbol]};
 
