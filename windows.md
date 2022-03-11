@@ -4,6 +4,7 @@
 
 1. From the Windows main menu, start a PowerShell terminal
 2. Downoload MSVC 2022 build tools: 
+
    ```Invoke-WebRequest -OutFile vs_BuildTools.exe -Uri https://aka.ms/vs/17/release/vs_BuildTools.exe`
    .\vs_BuildTools```
 3. Download Git 
