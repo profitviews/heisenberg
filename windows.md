@@ -33,9 +33,9 @@ Invoke-WebRequest -OutFile cmake-3.23.0-rc2-windows-x86_64.msil -Uri https://git
 .\cmake-3.23.0-rc2-windows-x86_64.msi
 $env:Path += ';C:\Program Files\CMake\bin'
 ```
-14. `conan install ../ --build missing --profile windows-msvc`
-15. `cmake -DCMAKE_BUILD_TYPE=Debug ..`
-16. `cmake --build .`
+15. `conan install ../ --build missing --profile windows-msvc`
+16. `cmake -DCMAKE_BUILD_TYPE=Debug ..`
+17. `cmake --build .`
 
 This will create (with debugging symbols):
 
