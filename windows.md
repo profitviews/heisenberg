@@ -24,9 +24,10 @@ Invoke-WebRequest -OutFile python-3.10.2-amd64.exe -Uri https://www.python.org/f
 8. `.venv\Scripts\activate.ps1`
 9. `pip install conan`
 10. `mkdir build`
-11. `conan profile new windows-msvc --detect`
-12. `conan profile update settings.build_type=Debug windows-msvc`
-13. Download Cmake
+11. `cd build`
+12. `conan profile new windows-msvc --detect`
+13. `conan profile update settings.build_type=Debug windows-msvc`
+14. Download Cmake
 ```powershell
 Invoke-WebRequest -OutFile cmake-3.23.0-rc2-windows-x86_64.msil -Uri https://github.com/Kitware/CMake/releases/download/v3.23.0-rc2/cmake-3.23.0-rc2-windows-x86_64.msi
 .\cmake-3.23.0-rc2-windows-x86_64.msi
@@ -41,6 +42,6 @@ This will create (with debugging symbols):
 * `cpp_crypto_algos\build\bin\Debug\algo.exe` which will run a simple Mean Reversion algo on FTX or Coinbase
 * For example
 ```powershell
-cd cpp_crypto_algos\build\bin\Debug
+cd bin\Debug
 .\algo --exchange=coinbase --api_key=$Env:COINBASE_API_KEY --api_secret=$Env:COINBASE_API_SECRET --api_phrase=$Env:COINBASE_API_PHRASE --lookback=50 --reversion_level=2 --base_quantity=0.0025 --symbol=ETH-BTC
 ```
