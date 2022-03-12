@@ -42,5 +42,5 @@ This will create (with debugging symbols):
 * For example
 ```powershell
 cd cpp_crypto_algos\build\bin\Debug
-.\algo --exchange=coinbase --api_key=${env:COINBASE_API_KEY} --api_secret=${env:COINBASE_API_SECRET} --api_phrase=${env:COINBASE_API_PHRASE} --lookback=50 --reversion_level=2 --base_quantity=0.0025 --symbol=ETH-BTC
+.\algo --exchange=coinbase --api_key=$Env:COINBASE_API_KEY --api_secret=$Env:COINBASE_API_SECRET --api_phrase=$Env:COINBASE_API_PHRASE --lookback=50 --reversion_level=2 --base_quantity=0.0025 --symbol=ETH-BTC
 ```
