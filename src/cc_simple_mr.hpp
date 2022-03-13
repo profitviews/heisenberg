@@ -34,7 +34,7 @@ public:
         fmt::print("Size: {}", trade_data.size);
         fmt::print("Source: {}", trade_data.source);
         fmt::print("Symbol: {}", trade_data.symbol);
-        fmt::print("Time: {}", td::string{std::asctime(std::localtime(&trade_data.time))});
+        fmt::print("Time: {}", std::string{std::asctime(std::localtime(&trade_data.time))});
 
         auto& [elements, prices] { counted_prices_[trade_data.symbol]};
 
