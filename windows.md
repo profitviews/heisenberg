@@ -29,7 +29,7 @@ Invoke-WebRequest -OutFile python-3.10.2-amd64.exe -Uri https://www.python.org/f
 13. `conan profile update settings.build_type=Debug windows-msvc`
 14. Download Cmake
 ```powershell
-Invoke-WebRequest -OutFile cmake-3.23.0-rc2-windows-x86_64.msil -Uri https://github.com/Kitware/CMake/releases/download/v3.23.0-rc2/cmake-3.23.0-rc2-windows-x86_64.msi
+Invoke-WebRequest -OutFile cmake-3.23.0-rc2-windows-x86_64.msi -Uri https://github.com/Kitware/CMake/releases/download/v3.23.0-rc2/cmake-3.23.0-rc2-windows-x86_64.msi
 .\cmake-3.23.0-rc2-windows-x86_64.msi
 $env:Path += ';C:\Program Files\CMake\bin'
 ```
