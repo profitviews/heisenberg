@@ -2,7 +2,7 @@
 
 ## Build steps
 
-Linux or MacOS.  See [here](https://github.com/profitviews/cpp_crypto_algos/blob/896f7bf3a1c54c4f2597a2abfd4de70bb8ed32e1/windows.md) for Windows.
+Linux or MacOS.  See [here](https://github.com/profitviews/cpp_crypto_algos/blob/main/windows.md) for Windows.
 
 1. Clone project
    ```
