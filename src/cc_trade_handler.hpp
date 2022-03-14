@@ -4,6 +4,8 @@
 
 #include <ccapi_cpp/ccapi_session.h>
 
+#include <boost/range/adaptor/indexed.hpp>
+
 #include <map>
 
 namespace ccapi 
@@ -33,18 +35,17 @@ public:
     {
         if (event.getType() == Event::Type::SUBSCRIPTION_DATA) {
             for (const auto& message : event.getMessageList()) {
-                auto cid{message.getCorrelationIdList().begin()}; // Assumes correlation list matchs elements - which it should
-                for (const auto& element : message.getElementList()) {
+                const auto& cid{message.getCorrelationIdList()}; // Assumes correlation list matchs elements - which it should
+                for (const auto& [index, element] : message.getElementList() | boost::adaptors::indexed(0)) {
                     const auto& e{element.getNameValueMap()};
                     profitview::TradeStreamMaker::get(trade_stream_name_).onStreamedTrade(
                         { std::stod(e.at("LAST_PRICE"))
                         , e.at("IS_BUYER_MAKER") == "1" ? profitview::Side::Buy : profitview::Side::Sell
                         , std::stod(e.at("LAST_SIZE"))
                         , market_
-                        , *cid
+                        , cid[index]
                         , message.getTime().time_since_epoch().count()/1'000'000'000}
                     );
-                    ++cid;
                 }
             }
         }
