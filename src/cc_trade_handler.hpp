@@ -25,10 +25,10 @@ public:
     void subscribe(const std::string& market, const std::vector<std::string>& symbol_list)
     {   
         market_ = market;  // Assuming for the moment that `subscribe` is called only once and there's only 1 market
-        std::vector<Subscription> subs;
+        std::vector<Subscription> subscriptions;
         for (auto& symbol : symbol_list) 
-            subs.emplace_back(market, symbol, "TRADE", "", symbol);
-        session_->subscribe(subs);
+            subscriptions.emplace_back(market, symbol, "TRADE", "", symbol); // <-- using `symbol` as correlation id
+        session_->subscribe(subscriptions);
     }
 
     bool processEvent(const Event& event, Session* session) override

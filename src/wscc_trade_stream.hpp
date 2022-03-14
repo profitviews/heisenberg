@@ -25,7 +25,7 @@ public:
         fmt::print("Size: {}, ", trade_data.size);
         fmt::print("Source: {}, ", trade_data.source);
         fmt::print("Symbol: {}, ", trade_data.symbol);
-        fmt::print("Time: {}", std::string{std::asctime(std::localtime(&trade_data.time))});
+        fmt::print("Time: {}", std::asctime(std::localtime(&trade_data.time)));
     }
 
     void subscribe(std::string const& market,  std::vector<std::string> const& symbol_list)
