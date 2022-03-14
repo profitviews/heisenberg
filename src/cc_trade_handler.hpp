@@ -24,12 +24,8 @@ public:
     {   
         market_ = market;  // Assuming for the moment that `subscribe` is called only once and there's only 1 market
         std::vector<Subscription> subs;
-        for (auto& symbol : symbol_list)
-        {
-            auto s{std::make_shared<Subscription>(market, symbol, "TRADE", "", symbol)};
-            subscriptions_[{market, symbol}] = s;
-            subs.emplace_back(*s);
-        }
+        for (auto& symbol : symbol_list) 
+            subs.emplace_back(market, symbol, "TRADE", "", symbol);
         session_->subscribe(subs);
     }
 
@@ -67,11 +63,5 @@ private:
     std::unique_ptr<Session> session_;
 
     std::string market_;
-    struct SubscriptionData 
-    {
-        std::string market, symbol;
-        friend auto operator<=>(const SubscriptionData&, const SubscriptionData&) = default;
-    };
-    std::map<SubscriptionData, std::shared_ptr<Subscription>> subscriptions_;
 };
 }
