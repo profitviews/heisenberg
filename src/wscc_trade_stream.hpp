@@ -21,7 +21,7 @@ public:
     void onStreamedTrade(TradeData const& trade_data) override
     {
         fmt::print("Price: {}, ", trade_data.price);
-        fmt::print("Side: {}, ", toString(Side::Buy));
+        fmt::print("Side: {}, ", toString(trade_data.side));
         fmt::print("Size: {}, ", trade_data.size);
         fmt::print("Source: {}, ", trade_data.source);
         fmt::print("Symbol: {}, ", trade_data.symbol);
