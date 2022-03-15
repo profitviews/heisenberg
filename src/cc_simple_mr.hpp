@@ -44,7 +44,7 @@ public:
             ++elements; // Accumulate up to lookback_ prices
         } else {
             // These could be done on the fly but the complexity would distract
-            auto mean_value { util::mean(prices, lookback_)};
+            auto mean_value { util::ma(prices, lookback_)};
             double std_reversion { reversion_level_*util::stdev(prices, mean_value, lookback_)};
 
             prices.pop_front(); // Now we have lookback_ prices already, remove the oldest

@@ -6,7 +6,7 @@
 namespace profitview::util
 {
 
-double mean(auto const& sequence, int lookback)
+double ma(auto const& sequence, int lookback)
 {
     return std::accumulate(sequence.begin(), sequence.end(), 0.0)/lookback;
 }
