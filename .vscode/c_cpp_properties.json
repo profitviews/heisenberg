@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/build/_deps/ccapi-src/include/**",
                 "${workspaceFolder}/build/_deps/websocketpp-src/websocketpp/**",
-                "~/.conan/data/**"
+                "~/.conan/data/**",
+                "${workspaceFolder}/src/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++-11",
