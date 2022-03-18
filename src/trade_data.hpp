@@ -2,6 +2,9 @@
 
 #include "side.hpp"
 
+#include <string>
+#include <ctime>
+
 namespace profitview 
 {
 

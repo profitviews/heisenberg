@@ -82,6 +82,16 @@
         "valarray": "cpp",
         "variant": "cpp",
         "regex": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "cassert": "cpp",
+        "cerrno": "cpp",
+        "ciso646": "cpp",
+        "climits": "cpp",
+        "filesystem": "cpp",
+        "ios": "cpp",
+        "locale": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "version": "cpp"
     }
 }

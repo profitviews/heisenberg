@@ -65,7 +65,6 @@
                 }
             ]
         },
-
         {
             "name": "(gdb) algo",
             "type": "cppdbg",
@@ -80,17 +79,31 @@
             // , "--base_quantity=0.0025"
             // , "--symbol=BTC-PERP"
             // ],
-            [ "--exchange=coinbase"
-            , "--api_key=${env:COINBASE_API_KEY}"
-            , "--api_secret=${env:COINBASE_API_SECRET}"
-            , "--api_phrase=${env:COINBASE_API_PHRASE}"
+            // [ "--exchange=coinbase"
+            // , "--api_key=${env:COINBASE_API_KEY}"
+            // , "--api_secret=${env:COINBASE_API_SECRET}"
+            // , "--api_phrase=${env:COINBASE_API_PHRASE}"
+            // , "--lookback=50"
+            // , "--reversion_level=2"
+            // , "--base_quantity=0.0025"
+            // , "--symbol=ETH-BTC"
+            // // , "SOL-BTC"
+            // ],
+            [ "--algo=Kaufman"
+            , "--exchange=ftx"
+            , "--api_key=${env:FTX_API_KEY}"
+            , "--api_secret=${env:FTX_API_SECRET}"
+            // , "--api_phrase=${env:COINBASE_API_PHRASE}"
             , "--lookback=50"
-            , "--reversion_level=2"
             , "--base_quantity=0.0025"
-            , "--symbol=ETH-BTC"
+            , "--er_period=30"
+            , "--fast_sc=3"
+            , "--slow_sc=15"
+            , "--kama_trend=20"
+            , "--symbol=BTC-PERP"
             // , "SOL-BTC"
             ],
-            "stopAtEntry": false,
+                "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
@@ -104,6 +117,33 @@
             ],
             "preLaunchTask": "CMake build project",
             "miDebuggerPath": "/usr/bin/gdb",
-        }
+        },
+        // {
+        //     "name": "(gdb) experiment",
+        //     "type": "cppdbg",
+        //     "request": "launch",
+        //     "program": "${workspaceFolder}/build/bin/experiment",
+        //     "args": 
+        //     [ "--name", "test"
+        //     , "--er_period", "8"
+        //     ],
+        //     "stopAtEntry": false,
+        //     "cwd": "${fileDirname}",
+        //     "environment": [],
+        //     "externalConsole": false,
+        //     "MIMode": "gdb",
+        //     "setupCommands": [
+        //         {
+        //             "description": "Enable pretty-printing for gdb",
+        //             "text": "-enable-pretty-printing",
+        //             "ignoreFailures": true
+        //         },
+        //         {
+        //             "description":  "Set Disassembly Flavor to Intel",
+        //             "text": "-gdb-set disassembly-flavor intel",
+        //             "ignoreFailures": true
+        //         }
+        //     ]
+        // },        
     ]
 }

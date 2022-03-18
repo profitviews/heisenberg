@@ -2,6 +2,7 @@ add_library(cpp_crypto_algos_lib INTERFACE)
 target_sources(cpp_crypto_algos_lib
     INTERFACE
         cc_simple_mr.hpp
+        cc_kaufman.hpp
         cc_trade_handler.hpp
         ccex_order_executor.hpp
         enum.hpp
@@ -37,6 +38,7 @@ target_include_directories(cpp_crypto_algos_lib
         ${PROJECT_SOURCE_DIR}/ccapi_executor
         ${ccapi_SOURCE_DIR}/include
         ${websocketpp_SOURCE_DIR}
+        ${csv2_SOURCE_DIR}/include
 )
 
 target_compile_definitions(cpp_crypto_algos_lib

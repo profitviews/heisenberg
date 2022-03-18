@@ -15,7 +15,12 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/zaphoyd/websocketpp.git
     GIT_TAG        develop
 )
-FetchContent_MakeAvailable(ccapi websocketpp)
+FetchContent_Declare(
+    csv2
+    GIT_REPOSITORY https://github.com/p-ranav/csv2
+    GIT_TAG        master
+)
+FetchContent_MakeAvailable(ccapi websocketpp csv2)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 find_package(Boost REQUIRED)
