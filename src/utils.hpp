@@ -2,14 +2,14 @@
 
 #include <boost/range/numeric.hpp>
 
-#include <iostream>
-
 #include <csv2/writer.hpp>
 
+#include <iostream>
 #include <numeric>
 #include <ranges>
 #include <tuple>
 #include <cmath>
+#include <cassert>
 
 namespace profitview::util
 {
@@ -44,6 +44,7 @@ double stdev(auto const& sequence, double m, int lookback)
 auto abs_differences(auto const& prices, int extent) -> std::tuple<std::vector<double>, double>
 {
     auto period_begin {prices.end() - extent};
+    assert(prices.size() > extent);
 
     std::ranges::subrange lagged  {period_begin - 1, prices.end() - 1};
     std::ranges::subrange aligned {period_begin,     prices.end()    };
