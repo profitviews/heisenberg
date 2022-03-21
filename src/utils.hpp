@@ -28,7 +28,7 @@ double ema(auto const& sequence, int lookback, double m = 0.0f)
         return price*alpha + accumulator*(1 - alpha);
     }};
 
-    return std::accumulate(sequence.begin(), sequence.end(), m, ema_step);
+    return boost::accumulate(sequence, m, ema_step);
 }
 
 double stdev(auto const& sequence, double m, int lookback)
@@ -38,17 +38,19 @@ double stdev(auto const& sequence, double m, int lookback)
         return accumulator + (val - m)*(val - m) / (lookback - 1);
     }};
 
-    return std::sqrt(std::accumulate(sequence.begin(), sequence.end(), 0.0, variance));
+    return boost::accumulate(sequence, 0.0, variance);
 }
 
-auto abs_differences(auto const& prices, int extent) -> std::tuple<std::vector<double>, double>
+template <typename Prices> // Couldn't get this to work with (const auto& prices,...)
+auto abs_differences(const Prices& prices, int extent) 
+    -> std::tuple<std::vector<typename Prices::value_type>, typename Prices::value_type>
 {
     auto period_begin {prices.end() - extent};
     assert(prices.size() > extent);
 
     std::ranges::subrange lagged  {period_begin - 1, prices.end() - 1};
     std::ranges::subrange aligned {period_begin,     prices.end()    };
-    std::vector<double> differences(extent);
+    std::vector<typename Prices::value_type> differences(extent);
     std::ranges::transform(lagged, aligned, differences.begin(), [](auto n, auto m) -> auto { return std::abs(n - m);});
 
     return {differences, std::abs(prices.back() - *period_begin)};
