@@ -1,5 +1,6 @@
 #include "cc_simple_mr.hpp"
 #include "cc_kaufman.hpp"
+#include "algo.hpp"
 
 #include "ccex_order_executor.hpp"
 #include "trade_stream_maker.hpp"
@@ -57,24 +58,23 @@ int main(int argc, char *argv[])
 	if (result)
 		return result.value();
 
-	enum {SIMPLE_MR, KAUFMAN};
-	const std::map<std::string, int> algos
-	{ {"Kaufman",  KAUFMAN   }
-	, {"SimpleMR", SIMPLE_MR }
+	const std::map<std::string, Algo> algos
+	{ {"Kaufman",  Kaufman  }
+	, {"SimpleMR", SimpleMr }
 	};
 
 	CcexOrderExecutor executor{options.exchange, options.api_key, options.api_secret, options.api_phrase, 5};
 
 	switch(algos.at(options.algo))
 	{
-	case SIMPLE_MR:
+	case SimpleMr:
 		TradeStreamMaker::register_stream<CcSimpleMR>("CcSimpleMR", 
 			&executor, 
 			options.lookback,
 			options.reversion_level,
 			options.base_quantity);	
 		break;
-	case KAUFMAN:
+	case Kaufman:
 		TradeStreamMaker::register_stream<CCKaufman>("Kaufman", 
 			&executor, 
 			options.lookback,
