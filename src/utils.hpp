@@ -38,7 +38,7 @@ double stdev(auto const& sequence, double m, int lookback)
         return accumulator + (val - m)*(val - m) / (lookback - 1);
     }};
 
-    return boost::accumulate(sequence, 0.0, variance);
+    return std::sqrt(boost::accumulate(sequence, 0.0, variance));
 }
 
 template <typename Prices> // Couldn't get this to work with (const auto& prices,...)
