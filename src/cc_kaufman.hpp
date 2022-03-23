@@ -70,7 +70,7 @@ public:
             mean_reached = true;
         } else if (mean_reached) {
             auto [er_vols, change]{util::abs_differences(prices, er_period_)};
-            auto er_vol{std::accumulate(er_vols.begin(), er_vols.end(), 0.0)};
+            auto er_vol{util::accumulate(er_vols, 0.0)};
             // Occasionally, the sequence will be constant:
             auto er{er_vol > 0 ? change/er_vol : 0.0};  // leading to er_vol of zero
             auto root_sc{er*sc_factor + sc_sum};
@@ -78,7 +78,6 @@ public:
 
             std::cout << "ER: " << er << std::endl;
             std::cout << "SC: " << sc << std::endl;
-
             
             // These could be done on the fly but the complexity would distract
             auto mean_value { util::ma(prices, lookback_)};
@@ -92,6 +91,10 @@ public:
                 auto [monotonic, up] {util::is_monotonic(std::ranges::subrange {kamas.end() - kama_trend_, kamas.end()})};
                 if(not monotonic) // Signal
                 {
+                    // @todo This will keep buying/selling when the market is not directional
+                    //       It should have more refined behaviour
+                    // @todo FTX market orders are not properly implemented so this puts limits at the 
+                    //       current price.  This will leave open orders sometimes.
                     executor_->new_order(trade_data.symbol, up ? Side::Buy : Side::Sell, base_quantity_, OrderType::Limit, trade_data.price);
                 }
 
@@ -105,7 +108,7 @@ public:
                     , monotonic ? (up ? "Up" : "Down") : "Not monotonic"
                     );
 
-                kamas.pop_front();
+                kamas.pop_front(); // Remove oldest KAMA price
             }
         }
 	}
