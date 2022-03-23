@@ -20,10 +20,10 @@
 namespace profitview 
 {
 
-class CCKaufman : public TradeStream, private ccapi::CcTradeHandler
+class CcKaufman : public TradeStream, private ccapi::CcTradeHandler
 {
 public:
-    CCKaufman
+    CcKaufman
 		( const std::string trade_stream_name 
         , OrderExecutor* executor
 		, int lookback

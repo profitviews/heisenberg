@@ -68,14 +68,14 @@ int main(int argc, char *argv[])
 	switch(algos.at(options.algo))
 	{
 	case SimpleMr:
-		TradeStreamMaker::register_stream<CcSimpleMR>("CcSimpleMR", 
+		TradeStreamMaker::register_stream<CcSimpleMR>(options.algo, 
 			&executor, 
 			options.lookback,
 			options.reversion_level,
 			options.base_quantity);	
 		break;
 	case Kaufman:
-		TradeStreamMaker::register_stream<CCKaufman>("Kaufman", 
+		TradeStreamMaker::register_stream<CcKaufman>(options.algo, 
 			&executor, 
 			options.lookback,
 			options.base_quantity,
