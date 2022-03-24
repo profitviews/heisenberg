@@ -3,6 +3,7 @@ target_sources(cpp_crypto_algos_lib
     INTERFACE
         cc_simple_mr.hpp
         cc_kaufman.hpp
+        damped_mr.hpp
         cc_trade_handler.hpp
         ccex_order_executor.hpp
         enum.hpp

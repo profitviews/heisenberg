@@ -35,9 +35,9 @@ auto ma(auto const& s, int p) -> auto
 }
 
 // Exponential Moving Average (ema) difference formula from https://en.wikipedia.org/wiki/Moving_average:
-double ema(auto const& s, int p, double m = 0.0f)
+auto ema(auto const& s, auto p, auto m = 0) -> auto
 {
-    auto alpha{2.0f/(p -1)};
+    auto alpha{2.0f/(p - 1)};
     auto const ema_step{[&alpha](auto a, const auto& price) 
     {
         return price*alpha + a*(1 - alpha);
@@ -46,18 +46,14 @@ double ema(auto const& s, int p, double m = 0.0f)
     return accumulate(s, m, ema_step);
 }
 
-double stdev(auto const& s, double m, int p, double d = std::numeric_limits<double>::max())
+auto stdev(auto const& s, auto m, int p) -> auto
 {   // Calculate standard deviation given mean (m)
     auto const variance {[&m, &p](auto a, const auto& v) 
     {
-        return a + (v - m)*(v - m) / (p - 1);
-    }};
-    auto const& t {s | std::views::transform([&m, &d](auto v) -> auto
-    {
         auto const& v_m{v - m};
-        return std::abs(v_m) > d ? boost::math::sign(v_m)*d : v_m;
-    })};
-    return std::sqrt(accumulate(t, 0.0, variance));
+        return a + v_m*v_m/(p - 1);
+    }};
+    return std::sqrt(accumulate(s, 0.0, variance));
 }
 
 template <typename Prices> // Couldn't get this to work with (const auto& prices,...)

@@ -71,5 +71,12 @@ auto main(int argc, char* argv[]) -> int
     BOOST_LOG_TRIVIAL(info) << options.symbol << "Running: " << std::endl; 
     executor.new_order(options.symbol, options.side, options.size, options.type, options.price);
 
+	enum {OrderId, Symbol, OrderSide, Size, Price, Time, Status};
+	for(const auto& [cid, details]: executor.get_open_orders())
+		std::cout 
+			<< "cid: " << cid 
+			<< ", symbol: " << std::get<OrderId>(details) 
+			<< ", status: " << std::get<Status>(details) 
+			<< std::endl; 
     return 0;
 }

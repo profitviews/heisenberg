@@ -10,15 +10,20 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/execute_order",
             "args": 
-                [ "--exchange=coinbase"
-                , "--symbol=ETH-BTC"
-                , "--api_key=${env:COINBASE_API_KEY}"
-                , "--api_secret=${env:COINBASE_API_SECRET}"
-                , "--api_phrase=${env:COINBASE_API_PHRASE}"
+                // [ "--exchange=coinbase"
+                [ "--exchange=ftx"
+                // , "--symbol=ETH-BTC"
+                , "--symbol=BTC-PERP"
+                , "--api_key=${env:FTX_API_KEY}"
+                , "--api_secret=${env:FTX_API_SECRET}"
+                // , "--api_key=${env:COINBASE_API_KEY}"
+                // , "--api_secret=${env:COINBASE_API_SECRET}"
+                // , "--api_phrase=${env:COINBASE_API_PHRASE}"
                 , "--side=buy"
                 , "--size=0.0025"
                 , "--type=limit"
-                , "--price=0.055"
+                , "--price=42000"
+                // , "--price=0.055"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -89,12 +94,14 @@
             // , "--symbol=ETH-BTC"
             // // , "SOL-BTC"
             // ],
-            [ "--algo=Kaufman"
+            // [ "--algo=Kaufman"
+            [ "--algo=SimpleMR"
             , "--exchange=ftx"
             , "--api_key=${env:FTX_API_KEY}"
             , "--api_secret=${env:FTX_API_SECRET}"
             // , "--api_phrase=${env:COINBASE_API_PHRASE}"
             , "--lookback=50"
+            , "--reversion_level=2"
             , "--base_quantity=0.0025"
             , "--er_period=30"
             , "--fast_sc=3"
