@@ -157,7 +157,7 @@ public:
         , Side side
         , double orderQty
         , OrderType type
-        , double price = 0.0
+        , double price // = 0.0
         ) override
     {
         SessionOptions session_options;

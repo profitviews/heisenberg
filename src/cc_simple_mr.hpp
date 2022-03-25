@@ -51,11 +51,11 @@ public:
 
             if(trade_data.price > mean_value + std_reversion) { // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
-                executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Limit, trade_data.price);
+                executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
             }
             else if(trade_data.price < mean_value - std_reversion) { // Well less than the normal volatility
                 // so buy, expecting a reversion to the mean
-                executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Limit, trade_data.price);
+                executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
         }
 	}

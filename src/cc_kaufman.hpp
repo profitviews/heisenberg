@@ -95,7 +95,7 @@ public:
                     //       It should have more refined behaviour
                     // @todo FTX market orders are not properly implemented so this puts limits at the 
                     //       current price.  This will leave open orders sometimes.
-                    executor_->new_order(trade_data.symbol, up ? Side::Buy : Side::Sell, base_quantity_, OrderType::Limit, trade_data.price);
+                    executor_->new_order(trade_data.symbol, up ? Side::Buy : Side::Sell, base_quantity_, OrderType::Market);
                 }
 
                 csv_writer_.write_strings
