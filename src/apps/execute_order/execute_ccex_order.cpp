@@ -38,7 +38,7 @@ struct ProgramArgs
 			("side", po::value(&side)->required(), "The side of the trade <buy|sell>.")
 			("size", po::value(&size)->required(), "Size to trade.")
 			("type", po::value(&type)->required(), "The type of order <limit|market>.")
-    		("price", po::value(&price)->required(), "Price to trade at.")
+    		("price", po::value(&price), "Price to trade at.")
 		;		
 	}
 };
