@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 	, {"Damped",   Damped   }
 	};
 
-	CcexOrderExecutor executor{options.exchange, options.api_key, options.api_secret, options.api_phrase, 5};
+	CcexOrderExecutor executor{options.exchange, options.api_key, options.api_secret, options.api_phrase};
 
 	switch(algos.at(options.algo))
 	{

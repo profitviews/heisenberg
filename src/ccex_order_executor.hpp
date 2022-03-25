@@ -137,13 +137,11 @@ public:
         const std::string &exchange,
         const std::string &api_key,
         const std::string &api_secret,
-        const std::string &pass_phrase,
-        int expiry)
+        const std::string &pass_phrase)
     :   exchange_{exchange}
     ,   api_key_{api_key}
     ,   api_secret_{api_secret}
     ,   pass_phrase_{pass_phrase}
-    ,   expiry_{expiry}
     {
     }
 

@@ -64,8 +64,7 @@ auto main(int argc, char* argv[]) -> int
         exchange_names.at(options.exchange), 
         options.apiKey, 
         options.apiSecret, 
-        options.apiPhrase, 
-        0
+        options.apiPhrase
     };
 
     BOOST_LOG_TRIVIAL(info) << options.symbol << "Running: " << std::endl; 
