@@ -72,7 +72,13 @@ private:
             std::cout << "Received an event:\n" + event.toStringPretty(2, 2) << std::endl;
             const auto& m{event.getMessageList()};
             const auto& n{m[0].getElementList()[0].getNameValueMap()};
-            std::cout << "Status: " << n.at("STATUS") << std::endl;
+            std::cout << "Status: " << 
+                (n.contains("STATUS") 
+                ? n.at("STATUS") 
+                : (n.contains("ERROR_MESSAGE") 
+                    ? n.at("ERROR_MESSAGE") 
+                    : "No status")) 
+                << std::endl;
             if(n.contains("LIMIT_PRICE"))
             {
                 executor_->add_open_order
@@ -111,6 +117,21 @@ private:
         open_orders_[cid] = {order_id, symbol, side, size, price, time, status};
     }
 
+    void adjust_exchange_params(const std::string& exchange, auto& params)
+    {
+        // Handling of Market orders differs between exchanges
+        if(params.at("type") == "market") {
+            if(exchange == CCAPI_EXCHANGE_NAME_FTX) {
+                params["price"] = (params.at("side") == "BUY" ? 
+                    // Force cross for synthetic market price
+                    // @note makes assumptions on extremes of price
+                    "1000000.0" : "0.0000001");  
+            } else if(exchange == CCAPI_EXCHANGE_NAME_COINBASE) {
+                params.erase("price");
+            }
+        }
+    }
+
 public:
     CcexOrderExecutor(
         const std::string &exchange,
@@ -138,7 +159,7 @@ public:
         , Side side
         , double orderQty
         , OrderType type
-        , double price = -1.0
+        , double price = 0.0
         ) override
     {
         SessionOptions session_options;
@@ -158,10 +179,14 @@ public:
 
         // @todo Properly handle Market orders.  Some exchanges don't have native Market orders
         //       Therefore create a type of cross limit to substitute
-        request.appendParam({{"type", type == OrderType::Market ? "market" : "limit"},
-                            {"side", side == Side::Buy ? "BUY" : "SELL"},
-                            {"size", std::to_string(orderQty)},
-                            {"price", type == OrderType::Limit ? std::to_string(price) : "0.0001"}});
+        std::map<std::string, std::string> params
+            { {"type", type == OrderType::Market ? "market" : "limit"}
+            , {"side", side == Side::Buy ? "BUY" : "SELL"}
+            , {"size", std::to_string(orderQty)}
+            , {"price", std::to_string(price)}
+            };
+        adjust_exchange_params(exchange_, params);
+        request.appendParam(params);
         session.sendRequest(request);
         event_handler.wait();
         session.stop();
