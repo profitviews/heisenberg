@@ -10,6 +10,7 @@
 #include <iostream>
 #include <numeric>
 #include <ranges>
+#include <concepts>
 #include <tuple>
 #include <type_traits>
 #include <limits>
@@ -94,16 +95,22 @@ auto is_monotonic(auto const& s) -> std::tuple<bool, bool> // { monotonic, up }
     return {true, prev == 1};
 }
 
+template <typename Arithmetic>
+concept arithmetic = std::is_arithmetic_v<std::remove_cvref_t<Arithmetic>>;
+
 class CsvWriter : public csv2::Writer<csv2::delimiter<','>>
 { // Provides shorthand `write_strings()`
 public:
-    template <typename Stream>
-    CsvWriter(Stream&& stream) : csv2::Writer<csv2::delimiter<','>>(stream) {}
+    CsvWriter(auto& stream) : csv2::Writer<csv2::delimiter<','>>(stream) {}
 
-    template <typename... Args>
-    void write_strings(Args... args)
+    void write_strings(auto&&... args)
     {
         this->write_row(std::vector<std::string>({args...}));
+    }
+
+    void write_strings(arithmetic auto&&... args)
+    {
+        this->write_row(std::vector<std::string>({std::to_string(args)...}));
     }
 };
 }

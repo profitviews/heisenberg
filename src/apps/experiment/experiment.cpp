@@ -53,8 +53,14 @@ auto main(int argc, char* argv[]) -> int
 	, 5, 6, 7, 10, 11, 12
 	, 5, 6, 7, 10, 11, 12
 	};
+	std::ofstream exp{"experiment.csv"};
+	profitview::util::CsvWriter cw{exp};
 
 	auto [d, c]{profitview::util::abs_differences(a, options.er_period)};
+
+	cw.write_strings(a[0], d[0], c, 5.5);
+
+	cw.write_strings("Hello", "there", std::to_string(20.5));
 
 	using namespace std::ranges;
 
@@ -71,13 +77,14 @@ auto main(int argc, char* argv[]) -> int
 	auto [s3m, s3d]{util::is_monotonic(s3)};
 	auto [s4m, s4d]{util::is_monotonic(s4)};
 
+
+
 	std::cout << std::boolalpha 
 		<< s1m << " " << s1d << std::endl
 		<< s2m << " " << s2d << std::endl
 		<< s3m << " " << s3d << std::endl
 		<< s4m << " " << s4d << std::endl
 		<< std::endl;
-
 
     return 0;
 }
