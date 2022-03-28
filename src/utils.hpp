@@ -11,6 +11,7 @@
 #include <numeric>
 #include <ranges>
 #include <tuple>
+#include <type_traits>
 #include <limits>
 #include <cmath>
 #include <cassert>
@@ -56,22 +57,20 @@ auto stdev(auto const& s, auto m, int p) -> auto
     return std::sqrt(accumulate(s, 0.0, variance));
 }
 
-template <typename Prices> // Couldn't get this to work with (const auto& prices,...)
-auto abs_differences(const Prices& prices, int e) 
-    -> std::tuple<std::vector<typename Prices::value_type>, typename Prices::value_type>
+auto abs_differences(const auto& prices, int e) -> auto
 {
     auto b {prices.end() - e};
     assert(prices.size() > e);
 
     using namespace std::ranges;
-
+    
     subrange 
         lagged  {b - 1, prices.end() - 1},
         aligned {b,     prices.end()    };
-    std::vector<typename Prices::value_type> differences(e);
+    std::vector<typename std::remove_cvref_t<decltype(prices)>::value_type> differences(e);
     transform(lagged, aligned, differences.begin(), [](auto n, auto m) -> auto { return std::abs(n - m);});
 
-    return {differences, std::abs(prices.back() - *b)};
+    return std::make_tuple(differences, prices.back() - *b);
 }
 
 auto is_monotonic(auto const& s) -> std::tuple<bool, bool> // { monotonic, up }
