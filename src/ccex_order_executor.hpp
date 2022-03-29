@@ -121,12 +121,7 @@ private:
     {
         // Handling of Market orders differs between exchanges
         if(params.at("type") == "market") {
-            if(exchange == CCAPI_EXCHANGE_NAME_FTX) {
-                params["price"] = (params.at("side") == "BUY" ? 
-                    // Force cross for synthetic market price
-                    // @note makes assumptions on extremes of price
-                    "1000000.0" : "0.0000001");  
-            } else if(exchange == CCAPI_EXCHANGE_NAME_COINBASE) {
+            if(exchange == CCAPI_EXCHANGE_NAME_COINBASE) {
                 params.erase("price");
             }
         }
