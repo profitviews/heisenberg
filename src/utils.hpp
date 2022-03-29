@@ -1,11 +1,13 @@
 #pragma once
 
+#include <csv2/writer.hpp>
+
+#include <fmt/core.h>
+
 #include <boost/range/numeric.hpp>
 #include <boost/math/special_functions/sign.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-
-#include <csv2/writer.hpp>
 
 #include <iostream>
 #include <numeric>
@@ -95,9 +97,6 @@ auto is_monotonic(auto const& s) -> std::tuple<bool, bool> // { monotonic, up }
     return {true, prev == 1};
 }
 
-template <typename Arithmetic>
-concept arithmetic = std::is_arithmetic_v<std::remove_cvref_t<Arithmetic>>;
-
 class CsvWriter : public csv2::Writer<csv2::delimiter<','>>
 { // Provides shorthand `write_strings()`
 public:
@@ -105,12 +104,7 @@ public:
 
     void write_strings(auto&&... args)
     {
-        this->write_row(std::vector<std::string>({args...}));
-    }
-
-    void write_strings(arithmetic auto&&... args)
-    {
-        this->write_row(std::vector<std::string>({std::to_string(args)...}));
+        this->write_row(std::vector<std::string>({fmt::format("{}", std::forward<decltype(args)>(args))...}));
     }
 };
 }

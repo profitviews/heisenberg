@@ -60,7 +60,7 @@ auto main(int argc, char* argv[]) -> int
 
 	cw.write_strings(a[0], d[0], c, 5.5);
 
-	cw.write_strings("Hello", "there", std::to_string(20.5));
+	cw.write_strings("Hello", "there", std::to_string(20.5), a[0], d[0], c, 5.5);
 
 	using namespace std::ranges;
 
