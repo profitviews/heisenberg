@@ -100,11 +100,11 @@ public:
 
                 csv_writer_.write_strings
                     ( trade_data.symbol
-                    , std::to_string(trade_data.price)
+                    , trade_data.price
                     , toString(trade_data.side).data()
-                    , std::to_string(trade_data.size)
+                    , trade_data.size
                     , trade_data.source
-                    , std::to_string(kama)
+                    , kama
                     , monotonic ? (up ? "Up" : "Down") : "Not monotonic"
                     );
 
