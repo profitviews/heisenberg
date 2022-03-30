@@ -123,7 +123,6 @@ public:
         bool mean_reached;
         Float initial_mean, kama;
         std::deque<Float> kamas;
-        friend auto operator<=>(const Data&, const Data&) = default;
     };
 
 private:

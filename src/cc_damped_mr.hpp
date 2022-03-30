@@ -107,7 +107,6 @@ public:
         std::deque<Float> prices;
         bool mean_reached;
         Float initial_mean, initial_stdev;
-        friend auto operator<=>(const Data&, const Data&) = default;
     };
 
 private:
