@@ -20,18 +20,19 @@
 namespace profitview 
 {
 
+template<std::floating_point Float = double, std::integral Int = int>
 class CcKaufman : public TradeStream, private ccapi::CcTradeHandler
 {
 public:
     CcKaufman
 		( const std::string trade_stream_name 
         , OrderExecutor* executor
-		, int lookback
-		, double base_quantity
-        , int er_period
-        , int fast_sc
-        , int slow_sc
-        , int kama_trend
+		, Int lookback
+		, Float base_quantity
+        , Int er_period
+        , Int fast_sc
+        , Int slow_sc
+        , Int kama_trend
         , const std::string& csv_name = "Kaufman.csv"
 	) 
     : ccapi::CcTradeHandler(trade_stream_name)
@@ -59,10 +60,8 @@ public:
 
         prices.emplace_back(trade_data.price);
 
-        using price_t = decltype(prices)::value_type;
-
-        price_t sc_factor {2.0/(fast_sc_+1) - 2.0/(slow_sc_+1)};
-        price_t sc_sum    {2.0/(slow_sc_+1)};
+        auto sc_factor {2.0/(fast_sc_+1) - 2.0/(slow_sc_+1)};
+        auto sc_sum    {2.0/(slow_sc_+1)};
 
         if (not mean_reached && prices.size() + 1 == lookback_) {
             kama = initial_mean = util::ma(prices, lookback_);
@@ -118,22 +117,23 @@ public:
         CcTradeHandler::subscribe(market, symbol_list);
     }
 
+    struct Data
+    {
+        std::deque<Float> prices;
+        bool mean_reached;
+        Float initial_mean, kama;
+        std::deque<Float> kamas;
+        friend auto operator<=>(const Data&, const Data&) = default;
+    };
+
 private:
 
-	const int lookback_;
+	const Int lookback_;
 
     double base_quantity_;
-    int er_period_, fast_sc_, slow_sc_, kama_trend_;
+    Int er_period_, fast_sc_, slow_sc_, kama_trend_;
 
-    std::map<std::string, 
-             std::tuple<
-                std::deque<double>, 
-                bool, 
-                double, 
-                double,
-                std::deque<double>
-                >
-            > price_structure_;
+    std::map<std::string, Data> price_structure_;
 
     OrderExecutor* executor_;
 

@@ -10,15 +10,16 @@
 namespace profitview 
 {
 
+template<std::floating_point Float = double, std::integral Int = int>
 class CcSimpleMR : public TradeStream, private ccapi::CcTradeHandler
 {
 public:
     CcSimpleMR
 		( const std::string trade_stream_name 
         , OrderExecutor* executor
-		, int lookback
-		, double reversion_level
-		, double base_quantity
+		, Int lookback
+		, Float reversion_level
+		, Float base_quantity
 	) 
     : ccapi::CcTradeHandler(trade_stream_name)
 	, lookback_        {lookback       }
@@ -45,7 +46,7 @@ public:
         } else {
             // These could be done on the fly but the complexity would distract
             auto mean_value { util::ma(prices, lookback_)};
-            double std_reversion { reversion_level_*util::stdev(prices, mean_value, lookback_)};
+            auto std_reversion { reversion_level_*util::stdev(prices, mean_value, lookback_)};
 
             prices.pop_front(); // Now we have lookback_ prices already, remove the oldest
 
@@ -64,14 +65,15 @@ public:
     {
         CcTradeHandler::subscribe(market, symbol_list);
     }
+
 private:
 
-	const int lookback_;
+	const Int lookback_;
 
-    const double reversion_level_; // Multiple of stdev
-    double base_quantity_;
+    const Float reversion_level_; // Multiple of stdev
+    Float base_quantity_;
 
-    std::map<std::string, std::pair<int, std::deque<double>>> counted_prices_;
+    std::map<std::string, std::pair<Int, std::deque<Float>>> counted_prices_;
 
     OrderExecutor* executor_;
 };

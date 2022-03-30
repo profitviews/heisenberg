@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 	switch(algos.at(options.algo))
 	{
 	case SimpleMr:
-		TradeStreamMaker::register_stream<CcSimpleMR>
+		TradeStreamMaker::register_stream<CcSimpleMR<>>
 			( options.algo
 			, &executor
 			, options.lookback
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 			);	
 		break;
 	case Kaufman:
-		TradeStreamMaker::register_stream<CcKaufman>
+		TradeStreamMaker::register_stream<CcKaufman<>>
 			( options.algo
 			, &executor
 			, options.lookback
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 			);
 		break;
 	case Damped:
-		TradeStreamMaker::register_stream<CcDamped>
+		TradeStreamMaker::register_stream<CcDamped<>>
 			(options.algo
 			, &executor
 			, options.lookback

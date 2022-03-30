@@ -9,6 +9,7 @@
 
 #include <fmt/core.h>
 
+#include <concepts>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -20,17 +21,18 @@
 namespace profitview 
 {
 
+template<std::floating_point Float = double, std::integral Int = int>
 class CcDamped : public TradeStream, private ccapi::CcTradeHandler
 {
 public:
     CcDamped
 		( const std::string trade_stream_name 
         , OrderExecutor* executor
-		, int lookback
-        , double reversion_level
-		, double base_quantity
-        , double damping
-        , const std::string& csv_name = "Kaufman.csv"
+		, Int lookback
+        , Float reversion_level
+		, Float base_quantity
+        , Float damping
+        , const std::string& csv_name = "Damped.csv"
 	) 
     : ccapi::CcTradeHandler(trade_stream_name)
 	, lookback_        {lookback       }
@@ -55,9 +57,7 @@ public:
 
         prices.emplace_back(trade_data.price);
 
-        using price_t = decltype(prices)::value_type;
-
-        if (not mean_reached && prices.size() + 1 == lookback_) {
+        if (not mean_reached and prices.size() + 1 == lookback_) {
             initial_mean = util::ma(prices, lookback_);
             initial_stdev = util::stdev(prices, initial_mean, lookback_);
             std::cout << "Initial mean: " << initial_mean << std::endl << std::endl;
@@ -75,7 +75,7 @@ public:
                         ? boost::math::sign(v_m)*damping_factor 
                         : v_m;
                 })};
-            double std_reversion { reversion_level_*util::stdev(damped, mean_value, lookback_)};
+            auto std_reversion { reversion_level_*util::stdev(damped, mean_value, lookback_)};
 
             prices.pop_front(); // Now we have lookback_ prices already, remove the oldest
             if(trade_data.price > mean_value + std_reversion) { // Well greater than the normal volatility
@@ -102,21 +102,22 @@ public:
         CcTradeHandler::subscribe(market, symbol_list);
     }
 
+    struct Data
+    {
+        std::deque<Float> prices;
+        bool mean_reached;
+        Float initial_mean, initial_stdev;
+        friend auto operator<=>(const Data&, const Data&) = default;
+    };
+
 private:
 
-	const int lookback_;
-    const double reversion_level_;
-    const double base_quantity_;
-    const double damping_;
+	const Int lookback_;
+    const Float reversion_level_;
+    const Float base_quantity_;
+    const Float damping_;
 
-    std::map< std::string
-            , std::tuple
-                < std::deque<double>
-                , bool
-                , double
-                , double
-                >
-            > price_structure_;
+    std::map< std::string, Data> price_structure_;
 
     OrderExecutor* executor_;
 
