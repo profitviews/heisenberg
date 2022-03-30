@@ -1,6 +1,6 @@
 #include "cc_simple_mr.hpp"
 #include "cc_kaufman.hpp"
-#include "damped_mr.hpp"
+#include "cc_damped_mr.hpp"
 #include "algo.hpp"
 
 #include "ccex_order_executor.hpp"
