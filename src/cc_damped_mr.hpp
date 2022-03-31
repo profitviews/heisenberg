@@ -73,7 +73,7 @@ public:
                     auto const& v_m{v - mean_value};
                     return std::abs(v_m) > damping_factor 
                         ? boost::math::sign(v_m)*damping_factor 
-                        : v_m;
+                        : v;
                 })};
             auto std_reversion { reversion_level_*util::stdev(damped, mean_value, lookback_)};
 
@@ -93,6 +93,8 @@ public:
                 , toString(trade_data.side).data()
                 , trade_data.size
                 , trade_data.source
+                , mean_value
+                , std_reversion
                 );
         }
 	}
