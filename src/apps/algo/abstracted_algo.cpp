@@ -46,7 +46,7 @@ struct ProgramArgs
 			("slow_sc", po::value(&slow_sc), "Slow exponential moving average smoothing period")
 			("kama_trend", po::value(&kama_trend), "Kaufman trend prediction period")
 			("damping", po::value(&damping), "Standard deviation damping limit")
-			("symbol", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.")
+			("symbols", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.")
 		;		
 	}
 };
