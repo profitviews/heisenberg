@@ -28,7 +28,7 @@ public:
 	, executor_        {executor       }
     {}
 
-    void onStreamedTrade(profitview::TradeData const& trade_data) override
+    void onStreamedTrade(TradeData const& trade_data) override
     {
         fmt::print("Price: {}, ", trade_data.price);
         fmt::print("Side: {}, ", toString(trade_data.side));
