@@ -103,6 +103,7 @@ public:
                     , toString(trade_data.side).data()
                     , trade_data.size
                     , trade_data.source
+                    , trade_data.time
                     , kama
                     , monotonic ? (up ? "Up" : "Down") : "Not monotonic"
                     );
