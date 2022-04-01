@@ -33,9 +33,9 @@ inline auto accumulate(const auto& s, auto i, auto op) -> auto
     return std::accumulate(std::begin(s), std::end(s), i, op);
 }
 
-auto ma(auto const& s, int p) -> auto
+auto ma(auto const& s, int p = 0) -> auto
 {
-    return accumulate(s, 0.0)/p;
+    return accumulate(s, 0.0)/(p ? p : s.size());
 }
 
 // Exponential Moving Average (ema) difference formula from https://en.wikipedia.org/wiki/Moving_average:

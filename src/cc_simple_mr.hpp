@@ -45,16 +45,16 @@ public:
             ++elements; // Accumulate up to lookback_ prices
         } else {
             // These could be done on the fly but the complexity would distract
-            auto mean_value { util::ma(prices, lookback_)};
-            auto std_reversion { reversion_level_*util::stdev(prices, mean_value, lookback_)};
+            auto mean { util::ma(prices)};
+            auto std_reversion { reversion_level_*util::stdev(prices, mean, lookback_)};
 
             prices.pop_front(); // Now we have lookback_ prices already, remove the oldest
 
-            if(trade_data.price > mean_value + std_reversion) { // Well greater than the normal volatility
+            if(trade_data.price > mean + std_reversion) { // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
             }
-            else if(trade_data.price < mean_value - std_reversion) { // Well less than the normal volatility
+            else if(trade_data.price < mean - std_reversion) { // Well less than the normal volatility
                 // so buy, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }

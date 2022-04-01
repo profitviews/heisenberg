@@ -58,31 +58,31 @@ public:
         prices.emplace_back(trade_data.price);
 
         if (not mean_reached and prices.size() + 1 == lookback_) {
-            initial_mean = util::ma(prices, lookback_);
+            initial_mean = util::ma(prices);
             initial_stdev = util::stdev(prices, initial_mean, lookback_);
             std::cout << "Initial mean: " << initial_mean << std::endl << std::endl;
             mean_reached = true;
         } else if (mean_reached) {
             // These could be done on the fly but the complexity would distract
-            auto mean_value { util::ma(prices, lookback_)};
+            auto mean { util::ma(prices)};
 
             auto const& damping_factor{damping_*initial_stdev};
             auto const& damped {prices | std::views::transform(
-                [&mean_value, &damping_factor](auto v) -> auto
-                {
-                    auto const& v_m{v - mean_value};
+                [&mean, &damping_factor](auto v) -> auto
+                {   
+                    auto const& v_m{v - mean};
                     return std::abs(v_m) > damping_factor 
                         ? boost::math::sign(v_m)*damping_factor 
                         : v;
                 })};
-            auto std_reversion { reversion_level_*util::stdev(damped, mean_value, lookback_)};
+            auto std_reversion { reversion_level_*util::stdev(damped, mean, lookback_)};
 
             prices.pop_front(); // Now we have lookback_ prices already, remove the oldest
-            if(trade_data.price > mean_value + std_reversion) { // Well greater than the normal volatility
+            if(trade_data.price > mean + std_reversion) { // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
             }
-            else if(trade_data.price < mean_value - std_reversion) { // Well less than the normal volatility
+            else if(trade_data.price < mean - std_reversion) { // Well less than the normal volatility
                 // so buy, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
@@ -93,7 +93,7 @@ public:
                 , toString(trade_data.side).data()
                 , trade_data.size
                 , trade_data.source
-                , mean_value
+                , mean
                 , std_reversion
                 );
         }

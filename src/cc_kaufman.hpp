@@ -64,7 +64,7 @@ public:
         auto sc_sum    {2.0/(slow_sc_+1)};
 
         if (not mean_reached && prices.size() + 1 == lookback_) {
-            kama = initial_mean = util::ma(prices, lookback_);
+            kama = initial_mean = util::ma(prices);
             std::cout << "Initial mean: " << initial_mean << std::endl << std::endl;
             mean_reached = true;
         } else if (mean_reached) {
@@ -79,7 +79,7 @@ public:
             std::cout << "SC: " << sc << std::endl;
             
             // These could be done on the fly but the complexity would distract
-            auto mean_value { util::ma(prices, lookback_)};
+            auto mean { util::ma(prices)};
 
             prices.pop_front(); // Now we have lookback_ prices already, remove the oldest
 
