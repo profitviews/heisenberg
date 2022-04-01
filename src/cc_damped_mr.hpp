@@ -78,11 +78,13 @@ public:
             auto std_reversion { reversion_level_*util::stdev(damped, mean, lookback_)};
 
             prices.pop_front(); // Now we have lookback_ prices already, remove the oldest
-            if(trade_data.price > mean + std_reversion) { // Well greater than the normal volatility
+            bool 
+                sell_condition {trade_data.price > mean + std_reversion},
+                buy_condition {trade_data.price < mean - std_reversion};
+            if(sell_condition) { // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
-            }
-            else if(trade_data.price < mean - std_reversion) { // Well less than the normal volatility
+            } else if(buy_condition) { // Well less than the normal volatility
                 // so buy, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
@@ -93,8 +95,10 @@ public:
                 , toString(trade_data.side).data()
                 , trade_data.size
                 , trade_data.source
+                , trade_data.time
                 , mean
                 , std_reversion
+                , buy_condition ? "Buy" : (sell_condition ? "Sell" : "No trade")
                 );
         }
 	}
