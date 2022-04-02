@@ -67,15 +67,24 @@ public:
             auto mean { util::ma(prices)};
 
             auto const& damping_factor{damping_*initial_stdev};
-            auto const& damped {prices | std::views::transform(
-                [&mean, &damping_factor](auto v) -> auto
+
+            // Version 1: chopping the tops/bottoms off extremes
+            auto const& cut_damped {prices | std::views::transform(
+                [&mean, &damping_factor](auto price) -> auto
                 {   
-                    auto const& v_m{v - mean};
-                    return std::abs(v_m) > damping_factor 
-                        ? boost::math::sign(v_m)*damping_factor 
-                        : v;
+                    return std::abs(price - mean) > damping_factor 
+                        ? boost::math::sign(price - mean)*damping_factor : price;
                 })};
-            auto std_reversion { reversion_level_*util::stdev(damped, mean, lookback_)};
+
+            // Version 2: excluding extreme prices
+            auto excluded_damped {prices | std::views::filter(
+                [&mean, &damping_factor](auto price) -> auto
+                {   
+                    return std::abs(price - mean) < damping_factor; 
+                })};
+
+            // auto std_reversion { reversion_level_*util::stdev(cut_damped, mean, lookback_)};
+            auto std_reversion { reversion_level_*util::stdev(excluded_damped, mean, lookback_)};
 
             prices.pop_front(); // Now we have lookback_ prices already, remove the oldest
             bool 

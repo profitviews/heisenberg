@@ -28,7 +28,7 @@ inline auto accumulate(const auto& s, auto i) -> auto
     return std::accumulate(std::begin(s), std::end(s), i);
 }
 
-inline auto accumulate(const auto& s, auto i, auto op) -> auto
+inline auto accumulate(auto& s, auto i, auto op) -> auto
 {
     return std::accumulate(std::begin(s), std::end(s), i, op);
 }
@@ -50,7 +50,7 @@ auto ema(auto const& s, auto p, auto m = 0) -> auto
     return accumulate(s, m, ema_step);
 }
 
-auto stdev(auto const& s, auto m, int p) -> auto
+auto stdev(auto & s, auto m, int p) -> auto
 {   // Calculate standard deviation given mean (m)
     auto const variance {[&m, &p](auto a, const auto& v) 
     {
