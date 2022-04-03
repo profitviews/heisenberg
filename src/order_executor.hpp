@@ -13,7 +13,7 @@ class OrderExecutor
 public:
     OrderExecutor() = default;
     virtual ~OrderExecutor() = default;
-    virtual void new_order(std::string const& symbol, Side side, double orderQty, OrderType type, double) = 0;
+    virtual void new_order(std::string const& symbol, Side side, double orderQty, OrderType type, double = 0.0) = 0;
 };
 
 }    // namespace profitview

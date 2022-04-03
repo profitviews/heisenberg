@@ -10,25 +10,25 @@
 namespace profitview
 {
 
-class CcSimpleMR
-    : public TradeStream
-    , private ccapi::CcTradeHandler
+template<std::floating_point Float = double, std::integral Int = int>
+class CcSimpleMR : public TradeStream, private ccapi::CcTradeHandler
 {
 public:
-    CcSimpleMR(
-        const std::string trade_stream_name,
-        OrderExecutor* executor,
-        int lookback,
-        double reversion_level,
-        double base_quantity)
-        : ccapi::CcTradeHandler(trade_stream_name)
-        , lookback_{lookback}
-        , reversion_level_{reversion_level}
-        , base_quantity_{base_quantity}
-        , executor_{executor}
+    CcSimpleMR
+		( const std::string trade_stream_name 
+        , OrderExecutor* executor
+		, Int lookback
+		, Float reversion_level
+		, Float base_quantity
+	) 
+    : ccapi::CcTradeHandler(trade_stream_name)
+	, lookback_        {lookback       }
+	, reversion_level_ {reversion_level}
+	, base_quantity_   {base_quantity  }
+	, executor_        {executor       }
     {}
 
-    void onStreamedTrade(profitview::TradeData const& trade_data) override
+    void onStreamedTrade(TradeData const& trade_data) override
     {
         fmt::print("Price: {}, ", trade_data.price);
         fmt::print("Side: {}, ", toString(trade_data.side));
@@ -48,21 +48,19 @@ public:
         else
         {
             // These could be done on the fly but the complexity would distract
-            auto mean_value{util::ma(prices, lookback_)};
-            double std_reversion{reversion_level_ * util::stdev(prices, mean_value, lookback_)};
+            auto mean { util::ma(prices)};
+            auto std_reversion { reversion_level_*util::stdev(prices, mean, lookback_)};
 
             prices.pop_front();    // Now we have lookback_ prices already, remove the
                                    // oldest
 
-            if (trade_data.price > mean_value + std_reversion)
-            {    // Well greater than the normal volatility
+            if(trade_data.price > mean + std_reversion) { // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
-                executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Limit, trade_data.price);
+                executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
             }
-            else if (trade_data.price < mean_value - std_reversion)
-            {    // Well less than the normal volatility
+            else if(trade_data.price < mean - std_reversion) { // Well less than the normal volatility
                 // so buy, expecting a reversion to the mean
-                executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Limit, trade_data.price);
+                executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
         }
     }
@@ -75,10 +73,12 @@ public:
 private:
     const int lookback_;
 
-    const double reversion_level_;    // Multiple of stdev
-    double base_quantity_;
+	const Int lookback_;
 
-    std::map<std::string, std::pair<int, std::deque<double>>> counted_prices_;
+    const Float reversion_level_; // Multiple of stdev
+    Float base_quantity_;
+
+    std::map<std::string, std::pair<Int, std::deque<Float>>> counted_prices_;
 
     OrderExecutor* executor_;
 };

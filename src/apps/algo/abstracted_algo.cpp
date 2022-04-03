@@ -1,5 +1,7 @@
 #include "cc_simple_mr.hpp"
 #include "cc_kaufman.hpp"
+#include "cc_damped_mr.hpp"
+#include "algo.hpp"
 
 #include "ccex_order_executor.hpp"
 #include "trade_stream_maker.hpp"
@@ -24,6 +26,7 @@ struct ProgramArgs
 	double reversion_level = 0.0;
 	double base_quantity = 0.0;
 	int er_period = 0, fast_sc = 0, slow_sc = 0, kama_trend = 0;
+	double damping = 0.0;
 	std::vector<std::string> symbols;
 
 	void addOptions(boost::program_options::options_description& options)
@@ -42,7 +45,8 @@ struct ProgramArgs
 			("fast_sc", po::value(&fast_sc), "Fast exponential moving average smoothing period")
 			("slow_sc", po::value(&slow_sc), "Slow exponential moving average smoothing period")
 			("kama_trend", po::value(&kama_trend), "Kaufman trend prediction period")
-			("symbol", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.")
+			("damping", po::value(&damping), "Standard deviation damping limit")
+			("symbols", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.")
 		;		
 	}
 };
@@ -57,32 +61,46 @@ int main(int argc, char *argv[])
 	if (result)
 		return result.value();
 
-	enum {SIMPLE_MR, KAUFMAN};
-	const std::map<std::string, int> algos
-	{ {"Kaufman",  KAUFMAN   }
-	, {"SimpleMR", SIMPLE_MR }
+	const std::map<std::string, Algo> algos
+	{ {"SimpleMR", SimpleMr }
+	, {"Kaufman",  Kaufman  }
+	, {"Damped",   Damped   }
 	};
 
-	CcexOrderExecutor executor{options.exchange, options.api_key, options.api_secret, options.api_phrase, 5};
+	CcexOrderExecutor executor{options.exchange, options.api_key, options.api_secret, options.api_phrase};
 
 	switch(algos.at(options.algo))
 	{
-	case SIMPLE_MR:
-		TradeStreamMaker::register_stream<CcSimpleMR>("CcSimpleMR", 
-			&executor, 
-			options.lookback,
-			options.reversion_level,
-			options.base_quantity);	
+	case SimpleMr:
+		TradeStreamMaker::register_stream<CcSimpleMR<>>
+			( options.algo
+			, &executor
+			, options.lookback
+			, options.reversion_level
+			, options.base_quantity
+			);	
 		break;
-	case KAUFMAN:
-		TradeStreamMaker::register_stream<CCKaufman>("Kaufman", 
-			&executor, 
-			options.lookback,
-			options.base_quantity,
-			options.er_period,
-			options.fast_sc,
-			options.slow_sc,
-			options.kama_trend);
+	case Kaufman:
+		TradeStreamMaker::register_stream<CcKaufman<>>
+			( options.algo
+			, &executor
+			, options.lookback
+			, options.base_quantity
+			, options.er_period
+			, options.fast_sc
+			, options.slow_sc
+			, options.kama_trend
+			);
+		break;
+	case Damped:
+		TradeStreamMaker::register_stream<CcDamped<>>
+			(options.algo
+			, &executor
+			, options.lookback
+			, options.reversion_level
+			, options.base_quantity
+			, options.damping
+			);
 		break;
 	default:
 		std::cout << "Unknown algo" << std::endl;
@@ -93,5 +111,15 @@ int main(int argc, char *argv[])
 
 	std::cout << "Press enter to quit" << std::endl;
 	std::cin.get();
+	
+	enum {OrderId, Symbol, OrderSide, Size, Price, Time, Status};
+	for(const auto& [cid, details]: executor.get_open_orders())
+		std::cout 
+			<< "cid: " << cid 
+			<< ", Order Id: " << std::get<OrderId>(details) 
+			<< ", Symbol: " << std::get<Symbol>(details) 
+			<< ", Status: " << std::get<Status>(details) 
+			<< std::endl; 
+
 	return 0;
 }

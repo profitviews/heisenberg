@@ -38,7 +38,7 @@ struct ProgramArgs
 			("side", po::value(&side)->required(), "The side of the trade <buy|sell>.")
 			("size", po::value(&size)->required(), "Size to trade.")
 			("type", po::value(&type)->required(), "The type of order <limit|market>.")
-    		("price", po::value(&price)->required(), "Price to trade at.")
+    		("price", po::value(&price), "Price to trade at.")
 		;		
 	}
 };
@@ -64,12 +64,18 @@ auto main(int argc, char* argv[]) -> int
         exchange_names.at(options.exchange), 
         options.apiKey, 
         options.apiSecret, 
-        options.apiPhrase, 
-        0
+        options.apiPhrase
     };
 
     BOOST_LOG_TRIVIAL(info) << options.symbol << "Running: " << std::endl; 
     executor.new_order(options.symbol, options.side, options.size, options.type, options.price);
 
+	enum {OrderId, Symbol, OrderSide, Size, Price, Time, Status};
+	for(const auto& [cid, details]: executor.get_open_orders())
+		std::cout 
+			<< "cid: " << cid 
+			<< ", symbol: " << std::get<OrderId>(details) 
+			<< ", status: " << std::get<Status>(details) 
+			<< std::endl; 
     return 0;
 }
