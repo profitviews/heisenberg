@@ -26,8 +26,11 @@ struct ProgramArgs
     void addOptions(boost::program_options::options_description& options)
     {
         namespace po = boost::program_options;
-        options.add_options()("name", po::value(&name)->required(), "Name of experiment")(
-            "er_period", po::value(&er_period)->required(), "Efficiency ratio lookback period");
+        // clang-format off
+        options.add_options()
+            ("name", po::value(&name)->required(), "Name of experiment")
+            ("er_period", po::value(&er_period)->required(), "Efficiency ratio lookback period");
+        // clang-format on
     }
 };
 

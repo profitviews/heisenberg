@@ -18,8 +18,11 @@ struct ProgramArgs
     void addOptions(boost::program_options::options_description& options)
     {
         namespace po = boost::program_options;
-        options.add_options()("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")(
-            "symbols", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.");
+        // clang-format off 
+        options.add_options()
+            ("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
+            ("symbols", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.");
+        // clang-format on
     }
 };
 

@@ -29,15 +29,18 @@ struct ProgramArgs
     void addOptions(boost::program_options::options_description& options)
     {
         namespace po = boost::program_options;
-        options.add_options()("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")(
-            "symbol", po::value(&symbol)->required(), "Symbol for cypto assets to trade.")(
-            "api_key", po::value(&apiKey)->required(), "API key for Cypto exchange.")(
-            "api_secret", po::value(&apiSecret)->required(), "API secret for Cypto exchange.")(
-            "api_phrase", po::value(&apiPhrase), "API phrase for Cypto exchange.")(
-            "side", po::value(&side)->required(), "The side of the trade <buy|sell>.")(
-            "size", po::value(&size)->required(), "Size to trade.")(
-            "type", po::value(&type)->required(), "The type of order <limit|market>.")(
-            "price", po::value(&price), "Price to trade at.");
+        // clang-format off
+        options.add_options()
+            ("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
+            ("symbol", po::value(&symbol)->required(), "Symbol for cypto assets to trade.")
+            ("api_key", po::value(&apiKey)->required(), "API key for Cypto exchange.")
+            ("api_secret", po::value(&apiSecret)->required(), "API secret for Cypto exchange.")
+            ("api_phrase", po::value(&apiPhrase), "API phrase for Cypto exchange.")
+            ("side", po::value(&side)->required(), "The side of the trade <buy|sell>.")
+            ("size", po::value(&size)->required(), "Size to trade.")
+            ("type", po::value(&type)->required(), "The type of order <limit|market>.")
+            ("price", po::value(&price), "Price to trade at.");
+        // clang-format on
     }
 };
 

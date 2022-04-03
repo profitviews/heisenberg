@@ -32,20 +32,23 @@ struct ProgramArgs
     void addOptions(boost::program_options::options_description& options)
     {
         namespace po = boost::program_options;
-        options.add_options()("algo", po::value(&algo)->required(), "Algo to use")(
-            "exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")(
-            "api_key", po::value(&api_key)->required(), "API key for Cypto exchange.")(
-            "api_secret", po::value(&api_secret)->required(), "API secret for Cypto exchange.")(
-            "api_phrase", po::value(&api_phrase), "API phrase for Cypto exchange.")(
-            "lookback", po::value(&lookback)->required(), "Time period to look back")(
-            "reversion_level", po::value(&reversion_level), "Mean reversion level.")(
-            "base_quantity", po::value(&base_quantity)->required(), "Quantity to trade.")(
-            "er_period", po::value(&er_period), "Efficiency Ratio base period for Kaufman")(
-            "fast_sc", po::value(&fast_sc), "Fast exponential moving average smoothing period")(
-            "slow_sc", po::value(&slow_sc), "Slow exponential moving average smoothing period")(
-            "kama_trend", po::value(&kama_trend), "Kaufman trend prediction period")(
-            "damping", po::value(&damping), "Standard deviation damping limit")(
-            "symbols", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.");
+        // clang-format off
+        options.add_options()
+            ("algo", po::value(&algo)->required(), "Algo to use")
+            ("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
+            ("api_key", po::value(&api_key)->required(), "API key for Cypto exchange.")
+            ("api_secret", po::value(&api_secret)->required(), "API secret for Cypto exchange.")
+            ("api_phrase", po::value(&api_phrase), "API phrase for Cypto exchange.")
+            ("lookback", po::value(&lookback)->required(), "Time period to look back")
+            ("reversion_level", po::value(&reversion_level), "Mean reversion level.")
+            ("base_quantity", po::value(&base_quantity)->required(), "Quantity to trade.")
+            ("er_period", po::value(&er_period), "Efficiency Ratio base period for Kaufman")
+            ("fast_sc", po::value(&fast_sc), "Fast exponential moving average smoothing period")
+            ("slow_sc", po::value(&slow_sc), "Slow exponential moving average smoothing period")
+            ("kama_trend", po::value(&kama_trend), "Kaufman trend prediction period")
+            ("damping", po::value(&damping), "Standard deviation damping limit")
+            ("symbols", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.");
+        // clang-format on
     }
 };
 
