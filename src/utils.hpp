@@ -96,7 +96,7 @@ public:
 
     void write_strings(auto&&... args)
     {
-        this->write_row(std::vector<std::string>({fmt::format("{}", std::forward<decltype(args)>(args))...}));
+        write_row<std::vector<std::string>>({fmt::format("{}", std::forward<decltype(args)>(args))...});
     }
 };
 }    // namespace profitview::util
