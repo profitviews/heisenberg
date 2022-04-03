@@ -12,32 +12,33 @@ namespace profitview
 
 struct ProgramArgs
 {
-	std::string exchange;
-	std::vector<std::string> symbols;
+    std::string exchange;
+    std::vector<std::string> symbols;
 
-	void addOptions(boost::program_options::options_description& options)
-	{
+    void addOptions(boost::program_options::options_description& options)
+    {
         namespace po = boost::program_options;
-		options.add_options()
-			("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
-			("symbols", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.")
-		;		
-	}
+        // clang-format off 
+        options.add_options()
+            ("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
+            ("symbols", po::value(&symbols)->multitoken()->required(), "Symbols for cypto assets to trade.");
+        // clang-format on
+    }
 };
 
-}
+}    // namespace profitview
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-	using namespace profitview;
-	ProgramArgs options;
-	auto const result = profitview::parseProgramOptions(argc, argv, options);
-	if (result)
-		return result.value();
-	
-	TradeStreamMaker::register_stream<WSCcTradeStream>("WSCcStream");
-	TradeStreamMaker::get("WSCcStream").subscribe(options.exchange, options.symbols);
+    using namespace profitview;
+    ProgramArgs options;
+    auto const result = profitview::parseProgramOptions(argc, argv, options);
+    if (result)
+        return result.value();
 
-	std::cout << "Press enter to quit" << std::endl;
-	std::cin.get();
+    TradeStreamMaker::register_stream<WSCcTradeStream>("WSCcStream");
+    TradeStreamMaker::get("WSCcStream").subscribe(options.exchange, options.symbols);
+
+    std::cout << "Press enter to quit" << std::endl;
+    std::cin.get();
 }

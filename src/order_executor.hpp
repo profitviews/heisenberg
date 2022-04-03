@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace profitview 
+namespace profitview
 {
 
 class OrderExecutor
@@ -16,5 +16,4 @@ public:
     virtual void new_order(std::string const& symbol, Side side, double orderQty, OrderType type, double = 0.0) = 0;
 };
 
-}
-
+}    // namespace profitview

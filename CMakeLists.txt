@@ -22,7 +22,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(ccapi websocketpp csv2)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 find_package(Boost REQUIRED)
 find_package(fmt REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -35,4 +35,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 configure_file(cmake/cpp_crypto_algos_config.hpp.in cpp_crypto_algos_config.hpp)
 
+include(clang_format)
 add_subdirectory(src)

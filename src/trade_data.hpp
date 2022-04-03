@@ -2,10 +2,10 @@
 
 #include "side.hpp"
 
-#include <string>
 #include <ctime>
+#include <string>
 
-namespace profitview 
+namespace profitview
 {
 
 struct TradeData
@@ -18,4 +18,4 @@ struct TradeData
     time_t time;
 };
 
-}
+}    // namespace profitview

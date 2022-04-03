@@ -1,5 +1,4 @@
 Language: Cpp
-# BasedOnStyle: Maven
 Standard: Latest
 
 ColumnLimit: 120
@@ -94,4 +93,4 @@ BinPackParameters: false
 BitFieldColonSpacing: After
 
 CompactNamespaces: true
-FixNamespaceComments: true 
+FixNamespaceComments: true

@@ -2,7 +2,7 @@
 
 #include <boost/describe/enum.hpp>
 
-namespace profitview 
+namespace profitview
 {
 
 BOOST_DEFINE_ENUM_CLASS(OrderType, Limit, Market)

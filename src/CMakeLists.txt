@@ -57,4 +57,5 @@ target_compile_options(cpp_crypto_algos_lib
         $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 )
 
+clang_format_target(TARGET cpp_crypto_algos_lib)
 add_subdirectory(apps)
