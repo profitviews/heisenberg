@@ -3,14 +3,14 @@
 #include <stdexcept>
 #include <string>
 
-namespace profitview 
+namespace profitview
 {
 
-struct TradeStreamException : public std::runtime_error 
+struct TradeStreamException : public std::runtime_error
 {
     TradeStreamException(std::string const& message)
-    :   std::runtime_error(message) 
+        : std::runtime_error(message)
     {}
 };
 
-}
+}    // namespace profitview

@@ -15,3 +15,5 @@ set_target_properties(streamer
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
+
+clang_format_target(TARGET streamer)

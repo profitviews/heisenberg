@@ -5,16 +5,16 @@
 #include <string>
 #include <vector>
 
-namespace profitview 
+namespace profitview
 {
 
-class TradeStream 
+class TradeStream
 {
 public:
     TradeStream() = default;
     virtual ~TradeStream() = default;
-	virtual void onStreamedTrade(TradeData const& trade_data) = 0;
+    virtual void onStreamedTrade(TradeData const& trade_data) = 0;
     virtual void subscribe(std::string const& market, std::vector<std::string> const& symbol_list) = 0;
 };
 
-}
+}    // namespace profitview

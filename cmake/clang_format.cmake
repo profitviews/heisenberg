@@ -20,7 +20,7 @@ files in a target.
     on.
 
 #]=======================================================================]
-function(clant_format_target)
+function(clang_format_target)
     set(options QUIET)
     set(oneValueArgs TARGET CONFIG_FILE)
     set(multiValueArgs)

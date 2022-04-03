@@ -7,14 +7,15 @@
 #include <boost/json.hpp>
 #include <string>
 
-namespace profitview 
+namespace profitview
 {
 
-class Exchange {
+class Exchange
+{
 public:
     virtual ~Exchange() = default;
-    virtual boost::json::object new_order(std::string const& symbol, Side side, double orderQty, OrderType type, double price = -1.0) = 0;
+    virtual boost::json::object
+        new_order(std::string const& symbol, Side side, double orderQty, OrderType type, double price = -1.0) = 0;
 };
 
-}
-
+}    // namespace profitview
