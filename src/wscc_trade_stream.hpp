@@ -17,7 +17,7 @@ class WSCcTradeStream
 {
 public:
     WSCcTradeStream(std::string const& trade_stream_name)
-    : CcTradeHandler(trade_stream_name)
+        : CcTradeHandler(trade_stream_name)
     {}
 
     void onStreamedTrade(TradeData const& trade_data) override
