@@ -1,5 +1,4 @@
 Language: Cpp
-# BasedOnStyle: Maven
 Standard: Latest
 
 ColumnLimit: 120
