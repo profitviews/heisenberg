@@ -166,19 +166,17 @@ public:
         });
 
         Session session(session_options, session_configs, &event_handler);
-
         Request request(Request::Operation::CREATE_ORDER, exchange_, symbol);
 
-        // @todo Properly handle Market orders.  Some exchanges don't have native
-        // Market orders
-        //       Therefore create a type of cross limit to substitute
         std::map<std::string, std::string> params{
             {"type",  type == OrderType::Market ? "market" : "limit"},
             {"side",  side == Side::Buy ? "BUY" : "SELL"            },
             {"size",  std::to_string(orderQty)                      },
             {"price", std::to_string(price)                         }
         };
+
         adjust_exchange_params(exchange_, params);
+
         request.appendParam(params);
         session.sendRequest(request);
         event_handler.wait();
