@@ -44,10 +44,11 @@ public:
                 for (const auto& [index, element] : message.getElementList() | boost::adaptors::indexed(0))
                 {
                     const auto& e{element.getNameValueMap()};
-                    profitview::TradeStreamMaker::get(trade_stream_name_)
+                    using namespace profitview;
+                    TradeStreamMaker::get(trade_stream_name_)
                         .onStreamedTrade(
                             {std::stod(e.at("LAST_PRICE")),
-                             e.at("IS_BUYER_MAKER") == "1" ? profitview::Side::Buy : profitview::Side::Sell,
+                             e.at("IS_BUYER_MAKER") == "1" ? Side::Buy : Side::Sell,
                              std::stod(e.at("LAST_SIZE")),
                              market_,
                              cid[index],
