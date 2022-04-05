@@ -5,25 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) execute_order",
+            "name": "(gdb) execute_order - FTX",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/execute_order",
             "args": 
-                // [ "--exchange=coinbase"
                 [ "--exchange=ftx"
-                // , "--symbol=ETH-BTC"
                 , "--symbol=BTC-PERP"
                 , "--api_key=${env:FTX_API_KEY}"
                 , "--api_secret=${env:FTX_API_SECRET}"
-                // , "--api_key=${env:COINBASE_API_KEY}"
-                // , "--api_secret=${env:COINBASE_API_SECRET}"
-                // , "--api_phrase=${env:COINBASE_API_PHRASE}"
                 , "--side=buy"
                 , "--size=0.0025"
                 , "--type=limit"
                 , "--price=42000"
-                // , "--price=0.055"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -44,7 +38,7 @@
             ]
         },
         {
-            "name": "(gdb) streamer",
+            "name": "(gdb) streamer - FTX",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/streamer",
@@ -71,45 +65,50 @@
             ]
         },
         {
-            "name": "(gdb) algo",
+            "name": "(gdb) algo - FTX - SimpleMR",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/algo",
             "args": 
-            // [ "--exchange=ftx"
-            // , "--api_key=${env:FTX_API_KEY}"
-            // , "--api_secret=${env:FTX_API_SECRET}"
-            // , "--lookback=50"
-            // , "--reversion_level=2"
-            // , "--base_quantity=0.0025"
-            // , "--symbols=BTC-PERP"
-            // ],
-            // [ "--exchange=coinbase"
-            // , "--api_key=${env:COINBASE_API_KEY}"
-            // , "--api_secret=${env:COINBASE_API_SECRET}"
-            // , "--api_phrase=${env:COINBASE_API_PHRASE}"
-            // , "--lookback=50"
-            // , "--reversion_level=2"
-            // , "--base_quantity=0.0025"
-            // , "--symbols=ETH-BTC"
-            // // , "SOL-BTC"
-            // ],
-            // [ "--algo=Kaufman"
+            [ "--algo=SimpleMR"
+            , "--exchange=ftx"
+            , "--api_key=${env:FTX_API_KEY}"
+            , "--api_secret=${env:FTX_API_SECRET}"
+            , "--lookback=50"
+            , "--reversion_level=2"
+            , "--base_quantity=0.0025"
+            , "--symbols=BTC-PERP"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "CMake build project",
+            "miDebuggerPath": "/usr/bin/gdb",
+        },
+        {
+            "name": "(gdb) algo - FTX - Damped",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/algo",
+            "args": 
             [ "--algo=Damped"
             , "--exchange=ftx"
             , "--api_key=${env:FTX_API_KEY}"
             , "--api_secret=${env:FTX_API_SECRET}"
-            // , "--api_phrase=${env:COINBASE_API_PHRASE}"
             , "--lookback=50"
             , "--reversion_level=2"
             , "--base_quantity=0.0025"
-            // , "--er_period=30"
-            // , "--fast_sc=3"
-            // , "--slow_sc=15"
-            // , "--kama_trend=20"
             , "--damping=2.5"
             , "--symbols=BTC-PERP"
-            // , "SOL-BTC"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
