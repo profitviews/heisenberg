@@ -16,8 +16,7 @@
                 , "--api_secret=${env:FTX_API_SECRET}"
                 , "--side=buy"
                 , "--size=0.0025"
-                , "--type=limit"
-                , "--price=42000"
+                , "--type=market"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
