@@ -9,6 +9,8 @@
 
 #include <fmt/core.h>
 
+#include <boost/log/trivial.hpp>
+
 #include <fstream>
 #include <map>
 #include <numeric>
@@ -67,7 +69,7 @@ public:
         if (not mean_reached && prices.size() + 1 == lookback_)
         {
             kama = initial_mean = util::ma(prices);
-            std::cout << "Initial mean: " << initial_mean << std::endl << std::endl;
+            BOOST_LOG_TRIVIAL(info) << "Initial mean: " << initial_mean << std::endl << std::endl;
             mean_reached = true;
         }
         else if (mean_reached)
@@ -79,8 +81,8 @@ public:
             auto root_sc{er * sc_factor + sc_sum};
             auto sc{root_sc * root_sc};
 
-            std::cout << "ER: " << er << std::endl;
-            std::cout << "SC: " << sc << std::endl;
+            BOOST_LOG_TRIVIAL(info) << "ER: " << er << std::endl;
+            BOOST_LOG_TRIVIAL(info) << "SC: " << sc << std::endl;
 
             // These could be done on the fly but the complexity would distract
             auto mean{util::ma(prices)};

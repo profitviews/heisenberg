@@ -6,6 +6,7 @@
 #include <boost/json.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
+#include <boost/log/trivial.hpp>
 
 #include <iostream>
 #include <map>
@@ -78,7 +79,7 @@ auto main(int argc, char* argv[]) -> int
         Status
     };
     for (const auto& [cid, details] : executor.get_open_orders())
-        std::cout << "cid: " << cid << ", symbol: " << std::get<OrderId>(details)
+        BOOST_LOG_TRIVIAL(info) << "cid: " << cid << ", symbol: " << std::get<OrderId>(details)
                   << ", status: " << std::get<Status>(details) << std::endl;
     return 0;
 }

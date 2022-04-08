@@ -9,6 +9,8 @@
 
 #include <fmt/core.h>
 
+#include <boost/log/trivial.hpp>
+
 #include <concepts>
 #include <fstream>
 #include <map>
@@ -62,7 +64,7 @@ public:
         {
             initial_mean = util::ma(prices);
             initial_stdev = util::stdev(prices, initial_mean, lookback_);
-            std::cout << "Initial mean: " << initial_mean << std::endl << std::endl;
+            BOOST_LOG_TRIVIAL(info) << "Initial mean: " << initial_mean << std::endl << std::endl;
             mean_reached = true;
         }
         else if (mean_reached)

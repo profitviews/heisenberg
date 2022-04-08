@@ -4,6 +4,7 @@
 
 #include <boost/json.hpp>
 #include <boost/program_options.hpp>
+#include <boost/log/trivial.hpp>
 
 #include <ranges>
 
@@ -44,9 +45,9 @@ auto main(int argc, char* argv[]) -> int
     if (result)
         return result.value();
 
-    std::cout << "Running experiments" << std::endl;
+    BOOST_LOG_TRIVIAL(info) << "Running experiments" << std::endl;
 
-    std::cout << " Running: " << options.name << std::endl;
+    BOOST_LOG_TRIVIAL(info) << " Running: " << options.name << std::endl;
 
     std::vector<double> a{5, 6, 7, 10, 11, 12, 5, 6, 7, 10, 11, 12, 5, 6, 7, 10, 11, 12, 5, 6, 7, 10, 11, 12};
     std::ofstream exp{"experiment.csv"};
@@ -61,7 +62,7 @@ auto main(int argc, char* argv[]) -> int
     using namespace std::ranges;
 
     copy(d, std::ostream_iterator<decltype(d)::value_type>(std::cout, " "));
-    std::cout << std::endl << "Change: " << c << std::endl;
+    BOOST_LOG_TRIVIAL(info) << std::endl << "Change: " << c << std::endl;
 
     subrange s1{a.begin(), a.begin() + 5};
     subrange s2{a.begin() + 3, a.begin() + 7};

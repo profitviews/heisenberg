@@ -7,6 +7,7 @@
 #include <ccapi_cpp/ccapi_session.h>
 
 #include <boost/describe/enum.hpp>
+#include <boost/log/trivial.hpp>
 
 #include <atomic>
 #include <map>
@@ -74,10 +75,10 @@ private:
 
         bool processEvent(const ccapi::Event& event, ccapi::Session* session) override
         {
-            std::cout << "Received an event:\n" + event.toStringPretty(2, 2) << std::endl;
+            BOOST_LOG_TRIVIAL(info) << "Received an event:\n" + event.toStringPretty(2, 2) << std::endl;
             const auto& m{event.getMessageList()};
             const auto& n{m[0].getElementList()[0].getNameValueMap()};
-            std::cout << "Status: "
+            BOOST_LOG_TRIVIAL(info) << "Status: "
                       << (n.contains("STATUS") ? n.at("STATUS")
                                                : (n.contains("ERROR_MESSAGE") ? n.at("ERROR_MESSAGE") : "No status"))
                       << std::endl;
@@ -99,7 +100,7 @@ private:
         }
         void wait() const
         {
-            std::cout << "Waiting for order event" << std::endl;
+            BOOST_LOG_TRIVIAL(info) << "Waiting for order event" << std::endl;
             ordered_.wait(false);
         }
     };

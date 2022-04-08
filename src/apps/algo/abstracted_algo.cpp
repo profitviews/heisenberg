@@ -9,6 +9,7 @@
 
 #include "program_options.hpp"
 
+#include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
 #include <iostream>
 
@@ -91,7 +92,8 @@ int main(int argc, char* argv[])
         TradeStreamMaker::register_stream<CcDamped<>>(
             options.algo, &executor, options.lookback, options.reversion_level, options.base_quantity, options.damping);
         break;
-    default: std::cout << "Unknown algo" << std::endl; return 2;
+    default: 
+        BOOST_LOG_TRIVIAL(error) << "Unknown algo" << std::endl; return 2;
     }
 
     TradeStreamMaker::get(options.algo).subscribe(options.exchange, options.symbols);
@@ -110,7 +112,7 @@ int main(int argc, char* argv[])
         Status
     };
     for (const auto& [cid, details] : executor.get_open_orders())
-        std::cout << "cid: " << cid << ", Order Id: " << std::get<OrderId>(details)
+        BOOST_LOG_TRIVIAL(info) << "cid: " << cid << ", Order Id: " << std::get<OrderId>(details)
                   << ", Symbol: " << std::get<Symbol>(details) << ", Status: " << std::get<Status>(details)
                   << std::endl;
 

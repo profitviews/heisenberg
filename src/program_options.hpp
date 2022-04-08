@@ -5,6 +5,8 @@
 
 #include <boost/program_options.hpp>
 #include <boost/throw_exception.hpp>
+#include <boost/log/trivial.hpp>
+
 #include <concepts>
 #include <filesystem>
 #include <fmt/core.h>
@@ -67,7 +69,7 @@ std::optional<int> parseProgramOptions(int argc, char* argv[], CustomProgramOpti
     }
     catch (po::required_option& e)
     {
-        std::cout << e.what() << std::endl;
+        BOOST_LOG_TRIVIAL(error) << e.what() << std::endl;
         return 1;
     }
     return std::nullopt;
