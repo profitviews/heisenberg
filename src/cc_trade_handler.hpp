@@ -1,6 +1,7 @@
 #pragma once
 
 #include "trade_stream_maker.hpp"
+#include "trade_stream.hpp"
 
 #include <ccapi_cpp/ccapi_session.h>
 
@@ -10,6 +11,7 @@
 
 namespace ccapi
 {
+using namespace profitview;
 class CcTradeHandler : public EventHandler
 {
 public:
@@ -18,6 +20,7 @@ public:
         , sessionOptions_{}
         , sessionConfigs_{}
         , session_{nullptr}
+        , stream_{TradeStreamMaker::get(trade_stream_name_)}
     {
         session_ = std::make_unique<Session>(sessionOptions_, sessionConfigs_, this);
     }
@@ -44,9 +47,7 @@ public:
                 for (const auto& [index, element] : message.getElementList() | boost::adaptors::indexed(0))
                 {
                     const auto& e{element.getNameValueMap()};
-                    using namespace profitview;
-                    TradeStreamMaker::get(trade_stream_name_)
-                        .onStreamedTrade(
+                    stream_.onStreamedTrade(
                             {std::stod(e.at("LAST_PRICE")),
                              e.at("IS_BUYER_MAKER") == "1" ? Side::Buy : Side::Sell,
                              std::stod(e.at("LAST_SIZE")),
@@ -66,6 +67,7 @@ private:
     SessionOptions sessionOptions_;
     SessionConfigs sessionConfigs_;
     std::unique_ptr<Session> session_;
+    TradeStream& stream_;
 
     std::string market_;
 };
