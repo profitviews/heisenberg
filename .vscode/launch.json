@@ -89,9 +89,14 @@
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
+                },
+                {
+                    "description":  "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "CMake build project",
+            // "preLaunchTask": "CMake build project",
             "miDebuggerPath": "/usr/bin/gdb",
         },
         {
@@ -108,7 +113,7 @@
             , "--reversion_level=2"
             , "--base_quantity=0.0025"
             , "--damping=2.5"
-            , "--symbols=BTC-PERP"
+            , "--symbols=ETH-PERP"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -120,9 +125,14 @@
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
+                },
+                {
+                    "description":  "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "CMake build project",
+            // "preLaunchTask": "CMake build project",
             "miDebuggerPath": "/usr/bin/gdb",
         },
         {
