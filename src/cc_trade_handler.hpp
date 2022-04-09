@@ -20,7 +20,7 @@ public:
         , sessionOptions_{}
         , sessionConfigs_{}
         , session_{nullptr}
-        , stream_{TradeStreamMaker::get(trade_stream_name_)}
+        , stream_{nullptr}
     {
         session_ = std::make_unique<Session>(sessionOptions_, sessionConfigs_, this);
     }
@@ -29,6 +29,8 @@ public:
     {
         market_ = market;    // Assuming for the moment that `subscribe` is called only
                              // once and there's only 1 market
+        stream_ = &TradeStreamMaker::get(trade_stream_name_); // Race condition if done in constructor
+
         std::vector<Subscription> subscriptions;
         for (auto& symbol : symbol_list)
             subscriptions.emplace_back(market, symbol, "TRADE", "",
@@ -47,7 +49,7 @@ public:
                 for (const auto& [index, element] : message.getElementList() | boost::adaptors::indexed(0))
                 {
                     const auto& e{element.getNameValueMap()};
-                    stream_.onStreamedTrade(
+                    stream_->onStreamedTrade(
                             {std::stod(e.at("LAST_PRICE")),
                              e.at("IS_BUYER_MAKER") == "1" ? Side::Buy : Side::Sell,
                              std::stod(e.at("LAST_SIZE")),
@@ -67,7 +69,7 @@ private:
     SessionOptions sessionOptions_;
     SessionConfigs sessionConfigs_;
     std::unique_ptr<Session> session_;
-    TradeStream& stream_;
+    TradeStream* stream_;
 
     std::string market_;
 };
