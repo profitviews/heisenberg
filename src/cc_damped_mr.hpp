@@ -92,14 +92,14 @@ public:
 
             prices.pop_front();    // Now we have lookback_ prices already, remove the
                                    // oldest
-            bool sell_condition{trade_data.price > mean + std_reversion},
-                buy_condition{trade_data.price < mean - std_reversion};
-            if (sell_condition)
+            bool sell_signal{trade_data.price > mean + std_reversion},
+                buy_signal{trade_data.price < mean - std_reversion};
+            if (sell_signal)
             {    // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
             }
-            else if (buy_condition)
+            else if (buy_signal)
             {    // Well less than the normal volatility
                 // so buy, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
@@ -114,7 +114,7 @@ public:
                 trade_data.time,
                 mean,
                 std_reversion,
-                buy_condition ? "Buy" : (sell_condition ? "Sell" : "No trade"));
+                buy_signal ? "Buy" : (sell_signal ? "Sell" : "No trade"));
         }
     }
 
