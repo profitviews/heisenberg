@@ -60,7 +60,7 @@ public:
 
         prices.emplace_back(trade_data.price);
 
-        if (not mean_reached and prices.size() + 1 == lookback_)
+        if (not mean_reached and prices.size() > lookback_)
         {
             initial_mean = util::ma(prices);
             initial_stdev = util::stdev(prices, initial_mean, lookback_);
@@ -92,8 +92,11 @@ public:
 
             prices.pop_front();    // Now we have lookback_ prices already, remove the
                                    // oldest
-            bool sell_signal{trade_data.price > mean + std_reversion},
-                buy_signal{trade_data.price < mean - std_reversion};
+
+            bool 
+                sell_signal{trade_data.price > mean + std_reversion},
+                buy_signal {trade_data.price < mean - std_reversion};
+
             if (sell_signal)
             {    // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
