@@ -34,12 +34,7 @@ public:
 
     void onStreamedTrade(TradeData const& trade_data) override
     {
-        fmt::print("Price: {}, ", trade_data.price);
-        fmt::print("Side: {}, ", toString(trade_data.side));
-        fmt::print("Size: {}, ", trade_data.size);
-        fmt::print("Source: {}, ", trade_data.source);
-        fmt::print("Symbol: {}, ", trade_data.symbol);
-        fmt::print("Time: {}", std::asctime(std::localtime(&trade_data.time)));
+        util::print_trade_data(trade_data);
 
         auto& [elements, prices]{counted_prices_[trade_data.symbol]};
 

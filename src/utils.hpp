@@ -1,5 +1,7 @@
 #pragma once
 
+#include <trade_data.hpp>
+
 #include <csv2/writer.hpp>
 
 #include <fmt/core.h>
@@ -21,6 +23,16 @@
 
 namespace profitview::util
 {
+
+void print_trade_data(TradeData const& trade_data)
+{
+    fmt::print("Price: {}, ", trade_data.price);
+    fmt::print("Side: {}, ", toString(trade_data.side));
+    fmt::print("Size: {}, ", trade_data.size);
+    fmt::print("Source: {}, ", trade_data.source);
+    fmt::print("Symbol: {}, ", trade_data.symbol);
+    fmt::print("Time: {}", std::asctime(std::localtime(&trade_data.time)));
+}
 
 // boost::accumulate should do this, but there's a compile fail
 inline auto accumulate(const auto& s, auto i) -> auto { return std::accumulate(std::begin(s), std::end(s), i); }
