@@ -21,12 +21,15 @@ public:
         OrderExecutor* executor,
         Int lookback,
         Float reversion_level,
-        Float base_quantity)
+        Float base_quantity,
+        const std::string& csv_name = "SimpleMR.csv")
         : ccapi::CcTradeHandler(trade_stream_name)
         , lookback_{lookback}
         , reversion_level_{reversion_level}
         , base_quantity_{base_quantity}
         , executor_{executor}
+        , csv_{csv_name}
+        , csv_writer_{csv_}
     {}
 
     void onStreamedTrade(TradeData const& trade_data) override
@@ -54,17 +57,30 @@ public:
 
             prices.pop_front();    // Now we have lookback_ prices already, remove the
                                    // oldest
-
-            if (trade_data.price > mean + std_reversion)
+            
+            bool 
+                sell_signal{trade_data.price > mean + std_reversion},
+                buy_signal {trade_data.price < mean - std_reversion};
+            if (sell_signal)
             {    // Well greater than the normal volatility
                 // so sell, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
             }
-            else if (trade_data.price < mean - std_reversion)
+            else if (buy_signal)
             {    // Well less than the normal volatility
                 // so buy, expecting a reversion to the mean
                 executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
+            csv_writer_.write_strings(
+                trade_data.symbol,
+                trade_data.price,
+                toString(trade_data.side).data(),
+                trade_data.size,
+                trade_data.source,
+                trade_data.time,
+                mean,
+                std_reversion,
+                buy_signal ? "Buy" : (sell_signal ? "Sell" : "No trade"));
         }
     }
 
@@ -82,6 +98,8 @@ private:
     std::map<std::string, std::pair<Int, std::deque<Float>>> counted_prices_;
 
     OrderExecutor* executor_;
-};
 
+    std::ofstream csv_;
+    util::CsvWriter csv_writer_;
+};
 }    // namespace profitview
