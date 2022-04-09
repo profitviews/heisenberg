@@ -81,8 +81,7 @@ public:
                                      return std::abs(price - mean) < damping_factor;
                                  })};
 
-            // auto std_reversion { reversion_level_*util::stdev(cut_damped, mean,
-            // lookback_)};
+            // Using Version 2 this time:
             auto std_reversion{reversion_level_ * util::stdev(excluded_damped, mean, lookback_)};
 
             prices.pop_front();    // Now we have lookback_ prices already, remove the
