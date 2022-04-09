@@ -53,11 +53,8 @@ auto ema(auto const& s, auto p, auto m = 0) -> auto
 
 auto stdev(auto& s, auto m, int p) -> auto
 {    // Calculate standard deviation given mean (m)
-    auto const variance{[&m, &p](auto a, const auto& v)
-                        {
-                            auto const& v_m{v - m};
-                            return a + v_m * v_m / (p - 1);
-                        }};
+    auto const variance{[&m, &p](auto a, const auto& v) { return a + (v - m) * (v - m) / (p - 1);}};
+
     return std::sqrt(accumulate(s, 0.0, variance));
 }
 
