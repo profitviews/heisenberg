@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
         return result.value();
 
     const std::map<std::string, Algo> algos{
-        {"SimpleMR", SimpleMr},
+        {"SimpleMR", SimpleMR},
         {"Kaufman",  Kaufman },
         {"Damped",   Damped  }
     };
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 
     switch (algos.at(options.algo))
     {
-    case SimpleMr:
+    case SimpleMR:
         TradeStreamMaker::register_stream<CcSimpleMR<>>(
             options.algo, &executor, options.lookback, options.reversion_level, options.base_quantity);
         break;

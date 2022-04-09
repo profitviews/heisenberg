@@ -5,6 +5,6 @@
 namespace profitview 
 {
 
-BOOST_DEFINE_ENUM(Algo, Kaufman, SimpleMr, Damped)
+BOOST_DEFINE_ENUM(Algo, Kaufman, SimpleMR, Damped)
 
 }
