@@ -72,7 +72,7 @@ public:
             // Version 1: chopping the tops/bottoms off extremes
             auto const& cut_damped{prices | std::views::transform([&mean, &damping_factor](auto price) -> auto {
                                        return std::abs(price - mean) > damping_factor
-                                                ? boost::math::sign(price - mean) * damping_factor
+                                                ? boost::math::sign(price - mean) * damping_factor + mean
                                                 : price;
                                    })};
 
