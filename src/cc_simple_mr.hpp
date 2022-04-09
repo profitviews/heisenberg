@@ -45,11 +45,7 @@ public:
 
         prices.emplace_back(trade_data.price);
 
-        if (elements + 1 < lookback_)
-        {
-            ++elements;    // Accumulate up to lookback_ prices
-        }
-        else
+        if (prices.size() > lookback_)
         {
             // These could be done on the fly but the complexity would distract
             auto mean{util::ma(prices)};
