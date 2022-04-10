@@ -3,6 +3,8 @@
 #include "cc_trade_handler.hpp"
 #include "trade_stream_maker.hpp"
 
+#include <util.hpp>
+
 #include <fmt/core.h>
 
 #include <string>
@@ -22,12 +24,7 @@ public:
 
     void onStreamedTrade(TradeData const& trade_data) override
     {
-        fmt::print("Price: {}, ", trade_data.price);
-        fmt::print("Side: {}, ", toString(trade_data.side));
-        fmt::print("Size: {}, ", trade_data.size);
-        fmt::print("Source: {}, ", trade_data.source);
-        fmt::print("Symbol: {}, ", trade_data.symbol);
-        fmt::print("Time: {}", std::asctime(std::localtime(&trade_data.time)));
+        util::print_trade_data(trade_data);
     }
 
     void subscribe(std::string const& market, std::vector<std::string> const& symbol_list)
