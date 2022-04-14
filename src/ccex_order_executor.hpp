@@ -44,6 +44,7 @@ private:
     std::string api_key_;
     std::string api_secret_;
     std::string pass_phrase_;
+    std::string sub_account_;
     std::string exchange_;
     int expiry_;
 
@@ -52,12 +53,12 @@ private:
         std::tuple<std::string, std::string, Side, double, double, ccapi::TimePoint, std::string>>
         open_orders_;
 
-    inline static const std::map<std::string, std::tuple<std::string, std::string, std::string>> exchange_key_names_{
+    inline static const std::map<std::string, std::tuple<std::string, std::string, std::string, std::string>> exchange_key_names_{
         {
-         {CCAPI_EXCHANGE_NAME_FTX, {CCAPI_FTX_API_KEY, CCAPI_FTX_API_SECRET, ""}},
-         {CCAPI_EXCHANGE_NAME_BITMEX, {CCAPI_BITMEX_API_KEY, CCAPI_FTX_API_SECRET, ""}},
+         {CCAPI_EXCHANGE_NAME_FTX, {CCAPI_FTX_API_KEY, CCAPI_FTX_API_SECRET, "", CCAPI_FTX_API_SUBACCOUNT}},
+         {CCAPI_EXCHANGE_NAME_BITMEX, {CCAPI_BITMEX_API_KEY, CCAPI_FTX_API_SECRET, "", ""}},
          {CCAPI_EXCHANGE_NAME_COINBASE,
-             {CCAPI_COINBASE_API_KEY, CCAPI_COINBASE_API_SECRET, CCAPI_COINBASE_API_PASSPHRASE}},
+             {CCAPI_COINBASE_API_KEY, CCAPI_COINBASE_API_SECRET, CCAPI_COINBASE_API_PASSPHRASE, ""}},
          }
     };
 
@@ -135,11 +136,13 @@ public:
         const std::string& exchange,
         const std::string& api_key,
         const std::string& api_secret,
-        const std::string& pass_phrase)
+        const std::string& pass_phrase,
+        const std::string& sub_account)
         : exchange_{exchange}
         , api_key_{api_key}
         , api_secret_{api_secret}
         , pass_phrase_{pass_phrase}
+        , sub_account_{sub_account}
     {}
 
     friend class CcexOrderHandler;
@@ -158,12 +161,14 @@ public:
         {
             ApiKey,
             ApiSecret,
-            PassPhrase
+            PassPhrase,
+            SubAccount
         };
         session_configs.setCredential({
             {std::get<ApiKey>(exchange_key_names_.at(exchange_)),     api_key_    },
             {std::get<ApiSecret>(exchange_key_names_.at(exchange_)),  api_secret_ },
-            {std::get<PassPhrase>(exchange_key_names_.at(exchange_)), pass_phrase_}
+            {std::get<PassPhrase>(exchange_key_names_.at(exchange_)), pass_phrase_},
+            {std::get<SubAccount>(exchange_key_names_.at(exchange_)), sub_account_}
         });
 
         Session session(session_options, session_configs, &event_handler);

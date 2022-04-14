@@ -19,9 +19,10 @@ struct ProgramArgs
 {
     std::string exchange;
     std::string symbol;
-    std::string apiKey;
-    std::string apiSecret;
-    std::string apiPhrase;
+    std::string api_key;
+    std::string api_secret;
+    std::string api_phrase;
+    std::string sub_account;
     Side side = Side::Buy;
     double size = 0.0;
     OrderType type = OrderType::Limit;
@@ -34,9 +35,10 @@ struct ProgramArgs
         options.add_options()
             ("exchange", po::value(&exchange)->required(), "Crypto Exchange to execute on.")
             ("symbol", po::value(&symbol)->required(), "Symbol for cypto assets to trade.")
-            ("api_key", po::value(&apiKey)->required(), "API key for Cypto exchange.")
-            ("api_secret", po::value(&apiSecret)->required(), "API secret for Cypto exchange.")
-            ("api_phrase", po::value(&apiPhrase), "API phrase for Cypto exchange.")
+            ("api_key", po::value(&api_key)->required(), "API key for Cypto exchange.")
+            ("api_secret", po::value(&api_secret)->required(), "API secret for Cypto exchange.")
+            ("api_phrase", po::value(&api_phrase), "API phrase for Cypto exchange.")
+            ("sub_account", po::value(&sub_account), "Subaccount on Cypto exchange.")
             ("side", po::value(&side)->required(), "The side of the trade <buy|sell>.")
             ("size", po::value(&size)->required(), "Size to trade.")
             ("type", po::value(&type)->required(), "The type of order <limit|market>.")
@@ -63,7 +65,7 @@ auto main(int argc, char* argv[]) -> int
     BOOST_LOG_TRIVIAL(info) << "Running Ccex test.";
 
     CcexOrderExecutor executor{
-        exchange_names.at(options.exchange), options.apiKey, options.apiSecret, options.apiPhrase};
+        exchange_names.at(options.exchange), options.api_key, options.api_secret, options.api_phrase, options.sub_account};
 
     BOOST_LOG_TRIVIAL(info) << options.symbol << "Running: " << std::endl;
     executor.new_order(options.symbol, options.side, options.size, options.type, options.price);

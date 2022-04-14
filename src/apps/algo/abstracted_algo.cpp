@@ -23,6 +23,7 @@ struct ProgramArgs
     std::string api_key;
     std::string api_secret;
     std::string api_phrase;
+    std::string sub_account;
     int lookback = 0;
     double reversion_level = 0.0;
     double base_quantity = 0.0;
@@ -40,6 +41,7 @@ struct ProgramArgs
             ("api_key", po::value(&api_key)->required(), "API key for Cypto exchange.")
             ("api_secret", po::value(&api_secret)->required(), "API secret for Cypto exchange.")
             ("api_phrase", po::value(&api_phrase), "API phrase for Cypto exchange.")
+            ("sub_account", po::value(&sub_account), "Subaccount on Cypto exchange.")
             ("lookback", po::value(&lookback)->required(), "Time period to look back")
             ("reversion_level", po::value(&reversion_level), "Mean reversion level.")
             ("base_quantity", po::value(&base_quantity)->required(), "Quantity to trade.")
@@ -69,7 +71,7 @@ int main(int argc, char* argv[])
         {"Damped",   Damped  }
     };
 
-    CcexOrderExecutor executor{options.exchange, options.api_key, options.api_secret, options.api_phrase};
+    CcexOrderExecutor executor{options.exchange, options.api_key, options.api_secret, options.api_phrase, options.sub_account};
 
     switch (algos.at(options.algo))
     {

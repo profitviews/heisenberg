@@ -105,6 +105,7 @@
             , "--exchange=ftx"
             , "--api_key=${env:FTX_API_KEY}"
             , "--api_secret=${env:FTX_API_SECRET}"
+            , "--sub_account=Webinar"
             , "--lookback=50"
             , "--reversion_level=2"
             , "--base_quantity=0.0025"
