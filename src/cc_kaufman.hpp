@@ -99,7 +99,7 @@ public:
                         trade_data.symbol, up ? Side::Buy : Side::Sell, base_quantity_, OrderType::Market);
                 }
 
-                csv_writer_.write_strings(
+                csv_writer_.write(
                     trade_data.symbol,
                     trade_data.price,
                     toString(trade_data.side).data(),

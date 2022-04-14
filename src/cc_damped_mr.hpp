@@ -102,7 +102,7 @@ public:
                 executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
 
-            csv_writer_.write_strings(
+            csv_writer_.write(
                 trade_data.symbol,
                 trade_data.price,
                 toString(trade_data.side).data(),

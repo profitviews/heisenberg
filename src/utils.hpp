@@ -36,13 +36,13 @@ void print_trade_data(TradeData const& trade_data)
 
 class CsvWriter : public csv2::Writer<csv2::delimiter<','>>
 {    // Provides shorthand
-     // `write_strings()`
+     // `write()`
 public:
     CsvWriter(auto& stream)
         : csv2::Writer<csv2::delimiter<','>>(stream)
     {}
 
-    void write_strings(auto&&... args)
+    void write(auto&&... args)
     {
         write_row<std::vector<std::string>>({fmt::format("{}", std::forward<decltype(args)>(args))...});
     }
