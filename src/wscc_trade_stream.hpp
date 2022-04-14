@@ -24,7 +24,7 @@ public:
 
     void onStreamedTrade(TradeData const& trade_data) override
     {
-        util::print_trade_data(trade_data);
+        trade_data.print();
     }
 
     void subscribe(std::string const& market, std::vector<std::string> const& symbol_list)

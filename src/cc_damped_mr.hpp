@@ -49,7 +49,7 @@ public:
 
     void onStreamedTrade(TradeData const& trade_data) override
     {
-        util::print_trade_data(trade_data);
+        trade_data.print();
 
         auto& [prices, mean_reached, initial_mean, initial_stdev]{price_structure_[trade_data.symbol]};
 
@@ -64,7 +64,6 @@ public:
         }
         else if (mean_reached)
         {
-            // These could be done on the fly but the complexity would distract
             auto mean{util::ma(prices)};
 
             auto const& damping_factor{damping_ * initial_stdev};
@@ -84,21 +83,18 @@ public:
             // Using Version 2 this time:
             auto std_reversion{reversion_level_ * util::stdev(excluded_damped, mean, lookback_)};
 
-            prices.pop_front();    // Now we have lookback_ prices already, remove the
-                                   // oldest
+            prices.pop_front();    
 
             bool 
                 sell_signal{trade_data.price > mean + std_reversion},
                 buy_signal {trade_data.price < mean - std_reversion};
 
             if (sell_signal)
-            {    // Well greater than the normal volatility
-                // so sell, expecting a reversion to the mean
+            {    
                 executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
             }
             else if (buy_signal)
-            {    // Well less than the normal volatility
-                // so buy, expecting a reversion to the mean
+            {    
                 executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
 

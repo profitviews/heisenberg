@@ -34,7 +34,7 @@ public:
 
     void onStreamedTrade(TradeData const& trade_data) override
     {
-        util::print_trade_data(trade_data);
+        trade_data.print();
 
         auto& [elements, prices]{counted_prices_[trade_data.symbol]};
 
@@ -60,7 +60,7 @@ public:
             {    
                 executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
-            
+
             csv_writer_.write(
                 trade_data.symbol,
                 trade_data.price,

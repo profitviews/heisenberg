@@ -52,7 +52,7 @@ public:
 
     void onStreamedTrade(TradeData const& trade_data) override
     {
-        util::print_trade_data(trade_data);
+        trade_data.print();
 
         auto& [prices, mean_reached, initial_mean, kama, kamas]{price_structure_[trade_data.symbol]};
 
