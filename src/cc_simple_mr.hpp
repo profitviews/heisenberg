@@ -43,6 +43,7 @@ public:
         if (prices.size() > lookback_)
         {
             auto mean{util::ma(prices)};
+
             auto std_reversion{reversion_level_ * util::stdev(prices, mean, lookback_)};
 
             prices.pop_front();
@@ -50,16 +51,16 @@ public:
             bool 
                 sell_signal{trade_data.price > mean + std_reversion},
                 buy_signal {trade_data.price < mean - std_reversion};
+
             if (sell_signal)
-            {    // Well greater than the normal volatility
-                // so sell, expecting a reversion to the mean
+            {    
                 executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
             }
             else if (buy_signal)
-            {    // Well less than the normal volatility
-                // so buy, expecting a reversion to the mean
+            {    
                 executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
+            
             csv_writer_.write(
                 trade_data.symbol,
                 trade_data.price,
