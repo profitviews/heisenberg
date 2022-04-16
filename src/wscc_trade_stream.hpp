@@ -29,6 +29,7 @@ public:
 
     void subscribe(std::string const& market, std::vector<std::string> const& symbol_list)
     {
+        CcTradeHandler::set_stream(this);
         CcTradeHandler::subscribe(market, symbol_list);
     }
 };

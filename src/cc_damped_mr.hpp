@@ -1,13 +1,7 @@
 #pragma once
 
 #include "enum.hpp"
-#include "order_executor.hpp"
-#include "utils.hpp"
-#include "wscc_trade_stream.hpp"
-
-#include <csv2/writer.hpp>
-
-#include <fmt/core.h>
+#include "cc_trade_stream.hpp"
 
 #include <boost/log/trivial.hpp>
 
@@ -24,9 +18,7 @@ namespace profitview
 {
 
 template<std::floating_point Float = double, std::integral Int = int>
-class CcDamped
-    : public TradeStream
-    , private ccapi::CcTradeHandler
+class CcDamped : public CcTradeStream<Float, Int>
 {
 public:
     CcDamped(
@@ -37,14 +29,11 @@ public:
         Float base_quantity,
         Float damping,
         const std::string& csv_name = "Damped.csv")
-        : ccapi::CcTradeHandler(trade_stream_name)
+        : CcTradeStream<Float, Int>(trade_stream_name, executor, csv_name)
         , lookback_{lookback}
         , reversion_level_{reversion_level}
         , base_quantity_{base_quantity}
         , damping_{damping}
-        , executor_{executor}
-        , csv_{csv_name}
-        , csv_writer_{csv_}
     {}
 
     void onStreamedTrade(TradeData const& trade_data) override
@@ -65,6 +54,7 @@ public:
         else if (mean_reached)
         {
             auto mean{util::ma(prices)};
+            BOOST_LOG_TRIVIAL(info) << "MA: " << mean << std::endl << std::endl;
 
             auto const& damping_factor{damping_ * initial_stdev};
 
@@ -82,6 +72,7 @@ public:
 
             // Using Version 2 this time:
             auto std_reversion{reversion_level_ * util::stdev(excluded_damped, mean, lookback_)};
+            BOOST_LOG_TRIVIAL(info) << "Std Reversion: " << std_reversion << std::endl << std::endl;
 
             prices.pop_front();    
 
@@ -91,14 +82,14 @@ public:
 
             if (sell_signal)
             {    
-                executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
+                this->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
             }
             else if (buy_signal)
             {    
-                executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
+                this->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
 
-            csv_writer_.write(
+            this->writeCsv(
                 trade_data.symbol,
                 trade_data.price,
                 toString(trade_data.side).data(),
@@ -109,11 +100,6 @@ public:
                 std_reversion,
                 buy_signal ? "Buy" : (sell_signal ? "Sell" : "No trade"));
         }
-    }
-
-    void subscribe(const std::string& market, const std::vector<std::string>& symbol_list)
-    {
-        CcTradeHandler::subscribe(market, symbol_list);
     }
 
     struct Data
@@ -130,11 +116,6 @@ private:
     const Float damping_;
 
     std::map<std::string, Data> price_structure_;
-
-    OrderExecutor* executor_;
-
-    std::ofstream csv_;
-    util::CsvWriter csv_writer_;
 };
 
 }    // namespace profitview

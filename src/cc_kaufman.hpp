@@ -1,13 +1,7 @@
 #pragma once
 
 #include "enum.hpp"
-#include "order_executor.hpp"
-#include "utils.hpp"
-#include "wscc_trade_stream.hpp"
-
-#include <csv2/writer.hpp>
-
-#include <fmt/core.h>
+#include "cc_trade_stream.hpp"
 
 #include <boost/log/trivial.hpp>
 
@@ -23,9 +17,7 @@ namespace profitview
 {
 
 template<std::floating_point Float = double, std::integral Int = int>
-class CcKaufman
-    : public TradeStream
-    , private ccapi::CcTradeHandler
+class CcKaufman : public CcTradeStream<Float, Int>
 {
 public:
     CcKaufman(
@@ -38,16 +30,13 @@ public:
         Int slow_sc,
         Int kama_trend,
         const std::string& csv_name = "Kaufman.csv")
-        : ccapi::CcTradeHandler(trade_stream_name)
+        : CcTradeStream<Float, Int>(trade_stream_name, executor, csv_name)
         , lookback_{lookback}
         , base_quantity_{base_quantity}
         , er_period_{er_period}
         , fast_sc_{fast_sc}
         , slow_sc_{slow_sc}
         , kama_trend_{kama_trend}
-        , executor_{executor}
-        , csv_{csv_name}
-        , csv_writer_{csv_}
     {}
 
     void onStreamedTrade(TradeData const& trade_data) override
@@ -95,11 +84,10 @@ public:
                     // @todo This will keep buying/selling when the market is not
                     // directional
                     //       It should have more refined behaviour
-                    executor_->new_order(
-                        trade_data.symbol, up ? Side::Buy : Side::Sell, base_quantity_, OrderType::Market);
+                    this->new_order(trade_data.symbol, up ? Side::Buy : Side::Sell, base_quantity_, OrderType::Market);
                 }
 
-                csv_writer_.write(
+                this->writeCsv(
                     trade_data.symbol,
                     trade_data.price,
                     toString(trade_data.side).data(),
@@ -112,11 +100,6 @@ public:
                 kamas.pop_front();    // Remove oldest KAMA price
             }
         }
-    }
-
-    void subscribe(const std::string& market, const std::vector<std::string>& symbol_list)
-    {
-        CcTradeHandler::subscribe(market, symbol_list);
     }
 
     struct Data
@@ -135,10 +118,6 @@ private:
 
     std::map<std::string, Data> price_structure_;
 
-    OrderExecutor* executor_;
-
-    std::ofstream csv_;
-    util::CsvWriter csv_writer_;
 };
 
 }    // namespace profitview

@@ -9,6 +9,8 @@
 
 #include <map>
 
+#include <cassert>
+
 namespace ccapi
 {
 using namespace profitview;
@@ -25,11 +27,12 @@ public:
         session_ = std::make_unique<Session>(sessionOptions_, sessionConfigs_, this);
     }
 
+    void set_stream(TradeStream* stream) { stream_ = stream; }
+
     void subscribe(const std::string& market, const std::vector<std::string>& symbol_list)
     {
         market_ = market;    // Assuming for the moment that `subscribe` is called only
                              // once and there's only 1 market
-        stream_ = &TradeStreamMaker::get(trade_stream_name_); // Race condition if done in constructor
 
         std::vector<Subscription> subscriptions;
         for (auto& symbol : symbol_list)
@@ -49,6 +52,7 @@ public:
                 for (const auto& [index, element] : message.getElementList() | boost::adaptors::indexed(0))
                 {
                     const auto& e{element.getNameValueMap()};
+                    assert(stream_ != nullptr);
                     stream_->onStreamedTrade(
                             {std::stod(e.at("LAST_PRICE")),
                              e.at("IS_BUYER_MAKER") == "1" ? Side::Buy : Side::Sell,

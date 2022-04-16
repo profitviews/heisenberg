@@ -1,19 +1,13 @@
 #pragma once
 
 #include "enum.hpp"
-#include "order_executor.hpp"
-#include "utils.hpp"
-#include "wscc_trade_stream.hpp"
-
-#include <fmt/core.h>
+#include "cc_trade_stream.hpp"
 
 namespace profitview
 {
 
 template<std::floating_point Float = double, std::integral Int = int>
-class CcSimpleMR
-    : public TradeStream
-    , private ccapi::CcTradeHandler
+class CcSimpleMR : public CcTradeStream<Float, Int>
 {
 public:
     CcSimpleMR(
@@ -23,13 +17,10 @@ public:
         Float reversion_level,
         Float base_quantity,
         const std::string& csv_name = "SimpleMR.csv")
-        : ccapi::CcTradeHandler(trade_stream_name)
+        : CcTradeStream<Float, Int>(trade_stream_name, executor, csv_name)
         , lookback_{lookback}
         , reversion_level_{reversion_level}
         , base_quantity_{base_quantity}
-        , executor_{executor}
-        , csv_{csv_name}
-        , csv_writer_{csv_}
     {}
 
     void onStreamedTrade(TradeData const& trade_data) override
@@ -54,14 +45,14 @@ public:
 
             if (sell_signal)
             {    
-                executor_->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
+                this->new_order(trade_data.symbol, Side::Sell, base_quantity_, OrderType::Market);
             }
             else if (buy_signal)
             {    
-                executor_->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
+                this->new_order(trade_data.symbol, Side::Buy, base_quantity_, OrderType::Market);
             }
 
-            csv_writer_.write(
+            this->writeCsv(
                 trade_data.symbol,
                 trade_data.price,
                 toString(trade_data.side).data(),
@@ -74,11 +65,6 @@ public:
         }
     }
 
-    void subscribe(const std::string& market, const std::vector<std::string>& symbol_list)
-    {
-        CcTradeHandler::subscribe(market, symbol_list);
-    }
-
 private:
     const Int lookback_;
 
@@ -86,10 +72,6 @@ private:
     Float base_quantity_;
 
     std::map<std::string, std::pair<Int, std::deque<Float>>> counted_prices_;
-
-    OrderExecutor* executor_;
-
-    std::ofstream csv_;
-    util::CsvWriter csv_writer_;
 };
+
 }    // namespace profitview

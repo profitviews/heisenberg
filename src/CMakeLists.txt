@@ -5,6 +5,7 @@ target_sources(cpp_crypto_algos_lib
         cc_kaufman.hpp
         cc_damped_mr.hpp
         cc_trade_handler.hpp
+        cc_trade_stream.hpp
         ccex_order_executor.hpp
         enum.hpp
         exchange.hpp

@@ -16,9 +16,9 @@ struct TradeStreamMaker
 {
 public:
     template<typename TradeStreamT, typename... Args>
-    static void register_stream(std::string const& name, Args&&... args)
+    static auto register_stream(std::string const& name, Args&&... args) -> auto
     {
-        made[name] = std::make_shared<TradeStreamT>(name, std::forward<Args>(args)...);
+        return made[name] = std::make_shared<TradeStreamT>(name, std::forward<Args>(args)...);
     }
 
     static TradeStream& get(std::string const& name) { return *made.at(name); }

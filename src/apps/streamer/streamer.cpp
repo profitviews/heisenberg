@@ -36,8 +36,8 @@ int main(int argc, char* argv[])
     if (result)
         return result.value();
 
-    TradeStreamMaker::register_stream<WSCcTradeStream>("WSCcStream");
-    TradeStreamMaker::get("WSCcStream").subscribe(options.exchange, options.symbols);
+    auto stream {TradeStreamMaker::register_stream<WSCcTradeStream>("WSCcStream")};
+    stream->subscribe(options.exchange, options.symbols);
 
     std::cout << "Press enter to quit" << std::endl;
     std::cin.get();

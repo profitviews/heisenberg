@@ -1,7 +1,7 @@
 add_executable(streamer)
 target_sources(streamer
     PRIVATE
-        abstracted_streamer.cpp
+        streamer.cpp
 )
 
 target_link_libraries(streamer
