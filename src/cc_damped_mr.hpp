@@ -2,17 +2,13 @@
 
 #include "enum.hpp"
 #include "cc_trade_stream.hpp"
+#include "utils.hpp"
+#include "trade_data.hpp"
 
 #include <boost/log/trivial.hpp>
 
 #include <concepts>
-#include <fstream>
 #include <map>
-#include <numeric>
-#include <ranges>
-#include <string>
-#include <tuple>
-#include <vector>
 
 namespace profitview
 {

@@ -11,7 +11,6 @@
 
 #include <cassert>
 #include <cmath>
-#include <concepts>
 #include <iostream>
 #include <limits>
 #include <numeric>

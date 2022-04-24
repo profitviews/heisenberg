@@ -2,6 +2,11 @@
 
 #include "enum.hpp"
 #include "cc_trade_stream.hpp"
+#include "utils.hpp"
+#include "trade_data.hpp"
+
+#include <concepts>
+#include <map>
 
 namespace profitview
 {

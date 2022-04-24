@@ -7,18 +7,9 @@
 
 #include <csv2/writer.hpp>
 
-#include <fmt/core.h>
-
-#include <boost/log/trivial.hpp>
-
 #include <concepts>
 #include <fstream>
-#include <map>
-#include <numeric>
-#include <ranges>
 #include <string>
-#include <tuple>
-#include <vector>
 
 namespace profitview
 {
