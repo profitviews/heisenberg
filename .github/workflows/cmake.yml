@@ -16,22 +16,6 @@ jobs:
             compiler: { type: GCC, version: 11, conan: "gcc", cc: "gcc-11", cxx: "g++-11" },
             lib: "libstdc++11"
           }
-        - {
-            name: "Ubuntu Clang-13 + libc++",
-            os: ubuntu-20.04,
-            compiler: { type: CLANG, version: 13, conan: "clang", cc: "clang-13", cxx: "clang++-13", std: 20 },
-            lib: "libc++"
-          }
-        - {
-            name: "Visual Studio 2019",
-            os: windows-latest,
-            compiler: { type: VISUAL, version: 16, cc: "cl", cxx: "cl" }
-          }
-        - {
-            name: "MacOS Apple Clang 13.2",
-            os: macos-latest,
-            compiler: { type: APPLE_CLANG, version: "13.2", cc: "clang", cxx: "clang++", std: 20 }
-          }
     steps:
       - uses: actions/checkout@v2
       - name: Add msbuild to PATH
@@ -75,7 +59,7 @@ jobs:
       - name: Configure Install
         shell: bash
         run: |
-          conan install . -if "${{github.workspace}}/build" -of "${{github.workspace}}/build --build missing -o boost:without_fiber=True"
+          conan install . -if "${{github.workspace}}/build" -of "${{github.workspace}}/build"
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
