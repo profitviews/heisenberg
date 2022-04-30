@@ -17,6 +17,12 @@ jobs:
             lib: "libstdc++11"
           }
         - {
+            name: "Ubuntu Clang-13 + libc++",
+            os: ubuntu-20.04,
+            compiler: { type: CLANG, version: 13, conan: "clang", cc: "clang-13", cxx: "clang++-13", std: 20 },
+            lib: "libc++"
+          }
+        - {
             name: "Visual Studio 2019",
             os: windows-latest,
             compiler: { type: VISUAL, version: 16, cc: "cl", cxx: "cl" }
