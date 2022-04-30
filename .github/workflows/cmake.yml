@@ -59,7 +59,7 @@ jobs:
       - name: Configure Install
         shell: bash
         run: |
-          conan install . -if "${{github.workspace}}/build" -of "${{github.workspace}}/build --build missing"
+          conan install . --build missing -if "${{github.workspace}}/build" -of "${{github.workspace}}/build"
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
