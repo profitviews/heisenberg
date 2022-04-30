@@ -1,5 +1,5 @@
 [build_requires]
-cmake/3.22.0
+cmake/3.23.0
 
 [requires]
 boost/1.78.0
