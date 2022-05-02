@@ -27,7 +27,7 @@ public:
         trade_data.print();
     }
 
-    void subscribe(std::string const& market, std::vector<std::string> const& symbol_list)
+    void subscribe(std::string const& market, std::vector<std::string> const& symbol_list) override
     {
         CcTradeHandler::set_stream(this);
         CcTradeHandler::subscribe(market, symbol_list);

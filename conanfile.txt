@@ -1,10 +1,10 @@
 [build_requires]
-cmake/3.22.0
+cmake/3.23.0
 
 [requires]
 boost/1.78.0
 fmt/8.1.1
-openssl/1.1.1m
+openssl/1.1.1n
 rapidjson/cci.20211112
 
 [generators]

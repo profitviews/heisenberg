@@ -55,14 +55,14 @@ public:
             auto const& damping_factor{damping_ * initial_stdev};
 
             // Version 1: chopping the tops/bottoms off outliers
-            auto const& cut_damped{prices | std::views::transform([&mean, &damping_factor](auto price) -> auto {
+            auto const& cut_damped{prices | std::ranges::views::transform([&mean, &damping_factor](auto price) -> auto {
                                        return std::abs(price - mean) > damping_factor
                                                 ? boost::math::sign(price - mean) * damping_factor + mean
                                                 : price;
                                    })};
 
             // Version 2: excluding outliers
-            auto excluded_damped{prices | std::views::filter([&mean, &damping_factor](auto price) -> auto {
+            auto excluded_damped{prices | std::ranges::views::filter([&mean, &damping_factor](auto price) -> auto {
                                      return std::abs(price - mean) < damping_factor;
                                  })};
 
