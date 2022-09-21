@@ -1,6 +1,8 @@
-# C++ Crypto Algos
+# Heisenberg Algo Trading
 
-## Build steps
+## C++ Crypto Algos
+
+### Build steps
 
 Linux or MacOS.  See [here](https://github.com/profitviews/cpp_crypto_algos/blob/main/windows.md) for Windows.
 
