@@ -1,6 +1,6 @@
 # Heisenberg Algo Trading
 
-![Heisenberg](/assets/images/heisenberg_photo.jpg | width=300)
+<img src="/assets/images/heisenberg_photo.jpg" style="width:500px"> 
 
 ## C++ Crypto Algos
 
