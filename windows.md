@@ -1,4 +1,4 @@
-# C++ Crypto Algos - Windows
+# Heisenberg - Windows
 
 ## Build steps
 
