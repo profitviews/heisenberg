@@ -8,8 +8,8 @@ Linux or MacOS.  See [here](https://github.com/profitviews/cpp_crypto_algos/blob
 
 1. Clone project
    ```
-   git clone https://github.com/profitviews/cpp_crypto_algos.git cpp_crypto_algos
-   cd cpp_crypto_algos
+   git clone https://github.com/profitviews/heisenberg.git cpp_crypto_algos
+   cd heisenberg
    ```
 
 2. Install Conan
@@ -35,7 +35,7 @@ Linux or MacOS.  See [here](https://github.com/profitviews/cpp_crypto_algos/blob
 
 This will create (with debugging symbols):
 
-* `build/cpp_crypto_algos` which will run a simple Mean Reversion algo on FTX or Coinbase
+* `build/heisenberg` which will run a simple Mean Reversion algo on FTX or Coinbase
 * For example
 ```bash
 cd bin
