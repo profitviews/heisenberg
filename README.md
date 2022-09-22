@@ -2,6 +2,8 @@
 
 ## C++ Crypto Algos
 
+![Heisenberg](/assets/images/heisenberg_photo.jpg)
+
 ### Build steps
 
 Linux or MacOS.  See [here](https://github.com/profitviews/heisenberg/blob/main/windows.md) for Windows.
