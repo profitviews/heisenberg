@@ -4,11 +4,11 @@
 
 ### Build steps
 
-Linux or MacOS.  See [here](https://github.com/profitviews/cpp_crypto_algos/blob/main/windows.md) for Windows.
+Linux or MacOS.  See [here](https://github.com/profitviews/heisenberg/blob/main/windows.md) for Windows.
 
 1. Clone project
    ```
-   git clone https://github.com/profitviews/heisenberg.git cpp_crypto_algos
+   git clone https://github.com/profitviews/heisenberg.git heisenberg
    cd heisenberg
    ```
 
