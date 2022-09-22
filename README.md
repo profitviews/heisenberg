@@ -25,6 +25,7 @@ Linux or MacOS.  See [here](https://github.com/profitviews/heisenberg/blob/main/
    ```
    mkdir build
    cd build
+   # Possibly create/modify a profile file in ~/.conan/profiles. See example_conan_profile_linux
    conan install ../ --build missing
    source ./activate.sh
    cmake -DCMAKE_BUILD_TYPE=Debug ..
