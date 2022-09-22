@@ -38,7 +38,7 @@ Linux or MacOS.  See [here](https://github.com/profitviews/heisenberg/blob/main/
 
 This will create (with debugging symbols):
 
-* `build/heisenberg` which will run a simple Mean Reversion algo on FTX or Coinbase
+* `build/bin/algo` which will run a simple Mean Reversion algo on FTX or Coinbase
 * For example
 ```bash
 cd bin
