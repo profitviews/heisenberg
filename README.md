@@ -1,8 +1,8 @@
 # Heisenberg Algo Trading
 
-## C++ Crypto Algos
-
 ![Heisenberg](/assets/images/heisenberg_photo.jpg)
+
+## C++ Crypto Algos
 
 ### Build steps
 
