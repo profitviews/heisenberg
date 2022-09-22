@@ -13,8 +13,8 @@ Invoke-WebRequest -OutFile vs_BuildTools.exe -Uri https://aka.ms/vs/17/release/v
 Invoke-WebRequest -OutFile Git-2.35.1.2-64-bit.exe -Uri https://github.com/git-for-windows/git/releases/download/v2.35.1.windows.2/Git-2.35.1.2-64-bit.exe
 .\Git-2.35.1.2-64-bit
 ```
-4. `git clone https://github.com/profitviews/cpp_crypto_algos.git`
-5. `cd cpp_crypto_algos`
+4. `git clone https://github.com/profitviews/heisenberg.git`
+5. `cd heisenberg`
 6. Download Python 
 ```powershell
 Invoke-WebRequest -OutFile python-3.10.2-amd64.exe -Uri https://www.python.org/ftp/python/3.10.2/python-3.10.2-amd64.exe
@@ -39,7 +39,7 @@ $env:Path += ';C:\Program Files\CMake\bin'
 
 This will create (with debugging symbols):
 
-* `cpp_crypto_algos\build\bin\Debug\algo.exe` which will run a simple Mean Reversion algo on FTX or Coinbase
+* `heisenberg\build\bin\Debug\algo.exe` which will run a simple Mean Reversion algo on FTX or Coinbase
 * For example
 ```powershell
 cd bin\Debug
