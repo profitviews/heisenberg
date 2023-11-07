@@ -33,3 +33,8 @@
 
 build/*
 .venv/*
+
+# Visual Studio artifacts
+.vs
+CMakeUserPresets.json
+[Oo]ut
