@@ -6,7 +6,7 @@
 
 ### Build steps
 
-Linux or MacOS.  See [here](https://github.com/profitviews/heisenberg/blob/main/windows.md) for Windows.
+Linux or MacOS. See [here](./windows.md) for Windows.
 
 * Clone project
    ```bash
@@ -34,6 +34,7 @@ Linux or MacOS.  See [here](https://github.com/profitviews/heisenberg/blob/main/
    ```
    
 * Ninja Multi-Config Build
+
    Multi-config builds allow you to create a build folder containing sub-folders for different build configurations and build them side-by-side.
    To generate all the configurations we run the `conan-default` preset which configures CMake for these configurations `Release` and `Debug`. The sample build below is choosing the `Release` configuration:
    ```bash

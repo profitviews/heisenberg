@@ -2,9 +2,9 @@ name: CMake
 
 on:
   push:
-    branches: [conan2_support]
+    branches: [main]
   pull_request:
-    branches: [conan2_support]
+    branches: [main]
 
 jobs:
   build:
