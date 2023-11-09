@@ -2,7 +2,6 @@ from conan import ConanFile
 from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
-from conan.tools.microsoft import MSBuildDeps, MSBuildToolchain
 from conan.tools.scm import Version
 import re, os.path
 import subprocess
@@ -24,13 +23,9 @@ class CppCryptoAlgos(ConanFile):
     no_copy_source = True
     exports_sources = ["CMakeLists.txt", "cmake/*", "src/*"]
     requires = (
-        #"boost/1.83.0",
         "boost/1.78.0",
-        #"fmt/[^10]",
         "fmt/[8.1.1]",
-        #"openssl/3.1.4",
         "openssl/1.1.1q",
-        #"rapidjson/cci.20220822"
         "rapidjson/cci.20211112"
     )
 
@@ -70,10 +65,10 @@ class CppCryptoAlgos(ConanFile):
                         self.settings.compiler.version))
 
     def generate(self):
-            tc = CMakeToolchain(self)
-            tc.generate()
-            deps = CMakeDeps(self)
-            deps.generate()
+        tc = CMakeToolchain(self)
+        tc.generate()
+        deps = CMakeDeps(self)
+        deps.generate()
 
     def layout(self):
         cmake_layout(self)

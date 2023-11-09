@@ -1,26 +1,3 @@
-#add_library(cpp_crypto_algos_lib INTERFACE)
-#target_sources(cpp_crypto_algos_lib
-#    INTERFACE
-#        cc_simple_mr.hpp
-#        cc_kaufman.hpp
-#        cc_damped_mr.hpp
-#        cc_trade_handler.hpp
-#        cc_trade_stream.hpp
-#        ccex_order_executor.hpp
-#        enum.hpp
-#        exchange.hpp
-#        order_executor.hpp
-#        order_type.hpp
-#        program_options.hpp
-#        side.hpp
-#        trade_data.hpp
-#        trade_stream.hpp
-#        trade_stream_exception.hpp
-#        trade_stream_maker.hpp
-#        utils.hpp
-#        wscc_trade_stream.hpp
-#)
-
 add_library(cpp_crypto_algos_lib
     INTERFACE
         cc_simple_mr.hpp
@@ -51,7 +28,6 @@ target_link_libraries(cpp_crypto_algos_lib
         fmt::fmt
         OpenSSL::SSL
         OpenSSL::Crypto
-        #RapidJSON::RapidJSON
         rapidjson
         Threads::Threads
 )
