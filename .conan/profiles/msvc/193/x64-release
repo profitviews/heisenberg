@@ -1,0 +1,6 @@
+include(../../default)
+include(../../arch/x64)
+include(../../cpp/20)
+include(../../config/release)
+include(../../os/current)
+include(compiler)

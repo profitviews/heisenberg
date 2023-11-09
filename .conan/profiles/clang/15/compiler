@@ -1,0 +1,4 @@
+include(../../compiler/clang)
+
+[settings]
+compiler.version=15

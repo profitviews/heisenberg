@@ -1,0 +1,2 @@
+[settings]
+os = {{ {"Darwin": "Macos"}.get(platform.system(), platform.system()) }}

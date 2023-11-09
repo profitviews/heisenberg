@@ -1,0 +1,4 @@
+include(../../compiler/gcc)
+
+[settings]
+compiler.version=12

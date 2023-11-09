@@ -1,0 +1,4 @@
+include(../stl/libstdc++11)
+
+[settings]
+compiler=gcc

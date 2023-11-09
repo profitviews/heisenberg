@@ -36,5 +36,10 @@ build/*
 
 # Visual Studio artifacts
 .vs
-CMakeUserPresets.json
 [Oo]ut
+
+# Conan2 directory
+.conan2
+
+# CMake build artifacts
+CMakeUserPresets.json
