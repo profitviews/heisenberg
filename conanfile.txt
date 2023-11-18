@@ -1,0 +1,13 @@
+[requires]
+boost/1.78.0
+fmt/8.1.1
+openssl/1.1.1q
+rapidjson/cci.20211112
+
+[tool_requires]
+cmake/3.27.0
+ninja/1.11.1
+
+[generators]
+CMakeDeps
+CMakeToolchain

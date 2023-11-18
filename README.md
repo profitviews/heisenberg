@@ -27,8 +27,9 @@ Linux or MacOS. See [here](./windows.md) for Windows.
    Installing Conan dependencies and configuring CMake presets.
    The sample build below is choosing the `Release` configuration:
    ```bash
-   conan install ./ -pr:h .conan2/profiles/gcc/12/x64-libstdc++11-release -pr:b .conan2/profiles/gcc/12/x64-libstdc++11-release --build missing
-   source build/Release/generators/conanbuild.sh
+   mkdir build
+   conan install ./ -pr:h .conan2/profiles/gcc/12/x64-libstdc++11-release -pr:b .conan2/profiles/gcc/12/x64-libstdc++11-release -of ./build --build missing
+   source build/conanbuild.sh
    cmake --preset conan-release
    cmake --build --preset conan-release
    ```
@@ -38,8 +39,8 @@ Linux or MacOS. See [here](./windows.md) for Windows.
    Multi-config builds allow you to create a build folder containing sub-folders for different build configurations and build them side-by-side.
    To generate all the configurations we run the `conan-default` preset which configures CMake for these configurations `Release` and `Debug`. The sample build below is choosing the `Release` configuration:
    ```bash
-   conan install ./ -pr:h .conan2/profiles/gcc/12/x64-libstdc++11-release -pr:b .conan2/profiles/gcc/12/x64-libstdc++11-release --build missing -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
-   source build/generators/conanbuild.sh
+   conan install ./ -pr:h .conan2/profiles/gcc/12/x64-libstdc++11-release -pr:b .conan2/profiles/gcc/12/x64-libstdc++11-release -of ./build --build missing -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
+   source build/conanbuild.sh
    cmake --preset conan-default # The configure stage for multi-config builds is conan-default
    cmake --build --preset conan-release # The build stage for multi-config builds is the conan-<configuration>
    ```
