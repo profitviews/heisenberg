@@ -1,5 +1,5 @@
 [requires]
-boost/1.83.0
+boost/1.80.0
 fmt/10.1.1
 openssl/3.1.4
 rapidjson/cci.20211112
