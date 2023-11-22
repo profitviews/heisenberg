@@ -99,6 +99,7 @@ jobs:
         if: matrix.settings.os == 'windows-latest'
         shell: cmd
         run: |
+          call build\conanvcvars.bat
           call build\conanbuild.ps1
           cmake --preset conan-default
 
