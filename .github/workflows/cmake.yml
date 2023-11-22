@@ -35,8 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: seanmiddleditch/gha-setup-ninja@master
-
       - name: Cache Conan data
         uses: actions/cache@v3
         env:
@@ -68,9 +66,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Conan Package Tools
+      - name: Install Python requirements
         run: |
-          pip install -U conan
+          pip install -r ./requirements.txt
 
       - name: Configure Conan
         shell: bash
@@ -88,7 +86,7 @@ jobs:
       - name: Configure Install
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
+          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -c tools.env.virtualenv:powershell=True
 
       - name: Configure Conan Build
         if: matrix.settings.os == 'windows-latest'
