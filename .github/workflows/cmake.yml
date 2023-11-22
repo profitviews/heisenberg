@@ -93,7 +93,7 @@ jobs:
         if: matrix.settings.os != 'windows-latest'
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
+          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -of ./build
 
       - name: Configure CMake
         if: matrix.settings.os == 'windows-latest'
@@ -107,7 +107,7 @@ jobs:
         if: matrix.settings.os != 'windows-latest'
         shell: bash
         run: |
-          source build/generators/conanbuild.sh
+          source build/conanbuild.sh
           cmake --preset conan-default
 
       - name: Conan Preset
@@ -125,5 +125,5 @@ jobs:
         if: matrix.settings.os != 'windows-latest'
         shell: bash
         run: |
-          source build/generators/conanbuild.sh
+          source build/conanbuild.sh
           cmake --build --preset ${{ env.CONAN_PRESET }}
