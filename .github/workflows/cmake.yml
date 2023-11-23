@@ -87,7 +87,7 @@ jobs:
         if: matrix.settings.os == 'windows-latest'
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -of ./build -c tools.env.virtualenv:powershell=True
+          conan install "${{github.workspace}}" --build missing -pr:b default -g VCVars -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -of ./build -c tools.env.virtualenv:powershell=True
 
       - name: Configure Install
         if: matrix.settings.os != 'windows-latest'

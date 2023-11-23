@@ -11,4 +11,3 @@ ninja/1.11.1
 [generators]
 CMakeDeps
 CMakeToolchain
-VCVars
