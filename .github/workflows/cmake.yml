@@ -95,6 +95,13 @@ jobs:
         run: |
           conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -of ./build
 
+      - name: Setup tmate session
+        if: matrix.settings.os == 'windows-latest'
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
+        with:
+          detached: true
+
       - name: Configure CMake
         if: matrix.settings.os == 'windows-latest'
         shell: cmd
