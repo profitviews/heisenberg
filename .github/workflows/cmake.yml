@@ -87,7 +87,7 @@ jobs:
         if: matrix.settings.os == 'windows-latest'
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -g VCVars -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -of ./build -c tools.env.virtualenv:powershell=True
+          conan install "${{github.workspace}}" --build missing -pr:b default -g VCVars -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -of ./build 
 
       - name: Configure Install
         if: matrix.settings.os != 'windows-latest'
@@ -107,7 +107,7 @@ jobs:
         shell: cmd
         run: |
           call build\conanvcvars.bat
-          call build\conanbuild.ps1
+          call build\conanbuild.bat
           cmake --preset conan-default
 
       - name: Configure CMake
@@ -125,7 +125,7 @@ jobs:
         if: matrix.settings.os == 'windows-latest'
         shell: cmd
         run: |
-          call build\conanbuild.ps1
+          call build\conanbuild.bat
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: Build
