@@ -1,7 +1,7 @@
 [requires]
 boost/1.80.0
-fmt/10.1.1
-openssl/3.1.4
+fmt/8.1.1
+openssl/1.1.1q
 rapidjson/cci.20211112
 
 [tool_requires]
