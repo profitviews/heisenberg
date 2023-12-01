@@ -63,7 +63,7 @@ auto abs_differences(const auto& prices, int e) -> auto
 
     using namespace std::ranges;
 
-    subrange lagged{b - 1, prices.end() - 1}, aligned{b, prices.end()};
+    std::ranges::subrange lagged{b - 1, prices.end() - 1}, aligned{b, prices.end()};
     std::vector<typename std::remove_cvref_t<decltype(prices)>::value_type> differences(e);
     transform(
         lagged, aligned, differences.begin(), [](auto n, auto m) -> auto { return std::abs(n - m); });
