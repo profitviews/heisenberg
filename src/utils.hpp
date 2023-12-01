@@ -5,9 +5,6 @@
 #include <fmt/core.h>
 
 #include <boost/math/special_functions/sign.hpp>
-#include <boost/range/begin.hpp>
-#include <boost/range/end.hpp>
-#include <boost/range/numeric.hpp>
 
 #include <cassert>
 #include <cmath>
