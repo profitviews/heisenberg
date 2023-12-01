@@ -56,8 +56,8 @@ target_compile_options(cpp_crypto_algos_lib
         $<$<CXX_COMPILER_ID:GNU>:-Wno-terminate>
         $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 )
-set_property(TARGET MY_LIB PROPERTY CPP_VISIBILITY_PRESET  ON)
-set_property(TARGET MY_LIB PROPERTY VISIBILITY_INLINES_HIDDEN ON)
+set_property(TARGET cpp_crypto_algos_lib PROPERTY CPP_VISIBILITY_PRESET  ON)
+set_property(TARGET cpp_crypto_algos_lib PROPERTY VISIBILITY_INLINES_HIDDEN ON)
 
 clang_format_target(TARGET cpp_crypto_algos_lib)
 add_subdirectory(apps)
