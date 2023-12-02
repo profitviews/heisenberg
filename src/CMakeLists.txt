@@ -1,5 +1,4 @@
-add_library(cpp_crypto_algos_lib INTERFACE)
-target_sources(cpp_crypto_algos_lib
+add_library(cpp_crypto_algos_lib
     INTERFACE
         cc_simple_mr.hpp
         cc_kaufman.hpp
@@ -29,7 +28,7 @@ target_link_libraries(cpp_crypto_algos_lib
         fmt::fmt
         OpenSSL::SSL
         OpenSSL::Crypto
-        RapidJSON::RapidJSON
+        rapidjson
         Threads::Threads
 )
 
@@ -54,9 +53,12 @@ target_compile_definitions(cpp_crypto_algos_lib
 
 target_compile_options(cpp_crypto_algos_lib
     INTERFACE
-        $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-terminate -fvisibility=hidden -fvisibility-inlines-hidden>
+        $<$<CXX_COMPILER_ID:Clang>:-fexperimental-library>
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-terminate>
         $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 )
+set_property(TARGET cpp_crypto_algos_lib PROPERTY CPP_VISIBILITY_PRESET  ON)
+set_property(TARGET cpp_crypto_algos_lib PROPERTY VISIBILITY_INLINES_HIDDEN ON)
 
 clang_format_target(TARGET cpp_crypto_algos_lib)
 add_subdirectory(apps)

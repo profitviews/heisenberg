@@ -1,6 +1,10 @@
 name: CMake
 
-on: [push]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -11,67 +15,135 @@ jobs:
         configuration: [ "Release", "Debug" ]
         settings:
         - {
-            name: "Ubuntu GCC-11",
-            os: ubuntu-20.04,
-            compiler: { type: GCC, version: 11, conan: "gcc", cc: "gcc-11", cxx: "g++-11" },
+            name: "Ubuntu GCC-12",
+            os: ubuntu-latest,
+            compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
             lib: "libstdc++11"
           }
+        - {
+            name: "Ubuntu Clang-15 + libc++",
+            os: ubuntu-latest,
+            compiler: { type: CLANG, version: 15, conan: "clang", cc: "clang-15", cxx: "clang++-15", std: 20 },
+            lib: "libc++",
+          }
+        - {
+            name: "Visual Studio 2019",
+            os: windows-latest,
+            compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 20 },
+          }
+
     steps:
       - uses: actions/checkout@v2
+
+      - name: Cache Conan data
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-conan-data
+        with:
+          path: ${{github.workspace}}/.conan2/p
+          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          restore-keys: |
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}- 
+
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.3
         with:
           vs-version: "16.5"
+
       - name: Install Latest GCC 
         if: matrix.settings.compiler.type == 'GCC'
         uses: egor-tensin/setup-gcc@v1
         with:
           version: ${{ matrix.settings.compiler.version }}
           platform: x64
+
       - name: Install Latest libstdC++11
         if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libstdc++11'
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: 11
+          version: 12
           platform: x64
+
       - name: Install Clang
         if: matrix.settings.compiler.type == 'CLANG'
         uses: egor-tensin/setup-clang@v1
         with:
           version: ${{ matrix.settings.compiler.version }}
           platform: x64
-      - name: Select Xcode ${{matrix.settings.compiler.version}}
-        if: matrix.settings.os == 'macos-latest'
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: '${{matrix.settings.compiler.version}}'
+
+      - name: Install Libc++
+        if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libc++'
+        shell: bash
+        run: |
+          sudo apt install -y libc++-${{ matrix.settings.compiler.version }}-dev libc++abi-${{ matrix.settings.compiler.version }}-dev libunwind-${{ matrix.settings.compiler.version }}-dev
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
-      - name: Install Conan Package Tools
+          python-version: '3.11'
+
+      - name: Install Python requirements
         run: |
-          pip install -U conan
+          pip install -r ./requirements.txt
+
       - name: Configure Conan
         shell: bash
         run: |
-          conan config init
+          conan profile detect --force
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' .conan2/profiles/default
           if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" ]]; then
-            conan profile update settings.compiler=${{ matrix.settings.compiler.conan }} default
-            conan profile update settings.compiler.version=${{ matrix.settings.compiler.version }} default
-            conan profile update settings.compiler.libcxx=${{ matrix.settings.lib }} default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ matrix.settings.compiler.conan }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ matrix.settings.compiler.version }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' .conan2/profiles/default
           fi
-          conan profile show default
+          conan profile show -pr default
+
       - name: Configure Install
+        if: matrix.settings.os == 'windows-latest'
         shell: bash
         run: |
-          conan install . --build missing -if "${{github.workspace}}/build" -of "${{github.workspace}}/build"
+          conan install "${{github.workspace}}" --build missing -pr:b default -g VCVars -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -of ./build 
+
+      - name: Configure Install
+        if: matrix.settings.os != 'windows-latest'
+        shell: bash
+        run: |
+          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -of ./build
+
       - name: Configure CMake
-        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B "${{github.workspace}}/build" -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+        if: matrix.settings.os == 'windows-latest'
+        shell: cmd
+        run: |
+          call build\conanvcvars.bat
+          call build\conanbuild.bat
+          cmake --preset conan-default
+
+      - name: Configure CMake
+        if: matrix.settings.os != 'windows-latest'
+        shell: bash
+        run: |
+          source build/conanbuild.sh
+          cmake --preset conan-default
+
+      - name: Conan Preset
+        shell: bash
+        run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Build
-        # Build your program with the given configuration
-        run: cmake --build "${{github.workspace}}/build" --config ${{ matrix.configuration }}
+        if: matrix.settings.os == 'windows-latest'
+        shell: cmd
+        run: |
+          call build\conanbuild.bat
+          cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: Build
+        if: matrix.settings.os != 'windows-latest'
+        shell: bash
+        run: |
+          source build/conanbuild.sh
+          cmake --build --preset ${{ env.CONAN_PRESET }}
