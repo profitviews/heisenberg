@@ -53,6 +53,7 @@ target_compile_definitions(cpp_crypto_algos_lib
 
 target_compile_options(cpp_crypto_algos_lib
     INTERFACE
+        $<$<CXX_COMPILER_ID:Clang>:-fexperimental-library>
         $<$<CXX_COMPILER_ID:GNU>:-Wno-terminate>
         $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 )
