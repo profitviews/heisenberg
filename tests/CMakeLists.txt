@@ -12,6 +12,7 @@ add_executable(heisenberg_tests
     test_utils.cpp
     test_enum.cpp
     test_exchange_names.cpp
+    test_order_completion.cpp
 )
 
 target_link_libraries(heisenberg_tests

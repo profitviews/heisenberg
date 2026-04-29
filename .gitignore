@@ -115,3 +115,4 @@ ipch/
 
 # Local secrets / credentials (never commit)
 /coinbase_secret.txt
+SimpleMR.csv

@@ -9,8 +9,10 @@
 #include <boost/describe/enum.hpp>
 #include <boost/log/trivial.hpp>
 
-#include <atomic>
+#include <chrono>
+#include <future>
 #include <map>
+#include <mutex>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
@@ -31,6 +33,9 @@ using ::ccapi::SessionOptions;
 class CcexOrderExecutor : public OrderExecutor
 {
 private:
+    /// Maximum time to wait for the exchange callback after CREATE_ORDER (ccapi delivers asynchronously).
+    static constexpr std::chrono::seconds order_response_timeout_{120};
+
     inline static const std::unordered_map<OrderType, std::string> order_type_names_{
         {OrderType::Limit,  "Limit" },
         {OrderType::Market, "Market"}
@@ -63,16 +68,19 @@ private:
          }
     };
 
+    // ccapi invokes processEvent from internal worker thread(s). Completing the shared promise from that
+    // thread and waiting on the paired future in new_order() is the supported C++ pattern for this handoff.
     class CcexOrderHandler : public ccapi::EventHandler
     {
     private:
-        std::atomic_flag ordered_;
-
         CcexOrderExecutor* executor_;
+        std::shared_ptr<std::promise<void>> completion_;
+        std::once_flag completion_once_;
 
     public:
-        CcexOrderHandler(CcexOrderExecutor* executor)
+        CcexOrderHandler(CcexOrderExecutor* executor, std::shared_ptr<std::promise<void>> completion)
             : executor_{executor}
+            , completion_{std::move(completion)}
         {}
 
         bool processEvent(const ccapi::Event& event, ccapi::Session* session) override
@@ -96,14 +104,8 @@ private:
                     m[0].getTimeReceived(),
                     n.at("STATUS"));
             }
-            ordered_.test_and_set();
-            ordered_.notify_one();
+            std::call_once(completion_once_, [this]() { completion_->set_value(); });
             return true;
-        }
-        void wait() const
-        {
-            BOOST_LOG_TRIVIAL(info) << "Waiting for order event" << std::endl;
-            ordered_.wait(false);
         }
     };
 
@@ -158,7 +160,10 @@ public:
     {
         SessionOptions session_options;
         SessionConfigs session_configs;
-        CcexOrderHandler event_handler(this);
+
+        auto completion = std::make_shared<std::promise<void>>();
+        std::future<void> const done = completion->get_future();
+        CcexOrderHandler event_handler(this, std::move(completion));
 
         enum
         {
@@ -192,7 +197,12 @@ public:
 
         request.appendParam(params);
         session.sendRequest(request);
-        event_handler.wait();
+        BOOST_LOG_TRIVIAL(info) << "Waiting for order event" << std::endl;
+        if (done.wait_for(order_response_timeout_) != std::future_status::ready)
+        {
+            BOOST_LOG_TRIVIAL(error) << "Timed out waiting for order response after "
+                                     << order_response_timeout_.count() << "s";
+        }
         session.stop();
     }
 };
