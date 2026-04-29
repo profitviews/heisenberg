@@ -165,7 +165,6 @@
             "request": "attach",
             "program": "${workspaceFolder}/build/bin/Debug/algo",
             "processId": "${command:pickProcess}",
-            "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
             "setupCommands": [

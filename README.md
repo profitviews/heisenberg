@@ -70,6 +70,19 @@ Or:
 
 If you change Conan inputs (profiles, `conanfile.py`), re-run **`conan install`** (both release and debug installs when you build both configs), then **`cmake --preset conan-default`** again.
 
+#### Unit tests (Catch2)
+
+With **`cmake --preset conan-default`** applied and **`BUILD_TESTING`** left at its default (**ON**), build and run tests from the repo root:
+
+```bash
+cmake --build build --config Debug --target heisenberg_tests --parallel
+cd build && ctest --output-on-failure -C Debug
+```
+
+For **Release**, use **`--config Release`** in both commands. With Ninja Multi-Config as configured here, the executable is **`build/tests/Debug/heisenberg_tests`** or **`build/tests/Release/heisenberg_tests`**.
+
+Configure with **`BUILD_TESTING=OFF`** if you need to omit the test target (smaller configure when FetchContent for Catch2 is undesirable).
+
 #### C++ IDE notes (Cursor vs VS Code)
 
 IntelliSense and bundled extensions differ between **Cursor** and **VS Code**. This repo includes **`.vscode/settings.json`** with **`clangd.arguments`** (**`--compile-commands-dir`** toward **`build/compile_commands.json`**, **`--background-index`**, and on Linux **`--query-driver`** so **clangd** matches **GCC/libstdc++** paths used by **`/usr/bin/c++`** in **`compile_commands.json`**). See **[docs/cpp-ide-cursor-vscode.md](./docs/cpp-ide-cursor-vscode.md)**.

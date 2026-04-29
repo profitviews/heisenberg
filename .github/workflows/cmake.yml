@@ -140,6 +140,13 @@ jobs:
           call build\conanbuild.bat
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
+      - name: Test
+        if: matrix.settings.os == 'windows-latest'
+        shell: cmd
+        run: |
+          call build\conanbuild.bat
+          ctest --output-on-failure -C ${{ matrix.configuration }}
+
       - name: Build
         if: matrix.settings.os != 'windows-latest'
         shell: bash
@@ -149,3 +156,13 @@ jobs:
         run: |
           source build/conanbuild.sh
           cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: Test
+        if: matrix.settings.os != 'windows-latest'
+        shell: bash
+        env:
+          CC: ${{ matrix.settings.compiler.cc }}
+          CXX: ${{ matrix.settings.compiler.cxx }}
+        run: |
+          source build/conanbuild.sh
+          ctest --output-on-failure -C ${{ matrix.configuration }}

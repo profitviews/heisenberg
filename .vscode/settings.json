@@ -3,7 +3,7 @@
         "cSpell.enabled": false
     },
     "clangd.arguments": [
-        "--compile-commands-dir=${workspaceFolder}/build",
+        "--compile-commands-dir=${workspaceFolder}",
         "--background-index",
         "--query-driver=/usr/bin/c++,/usr/bin/g++,/usr/bin/g++-*,/usr/bin/x86_64-linux-gnu-g++-*"
     ],

@@ -16,22 +16,19 @@ set(CMAKE_POLICY_DEFAULT_CMP0048 OLD)
 
 include(FetchContent)
 
-FetchContent_Declare(
-    ccapi
+cmake_language(CALL FetchContent_Declare ccapi
     GIT_REPOSITORY https://github.com/profitviews/ccapi.git
     GIT_TAG        windows-msvc
 )
-FetchContent_Declare(
-    websocketpp
+cmake_language(CALL FetchContent_Declare websocketpp
     GIT_REPOSITORY https://github.com/zaphoyd/websocketpp.git
     GIT_TAG        develop
 )
-FetchContent_Declare(
-    csv2
+cmake_language(CALL FetchContent_Declare csv2
     GIT_REPOSITORY https://github.com/p-ranav/csv2
     GIT_TAG        master
 )
-FetchContent_MakeAvailable(ccapi websocketpp csv2)
+cmake_language(CALL FetchContent_MakeAvailable ccapi websocketpp csv2)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 find_package(Boost REQUIRED)
@@ -46,5 +43,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 configure_file(cmake/cpp_crypto_algos_config.hpp.in cpp_crypto_algos_config.hpp)
 
+include(CTest)
+
 include(clang_format)
 add_subdirectory(src)
+
+if(BUILD_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

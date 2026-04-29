@@ -3,7 +3,7 @@
     "configurations": [
         {
             "name": "compile_commands",
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "compileCommands": "${workspaceFolder}/compile_commands.json",
             "cppStandard": "c++20"
         }
     ]

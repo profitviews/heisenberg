@@ -1,4 +1,5 @@
 # Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
 
-build/
-
+# Ignore build tree but keep compile_commands.json visible for tooling/indexing (gitignore-style negation).
+build/*
+!build/compile_commands.json

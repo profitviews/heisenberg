@@ -46,6 +46,9 @@
 
 # FetchContent and Ninja outputs live under /build/ when using -B build
 
+# CTest dashboard/scratch when run from the repo root (normally lives under build/Testing/)
+/Testing/
+
 # --- Conan / CMake files generated next to CMakeLists.txt ---
 CMakeUserPresets.json
 
