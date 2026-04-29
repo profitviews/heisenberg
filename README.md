@@ -90,6 +90,8 @@ cmake --build build --config Debug --target execute_order --parallel
 ./build/bin/Debug/execute_order --sandbox --symbol BTC-USD --side buy --size 1 --type limit --price 100
 ```
 
+**Live executor:** [`CcexOrderExecutor`](src/ccex_order_executor.hpp) uses ccapi with **one long-lived `Session`**, per-order **correlation IDs**, and a **pending-completion map** (`promise`/`future`) so synchronous **`new_order`** matches async exchange callbacks without spinning up a session per order. Architecture and threading are documented in **[docs/ccex-order-executor.md](./docs/ccex-order-executor.md)**.
+
 #### C++ IDE notes (Cursor vs VS Code)
 
 IntelliSense and bundled extensions differ between **Cursor** and **VS Code**. This repo includes **`.vscode/settings.json`** with **`clangd.arguments`** (**`--compile-commands-dir`** toward **`build/compile_commands.json`**, **`--background-index`**, and on Linux **`--query-driver`** so **clangd** matches **GCC/libstdc++** paths used by **`/usr/bin/c++`** in **`compile_commands.json`**). See **[docs/cpp-ide-cursor-vscode.md](./docs/cpp-ide-cursor-vscode.md)**.

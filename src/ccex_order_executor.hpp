@@ -1,5 +1,8 @@
 #pragma once
 
+/// Live-exchange OrderExecutor via ccapi: one long-lived Session, correlation IDs, pending completions.
+/// See docs/ccex-order-executor.md.
+
 #include "order_executor.hpp"
 
 #include <ccapi_cpp/ccapi_logger.h>
@@ -9,10 +12,14 @@
 #include <boost/describe/enum.hpp>
 #include <boost/log/trivial.hpp>
 
+#include <atomic>
 #include <chrono>
+#include <cstdint>
 #include <future>
 #include <map>
+#include <memory>
 #include <mutex>
+#include <string>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
@@ -68,46 +75,122 @@ private:
          }
     };
 
-    // ccapi invokes processEvent from internal worker thread(s). Completing the shared promise from that
-    // thread and waiting on the paired future in new_order() is the supported C++ pattern for this handoff.
+    /// Session::sendRequest is thread-safe; processEvent runs on ccapi EventDispatcher thread(s). Pending promises pair
+    /// waiter threads with dispatcher completions via correlation id (see upstream ccapi README "Thread safety").
+    std::mutex pending_mu_;
+    std::unordered_map<std::string, std::shared_ptr<std::promise<void>>> pending_;
+    std::atomic<std::uint64_t> correlation_seq_{0};
+
+    SessionOptions session_options_;
+    SessionConfigs session_configs_;
+
     class CcexOrderHandler : public ccapi::EventHandler
     {
-    private:
         CcexOrderExecutor* executor_;
-        std::shared_ptr<std::promise<void>> completion_;
-        std::once_flag completion_once_;
 
     public:
-        CcexOrderHandler(CcexOrderExecutor* executor, std::shared_ptr<std::promise<void>> completion)
+        explicit CcexOrderHandler(CcexOrderExecutor* executor)
             : executor_{executor}
-            , completion_{std::move(completion)}
         {}
 
         bool processEvent(const ccapi::Event& event, ccapi::Session* session) override
         {
-            BOOST_LOG_TRIVIAL(info) << "Received an event:\n" + event.toStringPretty(2, 2) << std::endl;
-            const auto& m{event.getMessageList()};
-            const auto& n{m[0].getElementList()[0].getNameValueMap()};
+            return executor_->on_ccapi_order_event(event);
+        }
+    };
+
+    CcexOrderHandler handler_;
+    std::mutex session_start_mu_;
+    std::unique_ptr<Session> session_;
+
+    std::string next_correlation_id()
+    {
+        return "pv-" + std::to_string(correlation_seq_.fetch_add(std::uint64_t{1}, std::memory_order_relaxed));
+    }
+
+    void ensure_session()
+    {
+        std::lock_guard<std::mutex> lock(session_start_mu_);
+        if (!session_)
+        {
+            session_ = std::make_unique<Session>(session_options_, session_configs_, &handler_);
+        }
+    }
+
+    bool on_ccapi_order_event(const ccapi::Event& event)
+    {
+        BOOST_LOG_TRIVIAL(info) << "Received an event:\n" + event.toStringPretty(2, 2) << std::endl;
+        const auto& messages = event.getMessageList();
+        if (messages.empty())
+        {
+            BOOST_LOG_TRIVIAL(warning) << "Empty message list in order event" << std::endl;
+            return true;
+        }
+
+        const auto& msg = messages[0];
+        const auto& correl_ids = msg.getCorrelationIdList();
+        if (correl_ids.empty())
+        {
+            BOOST_LOG_TRIVIAL(warning) << "No correlation id in order event" << std::endl;
+            return true;
+        }
+        std::string const cid = correl_ids[0];
+
+        const auto& elem_list = msg.getElementList();
+        if (elem_list.empty())
+        {
+            BOOST_LOG_TRIVIAL(warning) << "Empty element list for correlation id " << cid << std::endl;
+        }
+        else
+        {
+            const auto& n = elem_list[0].getNameValueMap();
             BOOST_LOG_TRIVIAL(info) << "Status: "
                       << (n.contains("STATUS") ? n.at("STATUS")
                                                : (n.contains("ERROR_MESSAGE") ? n.at("ERROR_MESSAGE") : "No status"))
                       << std::endl;
             if (n.contains("LIMIT_PRICE"))
             {
-                executor_->add_open_order(
-                    m[0].getCorrelationIdList()[0],
+                add_open_order(
+                    cid,
                     n.at("ORDER_ID"),
                     n.at("INSTRUMENT"),
                     n.at("SIDE") == "BUY" ? Side::Buy : Side::Sell,
                     std::stod(n.at("QUANTITY")),
                     std::stod(n.at("LIMIT_PRICE")),
-                    m[0].getTimeReceived(),
+                    msg.getTimeReceived(),
                     n.at("STATUS"));
             }
-            std::call_once(completion_once_, [this]() { completion_->set_value(); });
-            return true;
         }
-    };
+
+        std::shared_ptr<std::promise<void>> promise_to_finish;
+        {
+            std::lock_guard<std::mutex> lock(pending_mu_);
+            auto const it = pending_.find(cid);
+            if (it != pending_.end())
+            {
+                promise_to_finish = std::move(it->second);
+                pending_.erase(it);
+            }
+        }
+        if (promise_to_finish)
+        {
+            try
+            {
+                promise_to_finish->set_value();
+            }
+            catch (std::future_error const&)
+            {
+                // promise already satisfied
+            }
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(warning) << "No pending waiter for correlation id " << cid
+                                       << " (duplicate or timed-out response)" << std::endl;
+        }
+
+        return true;
+    }
 
     void add_open_order(
         const std::string& cid,
@@ -148,7 +231,37 @@ public:
         , api_secret_{api_secret}
         , pass_phrase_{pass_phrase}
         , sub_account_{sub_account}
-    {}
+        , handler_(this)
+    {
+        enum
+        {
+            ApiKey,
+            ApiSecret,
+            PassPhrase,
+            SubAccount
+        };
+        session_configs_.setCredential({
+            {std::get<ApiKey>(exchange_key_names_.at(exchange_)),     api_key_    },
+            {std::get<ApiSecret>(exchange_key_names_.at(exchange_)),  api_secret_ },
+            {std::get<PassPhrase>(exchange_key_names_.at(exchange_)), pass_phrase_},
+            {std::get<SubAccount>(exchange_key_names_.at(exchange_)), sub_account_}
+        });
+    }
+
+    CcexOrderExecutor(CcexOrderExecutor const&) = delete;
+    CcexOrderExecutor& operator=(CcexOrderExecutor const&) = delete;
+    CcexOrderExecutor(CcexOrderExecutor&&) = delete;
+    CcexOrderExecutor& operator=(CcexOrderExecutor&&) = delete;
+
+    ~CcexOrderExecutor() override
+    {
+        std::lock_guard<std::mutex> lock(session_start_mu_);
+        if (session_)
+        {
+            session_->stop();
+            session_.reset();
+        }
+    }
 
     friend class CcexOrderHandler;
 
@@ -158,29 +271,17 @@ public:
         std::string const& symbol, Side side, double orderQty, OrderType type, double price    // = 0.0
         ) override
     {
-        SessionOptions session_options;
-        SessionConfigs session_configs;
+        ensure_session();
 
+        std::string const cid = next_correlation_id();
         auto completion = std::make_shared<std::promise<void>>();
         std::future<void> const done = completion->get_future();
-        CcexOrderHandler event_handler(this, std::move(completion));
-
-        enum
         {
-            ApiKey,
-            ApiSecret,
-            PassPhrase,
-            SubAccount
-        };
-        session_configs.setCredential({
-            {std::get<ApiKey>(exchange_key_names_.at(exchange_)),     api_key_    },
-            {std::get<ApiSecret>(exchange_key_names_.at(exchange_)),  api_secret_ },
-            {std::get<PassPhrase>(exchange_key_names_.at(exchange_)), pass_phrase_},
-            {std::get<SubAccount>(exchange_key_names_.at(exchange_)), sub_account_}
-        });
+            std::lock_guard<std::mutex> lock(pending_mu_);
+            pending_[cid] = std::move(completion);
+        }
 
-        Session session(session_options, session_configs, &event_handler);
-        Request request(Request::Operation::CREATE_ORDER, exchange_, symbol);
+        Request request(Request::Operation::CREATE_ORDER, exchange_, symbol, cid);
 
         std::map<std::string, std::string> params{
             {CCAPI_EM_ORDER_SIDE,        side == Side::Buy ? CCAPI_EM_ORDER_SIDE_BUY : CCAPI_EM_ORDER_SIDE_SELL},
@@ -196,14 +297,15 @@ public:
         adjust_exchange_params(exchange_, params);
 
         request.appendParam(params);
-        session.sendRequest(request);
-        BOOST_LOG_TRIVIAL(info) << "Waiting for order event" << std::endl;
+        session_->sendRequest(request);
+        BOOST_LOG_TRIVIAL(info) << "Waiting for order event cid=" << cid << std::endl;
         if (done.wait_for(order_response_timeout_) != std::future_status::ready)
         {
             BOOST_LOG_TRIVIAL(error) << "Timed out waiting for order response after "
-                                     << order_response_timeout_.count() << "s";
+                                     << order_response_timeout_.count() << "s (cid=" << cid << ")";
+            std::lock_guard<std::mutex> lock(pending_mu_);
+            pending_.erase(cid);
         }
-        session.stop();
     }
 };
 
