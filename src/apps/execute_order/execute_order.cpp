@@ -1,15 +1,12 @@
 #include "ccex_order_executor.hpp"
+#include "exchange_names.hpp"
 #include "program_options.hpp"
-
-#include <ccapi_cpp/ccapi_macro.h>
 
 #include <boost/json.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
-#include <boost/log/trivial.hpp>
 
 #include <iostream>
-#include <map>
 #include <string>
 
 namespace profitview
@@ -56,16 +53,10 @@ auto main(int argc, char* argv[]) -> int
     if (result)
         return result.value();
 
-    const std::map<std::string, std::string> exchange_names = {
-        {"ftx",      CCAPI_EXCHANGE_NAME_FTX     },
-        {"coinbase", CCAPI_EXCHANGE_NAME_COINBASE},
-        {"bitmex",   CCAPI_EXCHANGE_NAME_BITMEX  },
-    };
-
     BOOST_LOG_TRIVIAL(info) << "Running Ccex test.";
 
     CcexOrderExecutor executor{
-        exchange_names.at(options.exchange), options.api_key, options.api_secret, options.api_phrase, options.sub_account};
+        ccapi_exchange_from_cli(options.exchange), options.api_key, options.api_secret, options.api_phrase, options.sub_account};
 
     BOOST_LOG_TRIVIAL(info) << options.symbol << "Running: " << std::endl;
     executor.new_order(options.symbol, options.side, options.size, options.type, options.price);

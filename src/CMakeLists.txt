@@ -7,6 +7,7 @@ add_library(cpp_crypto_algos_lib
         cc_trade_stream.hpp
         ccex_order_executor.hpp
         enum.hpp
+        exchange_names.hpp
         exchange.hpp
         order_executor.hpp
         order_type.hpp
@@ -49,6 +50,7 @@ target_compile_definitions(cpp_crypto_algos_lib
         CCAPI_ENABLE_EXCHANGE_BITMEX
         CCAPI_ENABLE_EXCHANGE_FTX
         CCAPI_ENABLE_EXCHANGE_COINBASE
+        CCAPI_ENABLE_EXCHANGE_KRAKEN
 )
 
 # libc++ experimental APIs (-fexperimental-library): supported on Unix Clang/AppleClang, not on Windows (clang-cl rejects the flag).

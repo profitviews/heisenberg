@@ -1,3 +1,4 @@
+#include "exchange_names.hpp"
 #include "program_options.hpp"
 #include "trade_stream_maker.hpp"
 #include "wscc_trade_stream.hpp"
@@ -37,7 +38,7 @@ int main(int argc, char* argv[])
         return result.value();
 
     auto stream {TradeStreamMaker::register_stream<WSCcTradeStream>("WSCcStream")};
-    stream->subscribe(options.exchange, options.symbols);
+    stream->subscribe(ccapi_exchange_from_cli(options.exchange), options.symbols);
 
     std::cout << "Press enter to quit" << std::endl;
     std::cin.get();

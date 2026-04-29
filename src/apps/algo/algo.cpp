@@ -4,6 +4,7 @@
 #include "cc_simple_mr.hpp"
 
 #include "ccex_order_executor.hpp"
+#include "exchange_names.hpp"
 #include "trade_stream_maker.hpp"
 
 #include "program_options.hpp"
@@ -70,7 +71,9 @@ int main(int argc, char* argv[])
         {"Damped",   Damped  }
     };
 
-    CcexOrderExecutor executor{options.exchange, options.api_key, options.api_secret, options.api_phrase, options.sub_account};
+    std::string const ccapi_exchange = ccapi_exchange_from_cli(options.exchange);
+
+    CcexOrderExecutor executor{ccapi_exchange, options.api_key, options.api_secret, options.api_phrase, options.sub_account};
 
     switch (algos.at(options.algo))
     {
@@ -97,7 +100,7 @@ int main(int argc, char* argv[])
         BOOST_LOG_TRIVIAL(error) << "Unknown algo" << std::endl; return 2;
     }
 
-    TradeStreamMaker::get(options.algo).subscribe(options.exchange, options.symbols);
+    TradeStreamMaker::get(options.algo).subscribe(ccapi_exchange, options.symbols);
 
     std::cout << "Press enter to quit" << std::endl;
     std::cin.get();

@@ -28,12 +28,14 @@ Start the Visual Studio 2022 Developer Command Prompt.
 
 This will create:
 
-* `heisenberg\build\bin\Release\algo.exe` which will run a simple Mean Reversion algo on FTX or Coinbase
-* For example
+* `heisenberg\build\bin\Release\algo.exe` which will run a simple Mean Reversion algo on supported exchanges (e.g. Coinbase, Kraken spot).
+* For example (Coinbase):
 ```powershell
 cd bin\Release
-.\algo --exchange=coinbase --api_key=$Env:COINBASE_API_KEY --api_secret=$Env:COINBASE_API_SECRET --api_phrase=$Env:COINBASE_API_PHRASE --lookback=50 --reversion_level=2 --base_quantity=0.0025 --symbol=ETH-BTC
+.\algo --exchange=coinbase --algo=SimpleMR --api_key=$Env:COINBASE_API_KEY --api_secret=$Env:COINBASE_API_SECRET --api_phrase=$Env:COINBASE_API_PHRASE --lookback=50 --reversion_level=2 --base_quantity=0.0025 --symbols ETH-BTC
 ```
+
+Kraken spot uses `KRAKEN_API_KEY` / `KRAKEN_API_SECRET`; `--symbols` must use Kraken pair identifiers (e.g. `XBT/USD`), not Coinbase product IDs.
 
 ## C++ editing (clangd)
 

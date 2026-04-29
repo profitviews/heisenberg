@@ -17,7 +17,7 @@
 
 namespace ccapi
 {
-Logger* Logger::logger = nullptr;    // This line is needed.
+inline Logger* Logger::logger = nullptr;    // Required by ccapi; inline avoids ODR violations when header is included in multiple TUs.
 }
 
 namespace profitview
@@ -56,9 +56,10 @@ private:
     inline static const std::map<std::string, std::tuple<std::string, std::string, std::string, std::string>> exchange_key_names_{
         {
          {CCAPI_EXCHANGE_NAME_FTX, {CCAPI_FTX_API_KEY, CCAPI_FTX_API_SECRET, "", CCAPI_FTX_API_SUBACCOUNT}},
-         {CCAPI_EXCHANGE_NAME_BITMEX, {CCAPI_BITMEX_API_KEY, CCAPI_FTX_API_SECRET, "", ""}},
+         {CCAPI_EXCHANGE_NAME_BITMEX, {CCAPI_BITMEX_API_KEY, CCAPI_BITMEX_API_SECRET, "", ""}},
          {CCAPI_EXCHANGE_NAME_COINBASE,
              {CCAPI_COINBASE_API_KEY, CCAPI_COINBASE_API_SECRET, CCAPI_COINBASE_API_PASSPHRASE, ""}},
+         {CCAPI_EXCHANGE_NAME_KRAKEN, {CCAPI_KRAKEN_API_KEY, CCAPI_KRAKEN_API_SECRET, "", ""}},
          }
     };
 
@@ -119,15 +120,17 @@ private:
         open_orders_[cid] = {order_id, symbol, side, size, price, time, status};
     }
 
-    void adjust_exchange_params(const std::string& exchange, auto& params)
+    void adjust_exchange_params(const std::string& exchange, std::map<std::string, std::string>& params)
     {
-        // Handling of Market orders differs between exchanges
-        if (params.at("type") == "market")
-        {
+        bool const market = [&]() {
             if (exchange == CCAPI_EXCHANGE_NAME_COINBASE)
-            {
-                params.erase("price");
-            }
+                return params.count("type") && params.at("type") == "market";
+            return params.count(CCAPI_EM_ORDER_TYPE) && params.at(CCAPI_EM_ORDER_TYPE) == "market";
+        }();
+        if (market)
+        {
+            if (exchange == CCAPI_EXCHANGE_NAME_COINBASE || exchange == CCAPI_EXCHANGE_NAME_KRAKEN)
+                params.erase(CCAPI_EM_ORDER_LIMIT_PRICE);
         }
     }
 
@@ -175,11 +178,15 @@ public:
         Request request(Request::Operation::CREATE_ORDER, exchange_, symbol);
 
         std::map<std::string, std::string> params{
-            {"type",  type == OrderType::Market ? "market" : "limit"},
-            {"side",  side == Side::Buy ? "BUY" : "SELL"            },
-            {"size",  std::to_string(orderQty)                      },
-            {"price", std::to_string(price)                         }
+            {CCAPI_EM_ORDER_SIDE,        side == Side::Buy ? CCAPI_EM_ORDER_SIDE_BUY : CCAPI_EM_ORDER_SIDE_SELL},
+            {CCAPI_EM_ORDER_QUANTITY,    std::to_string(orderQty)                                                         },
+            {CCAPI_EM_ORDER_LIMIT_PRICE, std::to_string(price)                                                            },
         };
+        std::string const ord_type = type == OrderType::Market ? "market" : "limit";
+        if (exchange_ == CCAPI_EXCHANGE_NAME_COINBASE)
+            params["type"] = ord_type;
+        else
+            params[CCAPI_EM_ORDER_TYPE] = ord_type;
 
         adjust_exchange_params(exchange_, params);
 

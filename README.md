@@ -84,7 +84,15 @@ IntelliSense and bundled extensions differ between **Cursor** and **VS Code**. T
 
 Executables end up under `build/bin/` (sometimes with `Release` or `Debug` subdirectories, depending on platform and generator).
 
+**Exchanges.** `--exchange` accepts short names that map to [ccapi](https://github.com/crypto-chronic/cryptochronic-api) exchange identifiers: `coinbase`, `ftx`, `bitmex`, `kraken` (Kraken **spot**). You can also pass the ccapi name directly (e.g. `kraken`). Credentials should match the strings ccapi expects (e.g. `KRAKEN_API_KEY`, `KRAKEN_API_SECRET` for Kraken). Symbol strings must match each venue—Kraken pair names differ from Coinbase product IDs.
+
 ```bash
 cd build/bin
-./algo --exchange=coinbase --algo=SimpleMR --api_key=$COINBASE_API_KEY --api_secret=$COINBASE_API_SECRET --api_phrase=$COINBASE_API_PHRASE --lookback=50 --reversion_level=2 --base_quantity=0.0025 --symbol=ETH-BTC
+./algo --exchange=coinbase --algo=SimpleMR --api_key=$COINBASE_API_KEY --api_secret=$COINBASE_API_SECRET --api_phrase=$COINBASE_API_PHRASE --lookback=50 --reversion_level=2 --base_quantity=0.0025 --symbols ETH-BTC
+```
+
+Kraken spot example (pair names are Kraken/ccapi-specific, not Coinbase-style):
+
+```bash
+./algo --exchange=kraken --algo=SimpleMR --api_key=$KRAKEN_API_KEY --api_secret=$KRAKEN_API_SECRET --lookback=50 --reversion_level=2 --base_quantity=0.0025 --symbols XBT/USD
 ```
