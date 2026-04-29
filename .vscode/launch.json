@@ -5,12 +5,12 @@
             "name": "(gdb) execute_order - FTX",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/execute_order",
+            "program": "${workspaceFolder}/build/bin/Debug/execute_order",
             "args": 
                 [ "--exchange=ftx"
                 , "--symbol=BTC-PERP"
-                , "--api_key=${env:FTX_API_KEY}"
-                , "--api_secret=${env:FTX_API_SECRET}"
+                , "--api_key=${env:COINBASE_API_KEY}"
+                , "--api_secret=${env:COINBASE_API_SECRET}"
                 , "--side=buy"
                 , "--size=0.0025"
                 , "--type=market"
@@ -37,7 +37,7 @@
             "name": "(gdb) streamer - FTX",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/streamer",
+            "program": "${workspaceFolder}/build/bin/Debug/streamer",
             "args": 
             [ "--exchange", "ftx"
             , "--symbols", "BTC-PERP", "SOL-PERP"
@@ -64,12 +64,12 @@
             "name": "(gdb) algo - FTX - SimpleMR",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/algo",
+            "program": "${workspaceFolder}/build/bin/Debug/algo",
             "args": 
             [ "--algo=SimpleMR"
             , "--exchange=ftx"
-            , "--api_key=${env:FTX_API_KEY}"
-            , "--api_secret=${env:FTX_API_SECRET}"
+            , "--api_key=${env:COINBASE_API_KEY}"
+            , "--api_secret=${env:COINBASE_API_SECRET}"
             , "--lookback=50"
             , "--reversion_level=2"
             , "--base_quantity=0.0025"
@@ -99,12 +99,12 @@
             "name": "(gdb) algo - FTX - Damped",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/algo",
+            "program": "${workspaceFolder}/build/bin/Debug/algo",
             "args": 
             [ "--algo=Damped"
             , "--exchange=ftx"
-            , "--api_key=${env:FTX_API_KEY}"
-            , "--api_secret=${env:FTX_API_SECRET}"
+            , "--api_key=${env:COINBASE_API_KEY}"
+            , "--api_secret=${env:COINBASE_API_SECRET}"
             , "--sub_account=Webinar"
             , "--lookback=50"
             , "--reversion_level=2"
@@ -136,7 +136,7 @@
             "name": "(gdb) experiment",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/experiment",
+            "program": "${workspaceFolder}/build/bin/Debug/experiment",
             "args": 
             [ "--name", "test"
             , "--er_period", "8"
@@ -158,6 +158,28 @@
                     "ignoreFailures": true
                 }
             ]
-        },        
+        },
+        {
+            "name": "(gdb) Attach to process…",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "${workspaceFolder}/build/bin/Debug/algo",
+            "processId": "${command:pickProcess}",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        }
     ]
 }
