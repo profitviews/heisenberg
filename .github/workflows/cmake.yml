@@ -105,7 +105,8 @@ jobs:
           BT=$(echo "${{ matrix.configuration }}" | tr '[:upper:]' '[:lower:]')
           PROFILE="${{ github.workspace }}/.conan/profiles/${{ matrix.settings.conan_profile_base }}-${BT}"
           if [[ "${{ matrix.settings.os }}" == 'windows-latest' ]]; then
-            conan install "${{ github.workspace }}" --build missing -pr:h "$PROFILE" -pr:b "$PROFILE" -g VCVars -of ./build
+            # Do not pass -g VCVars: CMakeToolchain.generate() already emits vcvars (duplicate VCVars breaks Conan 2).
+            conan install "${{ github.workspace }}" --build missing -pr:h "$PROFILE" -pr:b "$PROFILE" -of ./build
           else
             conan install "${{ github.workspace }}" --build missing -pr:h "$PROFILE" -pr:b "$PROFILE" -of ./build
           fi
