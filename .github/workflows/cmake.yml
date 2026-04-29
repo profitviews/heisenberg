@@ -107,13 +107,10 @@ jobs:
         if: matrix.settings.os == 'windows-latest'
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -g VCVars -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -of ./build 
-
-      - name: Configure Install
-        if: matrix.settings.os != 'windows-latest'
+          conan install "${{github.workspace}}" --build missing -pr:b default -g VCVars -of ./build
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -of ./build
+          conan install "${{github.workspace}}" --build missing -pr:b default -of ./build
 
       - name: Configure CMake
         if: matrix.settings.os == 'windows-latest'

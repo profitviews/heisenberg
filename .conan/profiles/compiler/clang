@@ -1,4 +1,3 @@
-include(../stl/libc++)
-
 [settings]
 compiler=clang
+compiler.libcxx=libc++

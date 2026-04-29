@@ -17,13 +17,13 @@ Start the Visual Studio 2022 Developer Command Prompt.
   
 * Ninja Multi-Config Build
    
-   Multi-config builds allow you to create a build folder containing sub-folders for different build configurations and build them side-by-side.
-   To generate all the configurations we run the `conan-default` preset which configures CMake for these configurations `Release` and `Debug`. The sample build below is choosing the `Release` configuration:
+   Conan is configured for Ninja Multi-Config (`conanfile.py`). Configure once, then build Release and Debug:
    ```powershell
-   conan install ./ -pr:h .conan2/profiles/msvc/193/x64-release -pr:b .conan2/profiles/msvc/193/x64-release --build missing -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
-   build\generators\conanbuild.bat
-   cmake --preset conan-default         # The configure stage for multi-config builds is conan-default
-   cmake --build --preset conan-release # The build stage for multi-config builds is the conan-<configuration>
+   conan install ./ -pr:h .conan2/profiles/msvc/193/x64-release -pr:b .conan2/profiles/msvc/193/x64-release --build missing -of ./build
+   build\conanbuild.bat
+   cmake --preset conan-default
+   cmake --build build --config Release
+   cmake --build build --config Debug
    ```
 
 This will create:

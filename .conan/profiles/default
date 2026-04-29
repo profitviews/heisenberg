@@ -1,0 +1,6 @@
+# Optional baseline for local overrides. Layered profiles (gcc/N/..., clang/N/..., etc.)
+# supply arch, OS, build type, compiler, and C++ standard via later includes.
+
+# Root conanfile.txt lists cmake/ninja under [tool_requires] for this project's configure/build.
+# Do not repeat them here: profile-wide [tool_requires] are injected for every node in the graph,
+# including cmake/3.27.0 itself, which triggers a dependency cycle on Conan 2.

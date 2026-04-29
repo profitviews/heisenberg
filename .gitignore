@@ -1,17 +1,17 @@
 # Prerequisites
 *.d
 
-# Compiled Object files
+# Compiled object files
 *.slo
 *.lo
 *.o
 *.obj
 
-# Precompiled Headers
+# Precompiled headers
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
+# Compiled dynamic libraries
 *.so
 *.dylib
 *.dll
@@ -20,7 +20,7 @@
 *.mod
 *.smod
 
-# Compiled Static libraries
+# Compiled static libraries
 *.lai
 *.la
 *.a
@@ -31,15 +31,81 @@
 *.out
 *.app
 
-build/*
-.venv/*
+# --- Local environment ---
+/.venv/
 
-# Visual Studio artifacts
-.vs
-[Oo]ut
+# Conan package cache (per-machine clone)
+/.conan2/
 
-# Conan2 directory
-.conan2
+# --- CMake / Ninja build trees ---
+# Use directory patterns so nested outputs are ignored (plain `build/*` does not).
+/build/
+/out/
+/cmake-build-*/
+/[Oo]ut/
 
-# CMake build artifacts
+# FetchContent and Ninja outputs live under /build/ when using -B build
+
+# --- Conan / CMake files generated next to CMakeLists.txt ---
 CMakeUserPresets.json
+
+# Compilation database symlink/copy for clangd / tooling
+/compile_commands.json
+
+# Ninja state files if generated beside the source tree
+.ninja_deps
+.ninja_log
+
+# --- IDE ---
+.vs/
+
+# VS Code CMake Tools extension cache (share tracked `.vscode/*.json` as needed)
+.cmake/
+
+.idea/
+
+# Qt Creator
+CMakeLists.txt.user
+
+# Conan VS Code integration scratch
+/.vsconan/
+
+# --- Visual Studio / MSVC extras ---
+# Covers caches and user-local files VS drops beside solutions or from MSVC toolchains.
+# Does not touch CMakeLists.txt, sources, or presets people commit on purpose.
+#
+# We deliberately do not ignore Debug/Release/Bin/Obj everywhere in the tree: patterns like
+# `[Dd]ebug/` match any path segment and can hide legitimate folders (docs, test fixtures).
+# CMake + Conan builds normally live under `/build/` above; root-only folders below catch
+# classic layouts when artifacts sit next to a `.sln`.
+
+*.vcxproj.user
+*.vcxproj.filters.user
+
+*.suo
+*.userosscache
+*.rsuser
+
+# IntelliSense / browsing databases
+*.VC.db
+*.VC.VC.opendb
+*.sdf
+*.opensdf
+ipch/
+
+# Typical MSVC emitted artifacts at binary dirs (omit *.pdb here if you vendor symbols)
+*.ilk
+*.pdb
+
+# Common root-level folders when building from Visual Studio next to the repo root .sln
+/Debug/
+/Release/
+/x64/
+/x86/
+/ARM/
+/ARM64/
+/Win32/
+
+# Editor backups
+*.swp
+*~

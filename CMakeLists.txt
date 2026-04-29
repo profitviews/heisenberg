@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.27)
 # set the project name
 project(cpp_crypto_algos LANGUAGES CXX VERSION 2.0)
 
+# Multi-config generators (Ninja Multi-Config, MSVC): only Debug and Release
+if(CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Available configurations" FORCE)
+endif()
+
 include(FetchContent)
 
 FetchContent_Declare(
