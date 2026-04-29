@@ -11,6 +11,7 @@ jobs:
     name: ${{ matrix.settings.name }} ${{ matrix.configuration }}
     runs-on: ${{ matrix.settings.os }}
     strategy:
+      fail-fast: false
       matrix:
         configuration: [ "Release", "Debug" ]
         settings:
@@ -97,6 +98,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if [[ "${{ matrix.settings.os }}" == 'ubuntu-latest' ]]; then
+            export CC="${{ matrix.settings.compiler.cc }}"
+            export CXX="${{ matrix.settings.compiler.cxx }}"
+          fi
           BT=$(echo "${{ matrix.configuration }}" | tr '[:upper:]' '[:lower:]')
           PROFILE="${{ github.workspace }}/.conan/profiles/${{ matrix.settings.conan_profile_base }}-${BT}"
           if [[ "${{ matrix.settings.os }}" == 'windows-latest' ]]; then
@@ -116,6 +121,9 @@ jobs:
       - name: Configure CMake
         if: matrix.settings.os != 'windows-latest'
         shell: bash
+        env:
+          CC: ${{ matrix.settings.compiler.cc }}
+          CXX: ${{ matrix.settings.compiler.cxx }}
         run: |
           source build/conanbuild.sh
           cmake --preset conan-default
@@ -134,6 +142,9 @@ jobs:
       - name: Build
         if: matrix.settings.os != 'windows-latest'
         shell: bash
+        env:
+          CC: ${{ matrix.settings.compiler.cc }}
+          CXX: ${{ matrix.settings.compiler.cxx }}
         run: |
           source build/conanbuild.sh
           cmake --build --preset ${{ env.CONAN_PRESET }}
