@@ -18,18 +18,22 @@ jobs:
             name: "Ubuntu GCC-12",
             os: ubuntu-latest,
             compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
-            lib: "libstdc++11"
+            lib: "libstdc++11",
+            conan_profile_base: "gcc/12/x64-libstdc++11",
           }
         - {
             name: "Ubuntu Clang-15 + libc++",
             os: ubuntu-latest,
             compiler: { type: CLANG, version: 15, conan: "clang", cc: "clang-15", cxx: "clang++-15", std: 20 },
             lib: "libc++",
+            conan_profile_base: "clang/15/x64-libc++",
           }
         - {
-            name: "Visual Studio 2019",
+            name: "Visual Studio 2022",
             os: windows-latest,
-            compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 20 },
+            compiler: { type: VISUAL, version: 17, conan: "msvc", cc: "cl", cxx: "cl", std: 20 },
+            lib: "msvc193",
+            conan_profile_base: "msvc/193/x64",
           }
 
     steps:
@@ -50,9 +54,7 @@ jobs:
 
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
-        uses: microsoft/setup-msbuild@v1.3
-        with:
-          vs-version: "16.5"
+        uses: microsoft/setup-msbuild@v2
 
       - name: Install Latest GCC 
         if: matrix.settings.compiler.type == 'GCC'
@@ -90,30 +92,18 @@ jobs:
         run: |
           pip install -r ./requirements.txt
 
-      - name: Configure Conan
+      # Same layered profiles as README / windows.md (.conan/profiles/...). MSVC profile uses compiler.version=193 (VS 2022).
+      - name: Conan install
         shell: bash
         run: |
-          conan profile detect --force
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' .conan2/profiles/default
-          if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" ]]; then
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ matrix.settings.compiler.conan }}/' .conan2/profiles/default
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ matrix.settings.compiler.version }}/' .conan2/profiles/default
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' .conan2/profiles/default
+          set -euo pipefail
+          BT=$(echo "${{ matrix.configuration }}" | tr '[:upper:]' '[:lower:]')
+          PROFILE="${{ github.workspace }}/.conan/profiles/${{ matrix.settings.conan_profile_base }}-${BT}"
+          if [[ "${{ matrix.settings.os }}" == 'windows-latest' ]]; then
+            conan install "${{ github.workspace }}" --build missing -pr:h "$PROFILE" -pr:b "$PROFILE" -g VCVars -of ./build
+          else
+            conan install "${{ github.workspace }}" --build missing -pr:h "$PROFILE" -pr:b "$PROFILE" -of ./build
           fi
-          conan profile show -pr default
-
-      - name: Conan install (Windows)
-        if: matrix.settings.os == 'windows-latest'
-        shell: bash
-        run: |
-          conan install "${{github.workspace}}" --build missing -pr:h default -pr:b default -g VCVars -of ./build
-
-      - name: Conan install (Linux)
-        if: matrix.settings.os != 'windows-latest'
-        shell: bash
-        run: |
-          conan install "${{github.workspace}}" --build missing -pr:h default -pr:b default -of ./build
 
       - name: Configure CMake
         if: matrix.settings.os == 'windows-latest'
