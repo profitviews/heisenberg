@@ -83,6 +83,13 @@ For **Release**, use **`--config Release`** in both commands. With Ninja Multi-C
 
 Configure with **`BUILD_TESTING=OFF`** if you need to omit the test target (smaller configure when FetchContent for Catch2 is undesirable).
 
+**Sandbox executor:** [`SandboxOrderExecutor`](src/sandbox_order_executor.hpp) records [`OrderExecutor::new_order`](src/order_executor.hpp) calls in memory (no ccapi/network). Coverage lives under **`[e2e][sandbox]`** in **`heisenberg_tests`**. To smoke the CLI without API keys:
+
+```bash
+cmake --build build --config Debug --target execute_order --parallel
+./build/bin/Debug/execute_order --sandbox --symbol BTC-USD --side buy --size 1 --type limit --price 100
+```
+
 #### C++ IDE notes (Cursor vs VS Code)
 
 IntelliSense and bundled extensions differ between **Cursor** and **VS Code**. This repo includes **`.vscode/settings.json`** with **`clangd.arguments`** (**`--compile-commands-dir`** toward **`build/compile_commands.json`**, **`--background-index`**, and on Linux **`--query-driver`** so **clangd** matches **GCC/libstdc++** paths used by **`/usr/bin/c++`** in **`compile_commands.json`**). See **[docs/cpp-ide-cursor-vscode.md](./docs/cpp-ide-cursor-vscode.md)**.

@@ -12,6 +12,7 @@ add_library(cpp_crypto_algos_lib
         order_executor.hpp
         order_type.hpp
         program_options.hpp
+        sandbox_order_executor.hpp
         side.hpp
         trade_data.hpp
         trade_stream.hpp

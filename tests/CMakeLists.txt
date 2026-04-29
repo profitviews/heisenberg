@@ -11,6 +11,7 @@ cmake_language(CALL FetchContent_MakeAvailable Catch2)
 add_executable(heisenberg_tests
     test_utils.cpp
     test_enum.cpp
+    test_e2e_sandbox.cpp
     test_exchange_names.cpp
     test_order_completion.cpp
 )
