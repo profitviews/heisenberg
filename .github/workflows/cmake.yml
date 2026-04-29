@@ -103,14 +103,17 @@ jobs:
           fi
           conan profile show -pr default
 
-      - name: Configure Install
+      - name: Conan install (Windows)
         if: matrix.settings.os == 'windows-latest'
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -g VCVars -of ./build
+          conan install "${{github.workspace}}" --build missing -pr:h default -pr:b default -g VCVars -of ./build
+
+      - name: Conan install (Linux)
+        if: matrix.settings.os != 'windows-latest'
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -of ./build
+          conan install "${{github.workspace}}" --build missing -pr:h default -pr:b default -of ./build
 
       - name: Configure CMake
         if: matrix.settings.os == 'windows-latest'
