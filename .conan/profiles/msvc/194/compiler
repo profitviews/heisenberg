@@ -1,5 +1,5 @@
 include(../../compiler/msvc)
 
 [settings]
-compiler.version=193
+compiler.version=194
 compiler.runtime=dynamic
