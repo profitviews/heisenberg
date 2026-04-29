@@ -19,7 +19,7 @@ Start the Visual Studio 2022 Developer Command Prompt.
    
    Conan is configured for Ninja Multi-Config (`conanfile.py`). Configure once, then build Release and Debug:
    ```powershell
-   conan install ./ -pr:h .conan2/profiles/msvc/193/x64-release -pr:b .conan2/profiles/msvc/193/x64-release --build missing -of ./build
+   conan install ./ -pr:h .conan2/profiles/msvc/194/x64-release -pr:b .conan2/profiles/msvc/194/x64-release --build missing -of ./build
    build\conanbuild.bat
    cmake --preset conan-default
    cmake --build build --config Release
