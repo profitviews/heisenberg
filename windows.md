@@ -34,3 +34,7 @@ This will create:
 cd bin\Release
 .\algo --exchange=coinbase --api_key=$Env:COINBASE_API_KEY --api_secret=$Env:COINBASE_API_SECRET --api_phrase=$Env:COINBASE_API_PHRASE --lookback=50 --reversion_level=2 --base_quantity=0.0025 --symbol=ETH-BTC
 ```
+
+## C++ editing (clangd)
+
+CMake emits **`compile_commands.json`** under **`build\`** for tooling. See **[docs/cpp-ide-cursor-vscode.md](../docs/cpp-ide-cursor-vscode.md)** for VS Code/Cursor, **clangd**, and **`.vscode/settings.json`**. The Linux **`--query-driver`** globs checked into that file normally **do not** match MSVC (**`cl.exe`**); clangd still infers headers from **`compile_commands.json`**. If your **`compile_commands.json`** lists MinGW/MSYS **`g++.exe`**, add a matching **`--query-driver`** glob (often in **User** settings).

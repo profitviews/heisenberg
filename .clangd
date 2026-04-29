@@ -1,0 +1,9 @@
+CompileFlags:
+  # Same compilation DB CMake writes under build/ (requires CMAKE_EXPORT_COMPILE_COMMANDS).
+  CompilationDatabase: build
+
+# Optional: hide all clangd editor underlines (squiggles). Prefer build/compile_commands.json,
+# .vscode/settings.json clangd.arguments (--compile-commands-dir, --query-driver on Linux), and
+# "Clangd: Restart language server". Quote "*" for YAML.
+# Diagnostics:
+#   Suppress: "*"

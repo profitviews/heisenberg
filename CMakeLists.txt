@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.27)
 # set the project name
 project(cpp_crypto_algos LANGUAGES CXX VERSION 2.0)
 
+# compile_commands.json for clangd / VS Code C++ (must exist — IntelliSense uses ${workspaceFolder}/build/compile_commands.json)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Generate compile_commands.json for IDE tooling" FORCE)
+
 # Multi-config generators (Ninja Multi-Config, MSVC): only Debug and Release
 if(CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Available configurations" FORCE)

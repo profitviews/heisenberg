@@ -62,6 +62,16 @@ Or:
 
 Use debug Conan profiles for `conan install` when you need Conan-provided libraries built as Debug (same profile for `-pr:h` and `-pr:b`). Release profiles match Release dependencies.
 
+#### C++ IDE notes (Cursor vs VS Code)
+
+IntelliSense and bundled extensions differ between **Cursor** and **VS Code**. This repo includes **`.vscode/settings.json`** with **`clangd.arguments`** (**`--compile-commands-dir`** toward **`build/compile_commands.json`**, **`--background-index`**, and on Linux **`--query-driver`** so **clangd** matches **GCC/libstdc++** paths used by **`/usr/bin/c++`** in **`compile_commands.json`**). See **[docs/cpp-ide-cursor-vscode.md](./docs/cpp-ide-cursor-vscode.md)**.
+
+#### Debugging in Cursor / VS Code (Linux)
+
+1. Configure Conan once (`conan install` … `cmake --preset conan-default`), then build **Debug**: Run Build Task (`Ctrl+Shift+B`) → **Build Debug (Conan)**, or `cmake --build build --config Debug`.
+2. For **breakpoints / GDB**, `.vscode/launch.json` uses **`cppdbg`** — install whatever provides it in your editor (VS Code usually uses Microsoft **C/C++** for the debugger adapter; Cursor users should follow [docs/cpp-ide-cursor-vscode.md](./docs/cpp-ide-cursor-vscode.md) for IntelliSense vs debugging).
+3. **Run and Debug** (`Ctrl+Shift+D`), pick a **`(gdb) …`** configuration, then **F5**. Use the **Debug** CMake configuration (`-g`). Optional: `"preLaunchTask": "Build Debug (Conan)"` on a launch config.
+
 #### Artifacts and example
 
 Executables end up under `build/bin/` (sometimes with `Release` or `Debug` subdirectories, depending on platform and generator).

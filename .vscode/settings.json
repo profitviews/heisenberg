@@ -1,5 +1,14 @@
 {
+    "[cpp]": {
+        "cSpell.enabled": false
+    },
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build",
+        "--background-index",
+        "--query-driver=/usr/bin/c++,/usr/bin/g++,/usr/bin/g++-*,/usr/bin/x86_64-linux-gnu-g++-*"
+    ],
     "files.associations": {
+        "*.hpp": "cpp",
         "*.in": "cpp",
         "array": "cpp",
         "cctype": "cpp",

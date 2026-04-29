@@ -3,16 +3,32 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "CMake build project",
+            "label": "Build Debug (Conan)",
             "options": {
-                "cwd": "${workspaceFolder}/build"
+                "cwd": "${workspaceFolder}"
             },
-            "command": "cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . 2>&1|tee cmake.out",
+            "command": "source build/conanbuild.sh && cmake --build build --config Debug --parallel",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": []
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Requires: conan install + cmake --preset conan-default once."
+        },
+        {
+            "type": "shell",
+            "label": "Build Release (Conan)",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "source build/conanbuild.sh && cmake --build build --config Release --parallel",
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Requires: conan install + cmake --preset conan-default once."
         }
     ]
 }

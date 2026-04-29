@@ -8,7 +8,9 @@
 #include <boost/log/trivial.hpp>
 
 #include <concepts>
+#include <deque>
 #include <map>
+#include <string>
 
 namespace profitview
 {
