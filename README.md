@@ -37,9 +37,17 @@ conan install ./ \
   -pr:h .conan/profiles/gcc/12/x64-libstdc++11-release \
   -pr:b .conan/profiles/gcc/12/x64-libstdc++11-release \
   -of ./build --build missing
+conan install ./ \
+  -pr:h .conan/profiles/gcc/12/x64-libstdc++11-debug \
+  -pr:b .conan/profiles/gcc/12/x64-libstdc++11-debug \
+  -of ./build --build missing
 source build/conanbuild.sh
 cmake --preset conan-default
 ```
+
+Use the **release** profile command alone if you only build **Release**. For **Ninja Multi-Config**, Conan must generate CMakeDeps for **both** `Release` and `Debug` (two installs into the same `-of ./build`) or **`cmake --build build --config Debug`** will fail with missing Boost headers and similar errors—the compiler command will lack Conan `-isystem` paths.
+
+Do not pass **`-DCMAKE_TOOLCHAIN_FILE=…`** together with **`cmake --preset conan-default`**. Conan’s preset already sets **`toolchainFile`** (`build/conan_toolchain.cmake`); adding **`-D`** makes CMake warn that **`CMAKE_TOOLCHAIN_FILE`** was unused. Configure with **`source build/conanbuild.sh && cmake --preset conan-default`** only.
 
 Do not pass `-c tools.cmake.cmaketoolchain:generator=...` manually; it is already set in `conanfile.py`.
 
@@ -60,7 +68,7 @@ Or:
 
 `BUILD_DIR` defaults to `./build`; override if needed: `BUILD_DIR=/path/to/build ./scripts/build-release-debug.sh`.
 
-Use debug Conan profiles for `conan install` when you need Conan-provided libraries built as Debug (same profile for `-pr:h` and `-pr:b`). Release profiles match Release dependencies.
+If you change Conan inputs (profiles, `conanfile.py`), re-run **`conan install`** (both release and debug installs when you build both configs), then **`cmake --preset conan-default`** again.
 
 #### C++ IDE notes (Cursor vs VS Code)
 

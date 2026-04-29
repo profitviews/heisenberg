@@ -1,6 +1,5 @@
 #pragma once
 
-#include "order_executor.hpp"
 #include "order_type.hpp"
 #include "side.hpp"
 

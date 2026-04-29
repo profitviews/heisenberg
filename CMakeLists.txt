@@ -11,6 +11,9 @@ if(CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Available configurations" FORCE)
 endif()
 
+# websocketpp (and similar deps) use legacy project() without VERSION; default CMP0048 for subdirs avoids noisy CMake dev warnings.
+set(CMAKE_POLICY_DEFAULT_CMP0048 OLD)
+
 include(FetchContent)
 
 FetchContent_Declare(

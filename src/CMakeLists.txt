@@ -51,14 +51,18 @@ target_compile_definitions(cpp_crypto_algos_lib
         CCAPI_ENABLE_EXCHANGE_COINBASE
 )
 
+# libc++ experimental APIs (-fexperimental-library): supported on Unix Clang/AppleClang, not on Windows (clang-cl rejects the flag).
 target_compile_options(cpp_crypto_algos_lib
     INTERFACE
-        $<$<CXX_COMPILER_ID:Clang>:-fexperimental-library>
+        $<$<AND:$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>,$<NOT:$<PLATFORM_ID:Windows>>>:-fexperimental-library>
         $<$<CXX_COMPILER_ID:GNU>:-Wno-terminate>
         $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 )
-set_property(TARGET cpp_crypto_algos_lib PROPERTY CPP_VISIBILITY_PRESET  ON)
-set_property(TARGET cpp_crypto_algos_lib PROPERTY VISIBILITY_INLINES_HIDDEN ON)
+if(NOT MSVC)
+    # GCC/Clang visibility attributes; MSVC uses different DLL export semantics for visibility-like behavior.
+    set_property(TARGET cpp_crypto_algos_lib PROPERTY CPP_VISIBILITY_PRESET ON)
+    set_property(TARGET cpp_crypto_algos_lib PROPERTY VISIBILITY_INLINES_HIDDEN ON)
+endif()
 
 clang_format_target(TARGET cpp_crypto_algos_lib)
 add_subdirectory(apps)

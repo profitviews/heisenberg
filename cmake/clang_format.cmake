@@ -33,16 +33,17 @@ function(clang_format_target)
     endif()
 
     execute_process(COMMAND "${CLANG_FORMAT_PATH}" --version OUTPUT_VARIABLE CLANG_FORMAT_OUTPUT)
-    string(REPLACE "\n" ";" CLANG_FORMAT_OUTPUT "${CLANG_FORMAT_OUTPUT}")
-    foreach(line ${CLANG_FORMAT_OUTPUT})
-        string(REGEX REPLACE "clang-format version ([\\.0-9]+)$" "\\1" CLANG_FORMAT_VERSION "${line}")
-        if(CLANG_FORMAT_VERSION)
-            break()
-        endif()
-    endforeach()
+    # Match "clang-format version X.Y.Z" even when followed by "(Ubuntu...)" or other suffixes.
+    if(CLANG_FORMAT_OUTPUT MATCHES "clang-format version ([0-9][0-9.]*)")
+        set(CLANG_FORMAT_VERSION "${CMAKE_MATCH_1}")
+    endif()
 
-    if("${CLANG_FORMAT_VERSION}" VERSION_LESS 13.0.0)
-        message(STATUS "Unsupported version of Clang-Format found.  Version 13.0.0 requird, version ${CLANG_FORMAT_VERSION} found")
+    if(NOT CLANG_FORMAT_VERSION)
+        message(WARNING "Could not parse clang-format version from:\n${CLANG_FORMAT_OUTPUT}")
+        return()
+    elseif(CLANG_FORMAT_VERSION VERSION_LESS 13.0.0)
+        message(WARNING "Unsupported Clang-Format version: ${CLANG_FORMAT_VERSION} (13.0.0 or newer required)")
+        return()
     endif()
 
     get_property(CLANG_FORMAT_QUIET_REPORTED GLOBAL PROPERTY clang_format_quiet_reported)
@@ -73,7 +74,7 @@ function(clang_format_target)
         WORKING_DIRECTORY
             ${CMAKE_SOURCE_DIR}
         COMMENT
-            "Formatting ${CLANG_FORMAT_TARGET} files with ${CLANG_FORMAT_EXE}"
+            "Formatting ${CLANG_FORMAT_TARGET} files with ${CLANG_FORMAT_PATH}"
     )
 
     if(TARGET clangformat)

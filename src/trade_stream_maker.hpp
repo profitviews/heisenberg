@@ -1,9 +1,6 @@
 #pragma once
 
-#include "side.hpp"
-#include "trade_data.hpp"
 #include "trade_stream.hpp"
-#include "trade_stream_exception.hpp"
 
 #include <memory>
 #include <string>

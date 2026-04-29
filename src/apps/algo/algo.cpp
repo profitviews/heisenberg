@@ -5,7 +5,6 @@
 
 #include "ccex_order_executor.hpp"
 #include "trade_stream_maker.hpp"
-#include "utils.hpp"
 
 #include "program_options.hpp"
 
