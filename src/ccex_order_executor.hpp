@@ -207,16 +207,13 @@ private:
 
     void adjust_exchange_params(const std::string& exchange, std::map<std::string, std::string>& params)
     {
-        bool const market = [&]() {
-            if (exchange == CCAPI_EXCHANGE_NAME_COINBASE)
-                return params.count("type") && params.at("type") == "market";
-            return params.count(CCAPI_EM_ORDER_TYPE) && params.at(CCAPI_EM_ORDER_TYPE) == "market";
-        }();
-        if (market)
-        {
-            if (exchange == CCAPI_EXCHANGE_NAME_COINBASE || exchange == CCAPI_EXCHANGE_NAME_KRAKEN)
-                params.erase(CCAPI_EM_ORDER_LIMIT_PRICE);
-        }
+        // Coinbase REST uses "type" for market vs limit; ccapi uses CCAPI_EM_ORDER_TYPE elsewhere.
+        char const* const order_type_key =
+            exchange == CCAPI_EXCHANGE_NAME_COINBASE ? "type" : CCAPI_EM_ORDER_TYPE;
+        auto const type_it = params.find(order_type_key);
+        bool const market = type_it != params.end() && type_it->second == "market";
+        if (market && (exchange == CCAPI_EXCHANGE_NAME_COINBASE || exchange == CCAPI_EXCHANGE_NAME_KRAKEN))
+            params.erase(CCAPI_EM_ORDER_LIMIT_PRICE);
     }
 
 public:
